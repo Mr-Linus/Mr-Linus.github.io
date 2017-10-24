@@ -332,17 +332,8 @@
 <h3 id="42-过程解析"><a class="markdownIt-Anchor" href="#42-过程解析"></a> 4.2 过程解析</h3>
 <ul>
 <li>Docker 客户端向 Docker 守护进程发出运行命令。</li>
-</ul>
-<blockquote></blockquote>
-<ul>
 <li>Docker 守护进程发现没有 hello-world 这个镜像，于是从仓库中寻找并下载它。</li>
-</ul>
-<blockquote></blockquote>
-<ul>
 <li>下载完毕之后，Docker 守护进程以 hello-world 这个镜像创建一个新的容器。</li>
-</ul>
-<blockquote></blockquote>
-<ul>
 <li>容器向 Docker 守护进程输出内容之后，容器停止。Docker 守护进程把输出的内容传递给 Docker 客户端。</li>
 </ul>
 <h2 id="五-docker的基本操作"><a class="markdownIt-Anchor" href="#五-docker的基本操作"></a> 五、Docker的基本操作</h2>
