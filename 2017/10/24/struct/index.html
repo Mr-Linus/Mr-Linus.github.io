@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" >
+    <title>
+        
+        Concept of Data Structure · Funky&#39;s Blog
+        
+    </title>
+    <link rel="icon" href= /assests/favicon.ico>
+    <!-- TODO: 在font-face加载完毕后改变字体  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js"></script>
+    <!-- 提前加载place holder  -->
+    <style type="text/css">
+        @font-face {
+            font-family: 'Oswald-Regular';
+            src: url('/font/Oswald-Regular.ttf');
+        }
+    </style>
+    <style type="text/css">
+        .site-intro-placeholder {
+            position: absolute;
+            z-index: -2;
+            top: 0;
+            left: 0px;
+            width: calc(100% + 300px);
+            height: 100%;
+            background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+            background-position: center center;
+            transform: translate3d(-226px, 0, 0);
+            animation: gradient-move 2.5s ease-out 0s 1;
+        }
+        @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+    <link rel="stylesheet" href = /css/style.css?v=20171020 />
+    <script src="//cdn.staticfile.org/jquery/3.2.1/jquery.min.js" defer></script>
+    
+    <script src="/scripts/main.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+</head>
+    
+        <body class="post-body">
+    
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
+
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Funky&#39;s Blog.</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Concept of Data Structure</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Funky's Blog.</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-img" style="background-image: url(http://oumn0o088.bkt.clouddn.com/post-bg.jpg)"></div>
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Concept of Data Structure
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+        </p>
+        <!-- 404 -->
+        
+        <!-- 文章页meta -->
+        
+            <!-- 文章页标签  -->
+            
+                <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-href = Data Structure>Data Structure</a>
+    
+</div>
+            
+            <div class="post-intro-meta">
+                <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                <span class="post-intro-time">2017/10/24</span>
+            </div>
+        
+    </div>
+</div>
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <script>
+            var browser = {
+                    versions: function () {
+                        var u = window.navigator.userAgent;
+                        return {
+                            userAgent: u,
+                            trident: u.indexOf('Trident') > -1, //IE内核
+                            presto: u.indexOf('Presto') > -1, //opera内核
+                            webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+                            gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+                            mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+                            ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+                            android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+                            iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+                            iPad: u.indexOf('iPad') > -1, //是否为iPad
+                            webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+                            weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+                            uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+                        };
+                    }()
+                }
+
+            function fontLoaded(){
+                console.log('font loaded');
+                if (document.getElementsByClassName('site-intro-meta')) {
+                    document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+                    document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+                    var postIntroTags = document.getElementsByClassName('post-intro-tags')[0],
+                        postIntroMeat = document.getElementsByClassName('post-intro-meta')[0];
+                        if (postIntroTags) {
+                            postIntroTags.classList.add('post-fade-in');
+                        }
+                        if (postIntroMeat) {
+                            postIntroMeat.classList.add('post-fade-in');
+                        }
+                    }
+                }
+                
+            console.log("userAgent:" + browser.versions.userAgent);
+            // UC不支持跨域，所以直接显示
+            if (browser.versions.uc) {
+                console.log("UCBrowser");
+                fontLoaded();
+            } else {
+                WebFont.load({
+                    custom: {
+                        families: ['Oswald-Regular']
+                    },
+                    loading: function () {  //所有字体开始加载
+                        // console.log('loading');
+                    },
+                    active: function () {  //所有字体已渲染
+                        fontLoaded();
+                    },
+                    inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+                        console.log('inactive: timeout');
+                        fontLoaded();
+                    },
+                    timeout: 7000 // Set the timeout to two seconds
+                });
+            }
+        </script>
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.5.1/katex.min.css"><h2 id="数据结构相关概念及定义"><a href="#数据结构相关概念及定义" class="headerlink" title="数据结构相关概念及定义"></a>数据结构相关概念及定义</h2><h3 id="数据结构框架"><a href="#数据结构框架" class="headerlink" title="数据结构框架"></a>数据结构框架</h3><ul>
+<li>数据结构<ul>
+<li>逻辑结构<ul>
+<li>线性结构<ul>
+<li>线性表、栈、队列</li>
+</ul>
+</li>
+<li>非线性结构<ul>
+<li>树、图、集合   </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>存储结构（存储结构）<ul>
+<li>顺序存储、链式存储、索引存储、散列存储</li>
+</ul>
+</li>
+<li>数据的运算</li>
+</ul>
+</li>
+</ul>
+<h3 id="什么是算法"><a href="#什么是算法" class="headerlink" title="什么是算法"></a>什么是算法</h3><ul>
+<li>算法 是对特定问题求解步骤的一种描述,它是指令的有限序列,其中每一条指令都表示一个或多个操作</li>
+</ul>
+<h3 id="算法的5个重要特性"><a href="#算法的5个重要特性" class="headerlink" title="算法的5个重要特性"></a>算法的5个重要特性</h3><ul>
+<li>有穷性 一个算法必须总是在执行有穷步之后结束,且每一步都可在有穷时间内完成</li>
+<li>确定性 算法中每一条指令必须有确切的含义,读者理解时不会产生二义性,并且在任何条件下,算法只有-唯一的一条执行路径</li>
+<li>可行性 一个算法是能行的,即算法描述的操作都是可以通过已经实现的基本运算执行优先次来实现的</li>
+<li>输入   一个算法有零个或多个的输入,这些输入取自于某个特定的对象的集合</li>
+<li>输出   一个算法有一个或多个输出,这些输出是同输入有着某些特定关系的量</li>
+</ul>
+<h3 id="算法设计要求"><a href="#算法设计要求" class="headerlink" title="算法设计要求"></a>算法设计要求</h3><ul>
+<li>正确性 算法应当满足具体问题的需求。设计或选择的算法应当能正确的反应这种需求。</li>
+<li>可读性 算法主要是为了人的阅读和交流，其次才是机器执行，可读性好有助于人对算法的理解。</li>
+<li>健壮性 当输入数据非法时，算法也能适当的作出反应或进行处理，而不会产生莫名其妙的输出结果。</li>
+</ul>
+<h3 id="效率与低存储量需求"><a href="#效率与低存储量需求" class="headerlink" title="效率与低存储量需求"></a>效率与低存储量需求</h3><p>通俗的说，效率指的是算法执行的时间。对于同一个问题如果有多种算法可以解决，执行时间短的算法效率高。低存储量需求指的是算法执行工程中所需要的最大存储空间。</p>
+<h4 id="渐进时间复杂度"><a href="#渐进时间复杂度" class="headerlink" title="渐进时间复杂度"></a>渐进时间复杂度</h4><p>一般情况下，算法中基本操作重复执行的次数是问题规模n的某个函数f(n)，算法的时间量度记作：</p>
+<script type="math/tex; mode=display">T(n)=O(f(n))</script><p>它表示随问题规模n的增大,算法执行时间的增长率和f(n)的增长率相同,称做算法的渐进时间复杂度,简称时间复杂度,语句的频度指的是该语句重复执行的次数.<br>举例:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">   (a)&#123;++x;s=<span class="number">0</span>;&#125;</div><div class="line">(b)<span class="keyword">for</span>(i= <span class="number">1</span>;i&lt;=n;++i)&#123;++x;s+=x;&#125;</div><div class="line">(c)<span class="keyword">for</span> (j=<span class="number">1</span>;j&lt;=n;++j)</div><div class="line">       <span class="keyword">for</span>(k=<span class="number">1</span>;k&lt;=n;++k)&#123;++x;s+=x;&#125;</div></pre></td></tr></table></figure></p>
+<p>含基本操作”x增1”的语句频度分别为1、n和n2，则这三个程序段的时间复杂度分别为$O(1)$、$O(n)$、$O(n^2)$ 分别称为常量阶、线性阶和平方阶，算法可能还有对数阶$O(log_2 n)$、指数阶$O(2^n)$等。</p>
+<h3 id="数据结构的基本概念"><a href="#数据结构的基本概念" class="headerlink" title="数据结构的基本概念"></a>数据结构的基本概念</h3><h4 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h4><p>数据，是对客观事务的符号表示,在计算机科学中是指所有能输入到计算机中并被计算机程序处理的符号的总称</p>
+<h4 id="数据元素"><a href="#数据元素" class="headerlink" title="数据元素"></a>数据元素</h4><p>数据元素，是数据的基本单位,在计算机程序中通常作为一个整体进行考虑和处理</p>
+<h4 id="数据对象"><a href="#数据对象" class="headerlink" title="数据对象"></a>数据对象</h4><p>数据对象 是性质形体的数据元素的集合,是数据的一个子集</p>
+<h4 id="什么是数据结构"><a href="#什么是数据结构" class="headerlink" title="什么是数据结构"></a>什么是数据结构</h4><p>数据结构 是相互直接存在一种或多种特定关系的数据元素的集合,这种数据元素相互之间的关系称为结构 ,根据数据元素之间关系的不同特性,通常有下列四类基本结构: </p>
+<p> (1)集合 结构中的数据元素之间除了”属于同一个集合”的关系外,别无其他关系;<br> (2)线性结构  结构中的数据元素之间存在一个对一个的关系;<br> (3)树形结构 结构中的数据元素之间存在一个对多个的关系;<br> (4)图状结构或网状结构 结构中的数据元素之间存在多个对多个的关系</p>
+<p>物理结构 数据结构在计算机中的表示(又称映像)称为数据的物理结构,又称存储结构 </p>
+<h4 id="元素-节点"><a href="#元素-节点" class="headerlink" title="元素/节点"></a>元素/节点</h4><p>在计算机中,我们可以用一个由若干位组合起来形成的一个位串表示一个数据元素(如果一个字长的位串表示一个整数,用8位二进制数表示一个字符等),通常称这个位串为元素或节点.当数据元素由若干数据项组成时,位串中对应于各个数据项的子位串称为数据域.因此,元素或节点可看成是数据元素在计算机中的印象.</p>
+<h4 id="存储结构-物理结构"><a href="#存储结构-物理结构" class="headerlink" title="存储结构 (物理结构)"></a>存储结构 (物理结构)</h4><p>物理结构 数据结构在计算机中的表示(又称映像)称为数据的物理结构,又称存储结构 </p>
+<p>数据元素之间的关系在计算机中有两种不同的表示方法:顺序映像和非顺序映像,并由此得到两种不同的存储结构:顺序存储结构和链式存储结构.顺序映像的特点是借助元素在存储器中的相对位置来表示数据元素之间的逻辑关系.非顺序映像的特点是借助指示元素存储地址的指针表示数据元素之间的逻辑关系.</p>
+<h4 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h4><p>数据类型是和数据结构密切相关的一个概念,他是最早出现在高级程序语言中,用以刻画(程序)操作对象的特性.</p>
+<p>1.原子类型：其值不可再分<br>2.结构类型：可以在分解为若干分量<br>3.抽象数据类型：抽象数据组织和与之相关的操作</p>
+<blockquote>
+<p>按’值’的不同特性,高级程序语言中的数据类型可分为两类:<br>1.非结构的原子类型.原子类型的值是不可分解的,例如C语言中的基本类型(int/double…).<br>2.结构类型 结构类型的值是由若干成分按某种结构组成的,因此是可以分解的,并且它的成分可以是非结构的,也可以说是结构的.</p>
+</blockquote>
+<h4 id="抽象数据类型-ADT"><a href="#抽象数据类型-ADT" class="headerlink" title="抽象数据类型-ADT"></a>抽象数据类型-ADT</h4><p>抽象数据类型(Abstract Date Type,简称ADT)是指一个数学模型以及定义在该模型上的一组操作.<br>ADT按其值的不同特性,可细分为下列三种类型:<br>原子类型 属原子类型的变量的值是不可分解的.这类抽象数据类型比较少,因为一般情况下已有的固有数据类型足以满足需求.<br>固定聚合类型 属该类型的变量,其值由确定数目的成分按某种结构组成.<br>可变聚合类型 和固定聚合类型相比较,构成可变聚合类型’值’的成分的数目不确定</p>
+<p>和数据结构的形式相对应,抽象数据类型可用以下三元组表示:</p>
+<pre><code>                    $$(D.S.P)$$
+</code></pre><p>D : 数据对象 S:   D上的关系集 P: 对D的基本操作集</p>
+<h5 id="多形数据类型"><a href="#多形数据类型" class="headerlink" title="多形数据类型"></a>多形数据类型</h5><p>多形数据类型是指其值的成分不确定的数据类型</p>
+<h3 id="线性表知识框架"><a href="#线性表知识框架" class="headerlink" title="线性表知识框架"></a>线性表知识框架</h3><ul>
+<li>线性表<ul>
+<li>顺序存储<ul>
+<li>顺序表</li>
+</ul>
+</li>
+<li>链式存储<ul>
+<li>单链表 （指针实现）</li>
+<li>双链表 （指针实现）</li>
+<li>循环链表 （指针实现）</li>
+<li>静态链表</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="数据结构算法常用设置"><a href="#数据结构算法常用设置" class="headerlink" title="数据结构算法常用设置"></a>数据结构算法常用设置</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//函数结果状态码</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> TURE 1</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> FALSE 0</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> OK 1</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> ERROR 0</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> INFEASIBLE -1</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> OVERFLOW -2</span></div><div class="line"><span class="comment">//Status 是函数的类型,其值是函数结果状态代码</span></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> Status;</div></pre></td></tr></table></figure>
+<h4 id="基本函数"><a href="#基本函数" class="headerlink" title="基本函数"></a>基本函数</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//求最大值 </span></div><div class="line">max(表达式<span class="number">1</span>,…,表达式n)</div><div class="line"><span class="comment">//求最小值 </span></div><div class="line">min(表达式<span class="number">1</span>,…,表达式n)</div><div class="line"><span class="comment">//求绝对值 </span></div><div class="line"><span class="built_in">abs</span>(表达式)</div><div class="line"><span class="comment">//求不足整数值 </span></div><div class="line"><span class="built_in">floor</span>(表达式)</div><div class="line"><span class="comment">//求进位整数值 </span></div><div class="line"><span class="built_in">ceil</span> (表达式)</div><div class="line"><span class="comment">//判定文件结束 </span></div><div class="line">eof(文件变量) 或eof</div><div class="line"><span class="comment">//判定行结束 </span></div><div class="line">eoln(文件变量) 或eoln</div></pre></td></tr></table></figure>
+<h3 id="常见数据结构类型定义"><a href="#常见数据结构类型定义" class="headerlink" title="常见数据结构类型定义"></a>常见数据结构类型定义</h3><h4 id="顺序表"><a href="#顺序表" class="headerlink" title="顺序表"></a>顺序表</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//静态分配</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MaxSize 50</span></div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></div><div class="line">    ElemType data[MaxSize];</div><div class="line">    <span class="keyword">int</span> length;</div><div class="line">&#125;SqList;</div><div class="line"><span class="comment">//动态分配</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> InitSize 100</span></div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></div><div class="line">    ElemType *data;</div><div class="line">    <span class="keyword">int</span> MaxSize,length;</div><div class="line">&#125;SeqList;</div><div class="line"><span class="comment">//动态分配内存</span></div><div class="line">L.data=(ElemType*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(ElemType*)InitSize);</div></pre></td></tr></table></figure>
+<h4 id="单链表"><a href="#单链表" class="headerlink" title="单链表"></a>单链表</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">LNode</span> &#123;</span></div><div class="line">    ElemType data;</div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">LNode</span> *<span class="title">next</span>;</span></div><div class="line">&#125;LNode, *LinkList;</div></pre></td></tr></table></figure>
+<h4 id="静态链表"><a href="#静态链表" class="headerlink" title="静态链表"></a>静态链表</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MaxSize 50 </span></div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></div><div class="line">    ElemType data;</div><div class="line">    <span class="keyword">int</span> next;</div><div class="line">&#125;SLinkList[MaxSize];</div></pre></td></tr></table></figure>
+<h4 id="顺序栈"><a href="#顺序栈" class="headerlink" title="顺序栈"></a>顺序栈</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MaxSize 50</span></div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></div><div class="line">    Elemtype data[MaxSize];</div><div class="line">    <span class="keyword">int</span> top;</div><div class="line">&#125; SqStack;</div></pre></td></tr></table></figure>
+<h4 id="链式栈"><a href="#链式栈" class="headerlink" title="链式栈"></a>链式栈</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">Linknode</span> &#123;</span></div><div class="line">    ElemType data;</div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">Linknode</span> *<span class="title">next</span>;</span></div><div class="line">&#125; *LiStack;</div></pre></td></tr></table></figure>
+<h4 id="顺序队列"><a href="#顺序队列" class="headerlink" title="顺序队列"></a>顺序队列</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MaxSize 50</span></div><div class="line"><span class="keyword">typedef</span> sturct &#123;</div><div class="line">    ElemType data[NaxSize];</div><div class="line">    <span class="keyword">int</span> front,rear;</div><div class="line">&#125;SqQueue;</div></pre></td></tr></table></figure>
+<h4 id="链式队列"><a href="#链式队列" class="headerlink" title="链式队列"></a>链式队列</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></div><div class="line">    ElemType data;</div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">LinkNode</span> *<span class="title">next</span>;</span></div><div class="line">&#125;LinkNode;</div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></div><div class="line">    LinkNode *front , *rear ;</div><div class="line">&#125; LinkQueue;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>队列相关操作：</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">初始： Q.front=Q.rear=0</div><div class="line">队头指针进1(出队)：Q.front=(Q.front+1)%MaxSize</div><div class="line">队尾指针进1(入队)：Q.rear=(Q.rear+1)%MaxSize</div><div class="line">队列长度：(Q.rear+MaxSize-Q.front)%MaxSize</div><div class="line">队列已满：(Q.rear+1)%MaxSize==Q.front;</div><div class="line">队空:Q.front==Q.rear</div></pre></td></tr></table></figure>
+<h4 id="二叉树"><a href="#二叉树" class="headerlink" title="二叉树"></a>二叉树</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">BiTNode</span>&#123;</span></div><div class="line">    ElemType data;</div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">BiTNode</span> *<span class="title">lchild</span>,*<span class="title">rchild</span>;</span></div><div class="line">&#125;BiTNode,*BiTree;</div></pre></td></tr></table></figure>
+<h4 id="线索二叉树"><a href="#线索二叉树" class="headerlink" title="线索二叉树"></a>线索二叉树</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">ThreadNode</span>&#123;</span></div><div class="line">    ElemType data;</div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">BiTNode</span> *<span class="title">lchild</span>,*<span class="title">rchild</span>;</span></div><div class="line">&#125; ThreadNode,*ThreadNode;</div></pre></td></tr></table></figure>
+<h4 id="图（邻接矩阵法）"><a href="#图（邻接矩阵法）" class="headerlink" title="图（邻接矩阵法）"></a>图（邻接矩阵法）</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MaxVertexNum 100 <span class="comment">//顶点数目的最大值</span></span></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">char</span> VertexType; <span class="comment">//顶点的数据类型</span></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> EdgeType;  <span class="comment">//带权图中边上权值的数据类型</span></div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span> </div><div class="line">    VertexType Vex[MaxVertexNum]; <span class="comment">//顶点表</span></div><div class="line">    EdgeType Edge[MaxVertex]; <span class="comment">//邻接矩阵</span></div><div class="line">    <span class="keyword">int</span> vexnum,arcnum; <span class="comment">//图的当前顶点数和弧度数</span></div><div class="line">&#125;MGragh;</div></pre></td></tr></table></figure>
+<h4 id="图（邻接表法）"><a href="#图（邻接表法）" class="headerlink" title="图（邻接表法）"></a>图（邻接表法）</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MaxVertexNum 100 <span class="comment">//顶点数目的最大值</span></span></div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">ArcNode</span>&#123;</span> <span class="comment">//边表节点</span></div><div class="line">    <span class="keyword">int</span> adjvex; <span class="comment">//该弧所指向的顶点位置</span></div><div class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">ArcNode</span> *<span class="title">next</span>;</span> <span class="comment">//指向下一条弧的指针</span></div><div class="line">    <span class="comment">//InfoType info; //网的边权值</span></div><div class="line">&#125;ArcNode;</div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">VNode</span>&#123;</span> <span class="comment">//顶点表节点</span></div><div class="line">    VertexType data; <span class="comment">//顶点信息</span></div><div class="line">    ArcNode *first;  <span class="comment">//指向第一条依附该顶点的弧的指针</span></div><div class="line">&#125;VNode,AdjList[MaxVertexNum];</div><div class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span> <span class="comment">//邻接表</span></div><div class="line">    AdjList vertices;</div><div class="line">    <span class="keyword">int</span> vexnum,arcnum;  <span class="comment">//图的顶点数和弧数</span></div><div class="line">&#125;ALGraph; <span class="comment">//ALGraph是以邻接表存储的图类型</span></div></pre></td></tr></table></figure>
+
+    </article>
+    <!-- 前后页  -->
+    <ul class="post-pager">
+        
+        
+            <li class="previous">
+                <a href= "/2017/10/23/sort/" title= Sort of Data Structure >
+                    <span>Previous Post</span>
+                    <span>Sort of Data Structure</span>
+                </a>
+            </li>
+        
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC版-->
+
+    <!--PC版-->
+
+
+    
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:admin@geekfan.club" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/mr-linus/" class="iconfont-archer github" target="_blank" title="github"></a>
+            
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title="rss"></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">Theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper">
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#数据结构相关概念及定义"><span class="toc-number">1.</span> <span class="toc-text">数据结构相关概念及定义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#数据结构框架"><span class="toc-number">1.1.</span> <span class="toc-text">数据结构框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#什么是算法"><span class="toc-number">1.2.</span> <span class="toc-text">什么是算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#算法的5个重要特性"><span class="toc-number">1.3.</span> <span class="toc-text">算法的5个重要特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#算法设计要求"><span class="toc-number">1.4.</span> <span class="toc-text">算法设计要求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#效率与低存储量需求"><span class="toc-number">1.5.</span> <span class="toc-text">效率与低存储量需求</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#渐进时间复杂度"><span class="toc-number">1.5.1.</span> <span class="toc-text">渐进时间复杂度</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据结构的基本概念"><span class="toc-number">1.6.</span> <span class="toc-text">数据结构的基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#数据"><span class="toc-number">1.6.1.</span> <span class="toc-text">数据</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据元素"><span class="toc-number">1.6.2.</span> <span class="toc-text">数据元素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据对象"><span class="toc-number">1.6.3.</span> <span class="toc-text">数据对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#什么是数据结构"><span class="toc-number">1.6.4.</span> <span class="toc-text">什么是数据结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#元素-节点"><span class="toc-number">1.6.5.</span> <span class="toc-text">元素/节点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#存储结构-物理结构"><span class="toc-number">1.6.6.</span> <span class="toc-text">存储结构 (物理结构)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据类型"><span class="toc-number">1.6.7.</span> <span class="toc-text">数据类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#抽象数据类型-ADT"><span class="toc-number">1.6.8.</span> <span class="toc-text">抽象数据类型-ADT</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#多形数据类型"><span class="toc-number">1.6.8.1.</span> <span class="toc-text">多形数据类型</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#线性表知识框架"><span class="toc-number">1.7.</span> <span class="toc-text">线性表知识框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据结构算法常用设置"><span class="toc-number">1.8.</span> <span class="toc-text">数据结构算法常用设置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#基本函数"><span class="toc-number">1.8.1.</span> <span class="toc-text">基本函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常见数据结构类型定义"><span class="toc-number">1.9.</span> <span class="toc-text">常见数据结构类型定义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#顺序表"><span class="toc-number">1.9.1.</span> <span class="toc-text">顺序表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#单链表"><span class="toc-number">1.9.2.</span> <span class="toc-text">单链表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#静态链表"><span class="toc-number">1.9.3.</span> <span class="toc-text">静态链表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#顺序栈"><span class="toc-number">1.9.4.</span> <span class="toc-text">顺序栈</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#链式栈"><span class="toc-number">1.9.5.</span> <span class="toc-text">链式栈</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#顺序队列"><span class="toc-number">1.9.6.</span> <span class="toc-text">顺序队列</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#链式队列"><span class="toc-number">1.9.7.</span> <span class="toc-text">链式队列</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二叉树"><span class="toc-number">1.9.8.</span> <span class="toc-text">二叉树</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#线索二叉树"><span class="toc-number">1.9.9.</span> <span class="toc-text">线索二叉树</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#图（邻接矩阵法）"><span class="toc-number">1.9.10.</span> <span class="toc-text">图（邻接矩阵法）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#图（邻接表法）"><span class="toc-number">1.9.11.</span> <span class="toc-text">图（邻接表法）</span></a></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top">&#xe639;</div>
+    <div class="sidebar">
+    <div class="sidebar-header sidebar-header-show-archive">
+        <div class="sidebar-category">
+            <span class="sidebar-archive-link"><span class="iconfont-archer">&#xe67d;</span>Archive</span>
+            <span class="sidebar-tags-link"><span class="iconfont-archer">&#xe610;</span>Tag</span>
+        </div>
+    </div>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-archive">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-archive"> Total : 3 </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2017/10/24/struct/" >Concept of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/sort/" >Sort of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2017/10/20/Docker-Primer/" >Docker-Primer</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name"><a href= "#">Data Structure</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">docker</a></span>
+    
+    </div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #888; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: false
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tag-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var jsInfo = {
+        root: '/'
+    }
+</script>
+    <!-- 不蒜子  -->
+    
+    <!-- CNZZ统计  -->
+    
+    </div><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    </body>
+</html>
+
+
