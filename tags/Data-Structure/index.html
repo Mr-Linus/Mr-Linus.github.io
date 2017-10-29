@@ -154,22 +154,16 @@
                         <span>Search of Data Structure</span>
                     </h2>
                 <div class="abstract-content">
-                     查找
- 查找方法
-
+                    查找查找方法
 顺序查找
 折半查找
 分块查找
 
- 平均查找长度 ASL（Average Search Length  ）
-所有查找过程中进行关键字比较次数的平均值
-数学定义为：ASL=∑i=1nPiCiASL=\sum _{i=1}^n P_i C_iASL=∑​i=1​n​​P​i​​C​i​​
+平均查找长度 ASL（Average Search Length  ）所有查找过程中进行关键字比较次数的平均值数学定义为：$ASL=\sum _{i=1}^n P_i C_i$
 
-n是查找长度，PiP_iP​i​​是查找第i个元素的概率，CiC_iC​i​​是找到第i个元素所需进行比较次数
+n是查找长度，$P_i$是查找第i个元素的概率，$C_i$是找到第i个元素所需进行比较次数
 
- 顺序查找
-适用于无序的表，挨个查找
-123456789typedef struct &#123;    ElemType *elem; //元素存储空间基址    int...
+顺序查找适用于无序的表，挨个查找123456789typedef struct &#123;    ElemType *elem; //元素存储空间基址    int TableLen;//表长&#125;SSTable;int Search_Seq(SSTable ST,...
                 </div>
             </a>
             <div class="abstract-post-meta">
@@ -197,27 +191,20 @@ n是查找长度，PiP_iP​i​​是查找第i个元素的概率，CiC_iC​i�
                         <span>Concept of Data Structure</span>
                     </h2>
                 <div class="abstract-content">
-                     数据结构相关概念及定义
- 数据结构框架
-
+                    数据结构相关概念及定义数据结构框架
 数据结构
-
 逻辑结构
-
 线性结构
-
 线性表、栈、队列
 
 
 非线性结构
-
-树、图、集合
+树、图、集合   
 
 
 
 
 存储结构（存储结构）
-
 顺序存储、链式存储、索引存储、散列存储
 
 
@@ -225,15 +212,13 @@ n是查找长度，PiP_iP​i​​是查找第i个元素的概率，CiC_iC​i�
 
 
 
- 什么是算法
-
+什么是算法
 算法 是对特定问题求解步骤的一种描述,它是指令的有限序列,其中每一条指令都表示一个或多个操作
 
- 算法的5个重要特性
-
+算法的5个重要特性
 有穷性 一个算法必须总是在执行有穷步之后结束,且每一步都可在有穷时间内完成
 确定性 算法中每一条指令必须有确切的含义,读者理解时不会产生二义性,并且在任何条件下,算法只有-唯一的一条执行路径
-可行性 一个算法是能行的,即算法描述的操作...
+可行性 一个算法是能行的,即算法描述的操作都是可以通过已经实现...
                 </div>
             </a>
             <div class="abstract-post-meta">
@@ -261,25 +246,21 @@ n是查找长度，PiP_iP​i​​是查找第i个元素的概率，CiC_iC​i�
                         <span>Sort of Data Structure</span>
                     </h2>
                 <div class="abstract-content">
-                     排序算法
-这里讨论的排序算法都是内排序算法
+                    排序算法这里讨论的排序算法都是内排序算法
 排序分为：
 
 插入排序
-
 直接插入排序
-折半插入排序
+折半插入排序 
 Shell排序
 
 
 交换排序
-
 冒泡排序
 快速排序
 
 
 选择排序
-
 简单选择排序
 堆排序
 
@@ -287,14 +268,12 @@ Shell排序
 归并排序
 基数排序
 
- 插入排序
-插入排序是一种简单直观的排序方法,其基本思想在于每次将一个待排序的记录,按其关键字大小插入到前面已经排好序的子序列中,直到全部记录完成.
+插入排序插入排序是一种简单直观的排序方法,其基本思想在于每次将一个待排序的记录,按其关键字大小插入到前面已经排好序的子序列中,直到全部记录完成.
 
 由插入排序的思想可以引伸出三个重要排序算法: 直接插入排序 / 折半插入排序 / 希尔排序
 
- 直接插入排序
-在排序过程中序列的状态如下:
-1|  有序序列L[1...i-1]  |   L[i]   |    无序序列L[i...
+直接插入排序在排序过程中序列的状态如下:
+1|  有序序列L[1...i-1]  |   L[i]   |    无序序列L[i+1...n] ...
                 </div>
             </a>
             <div class="abstract-post-meta">
@@ -367,6 +346,8 @@ Shell排序
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-archive">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
     
     
     
