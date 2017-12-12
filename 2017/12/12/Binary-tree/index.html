@@ -283,10 +283,10 @@
 <ul>
 <li>树中的每个节点至多有m棵子树，至多含有m-1个关键字</li>
 <li>如果节点不是终端节点，那么至少有两颗树，至少一个关键字</li>
-<li>除了根节点外的非叶子节点至少含有<br>$ \left \lceil m/2  \right \rceil $  棵子树</li>
-<li>至少含有<br>$ \left \lceil m/2 \right \rceil - 1 $ 个关键字</li>
+<li>除了根节点外的非叶子节点至少含有<br>$\left \lceil m/2  \right \rceil$  棵子树</li>
+<li>至少含有<br>$\left \lceil m/2 \right \rceil-1$ 个关键字</li>
 <li>所有叶子节点都在同一层，而且实际上这些节点不存在</li>
-<li>B树的所有节点的平衡因子都为0<h4 id="B树的高度（磁盘存取次数）"><a href="#B树的高度（磁盘存取次数）" class="headerlink" title="B树的高度（磁盘存取次数）"></a>B树的高度（磁盘存取次数）</h4>B树的大部分操作所需的存盘次数跟B树的高度成正比<br>对于关键字个数为n的B树，叶子节点即查找不成功的节点为n+1<br>因此<br>$ h \leq log_{ \left \lceil m/2  \right \rceil}(n+1)/2+1 $<h4 id="B树的插入与删除"><a href="#B树的插入与删除" class="headerlink" title="B树的插入与删除"></a>B树的插入与删除</h4>插入先定位插入位置，如果节点不满则插入，如果节点已满，则分裂节点，插入。<br>删除分三个情况：</li>
+<li>B树的所有节点的平衡因子都为0<h4 id="B树的高度（磁盘存取次数）"><a href="#B树的高度（磁盘存取次数）" class="headerlink" title="B树的高度（磁盘存取次数）"></a>B树的高度（磁盘存取次数）</h4>B树的大部分操作所需的存盘次数跟B树的高度成正比<br>对于关键字个数为n的B树，叶子节点即查找不成功的节点为n+1<br>因此<br>$h \leq log_{ \left \lceil m/2  \right \rceil}(n+1)/2+1$<h4 id="B树的插入与删除"><a href="#B树的插入与删除" class="headerlink" title="B树的插入与删除"></a>B树的插入与删除</h4>插入先定位插入位置，如果节点不满则插入，如果节点已满，则分裂节点，插入。<br>删除分三个情况：</li>
 <li>直接删除关键字 直接删掉还是B树</li>
 <li>兄弟够借 直接从兄弟借关键字，生成新节点</li>
 <li>兄弟不够借 不够借则直接从双亲分裂再次合并节点</li>
@@ -376,8 +376,6 @@
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-archive">
     <!-- 在ejs中将archive按照时间排序 -->
-    
-    
     
     
     
