@@ -167,20 +167,16 @@
                         <span>Binary tree  of Data Structure</span>
                     </h2>
                 <div class="abstract-content">
-                     树与二叉树
- 度
-树中一个节点的子节点个数称为该节点的度，树中节点的最大度数称为树的度。
-度大于0的节点称为分支节点(又称未终端节点)；度为0的节点称为叶子节点。
- 节点的深度、高度、层次
-节点层次从树根开始定义，根节点为第一层，他的子节点为第二层，以此类推。
-节点深度是从根节点开始从顶向下逐层累加。
-节点高度是从叶子节点开始从底向上逐层累加。
+                    树与二叉树度树中一个节点的子节点个数称为该节点的度，树中节点的最大度数称为树的度。度大于0的节点称为分支节点(又称未终端节点)；度为0的节点称为叶子节点。
+节点的深度、高度、层次节点层次从树根开始定义，根节点为第一层，他的子节点为第二层，以此类推。  
+节点深度是从根节点开始从顶向下逐层累加。  
+节点高度是从叶子节点开始从底向上逐层累加。  
 树的高度（又称深度）是从树中节点的最大层数。
- 树的性质
-
+树的性质
 树中的节点数等于所有节点的度数加1.
-度为m的树中第i层上至多有mi−1m^{i-1}m​i−1​​个节点
-高度为h的m叉树最多有(mh−1)/(m−1)(m^h-1)/(m-1)(m...
+度为m的树中第i层上至多有$m^{i-1}$个节点
+高度为h的m叉树最多有$(m^h-1)/(m-1)$个节点
+具有n个节点的m叉树的最小高度为:$\l...
                 </div>
             </a>
             <div class="abstract-post-meta">
@@ -208,17 +204,12 @@
                         <span>Graph traversal  of Data Structure</span>
                     </h2>
                 <div class="abstract-content">
-                     图的遍历
-
+                    图的遍历
 广度优先搜索 （Breath-First-Search,BFS）
 深度优先搜索 （Depth-First-Search,DFS）
 
- 常识
-图：Graph (G)
-顶点（节点）：Vertex (V)
-边：Edge (E)
- BFS 广度优先搜索
-1234567891011121314151617181920212223242526272829bool visited[MaxNum];void BFSTraverse(Graph G)&#123;    Queue Q;    for(i=0;i&lt;G.vexnum;++i)&#123; //数组下标初始化        ...
+常识图：Graph (G)顶点（节点）：Vertex (V)边：Edge (E)
+BFS 广度优先搜索1234567891011121314151617181920212223242526272829bool visited[MaxNum];void BFSTraverse(Graph G)&#123;    Queue Q;    for(i=0;i&lt;G.vexnum;++i)&#123; //数组下标初始化        visited[...
                 </div>
             </a>
             <div class="abstract-post-meta">
@@ -246,22 +237,16 @@
                         <span>Search of Data Structure</span>
                     </h2>
                 <div class="abstract-content">
-                     查找
- 查找方法
-
+                    查找查找方法
 顺序查找
 折半查找
 分块查找
 
- 平均查找长度 ASL（Average Search Length  ）
-所有查找过程中进行关键字比较次数的平均值
-数学定义为：ASL=∑i=1nPiCiASL=\sum _{i=1}^n P_i C_iASL=∑​i=1​n​​P​i​​C​i​​
+平均查找长度 ASL（Average Search Length  ）所有查找过程中进行关键字比较次数的平均值数学定义为：$ASL=\sum _{i=1}^n P_i C_i$
 
-n是查找长度，PiP_iP​i​​是查找第i个元素的概率，CiC_iC​i​​是找到第i个元素所需进行比较次数
+n是查找长度，$P_i$是查找第i个元素的概率，$C_i$是找到第i个元素所需进行比较次数
 
- 顺序查找
-适用于无序的表，挨个查找
-123456789typedef struct &#123;    ElemType *elem; //元素存储空间基址    int...
+顺序查找适用于无序的表，挨个查找123456789typedef struct &#123;    ElemType *elem; //元素存储空间基址    int TableLen;//表长&#125;SSTable;int Search_Seq(SSTable ST,...
                 </div>
             </a>
             <div class="abstract-post-meta">
@@ -289,27 +274,20 @@ n是查找长度，PiP_iP​i​​是查找第i个元素的概率，CiC_iC​i�
                         <span>Concept of Data Structure</span>
                     </h2>
                 <div class="abstract-content">
-                     数据结构相关概念及定义
- 数据结构框架
-
+                    数据结构相关概念及定义数据结构框架
 数据结构
-
 逻辑结构
-
 线性结构
-
 线性表、栈、队列
 
 
 非线性结构
-
-树、图、集合
+树、图、集合   
 
 
 
 
 存储结构（存储结构）
-
 顺序存储、链式存储、索引存储、散列存储
 
 
@@ -317,15 +295,13 @@ n是查找长度，PiP_iP​i​​是查找第i个元素的概率，CiC_iC​i�
 
 
 
- 什么是算法
-
+什么是算法
 算法 是对特定问题求解步骤的一种描述,它是指令的有限序列,其中每一条指令都表示一个或多个操作
 
- 算法的5个重要特性
-
+算法的5个重要特性
 有穷性 一个算法必须总是在执行有穷步之后结束,且每一步都可在有穷时间内完成
 确定性 算法中每一条指令必须有确切的含义,读者理解时不会产生二义性,并且在任何条件下,算法只有-唯一的一条执行路径
-可行性 一个算法是能行的,即算法描述的操作...
+可行性 一个算法是能行的,即算法描述的操作都是可以通过已经实现...
                 </div>
             </a>
             <div class="abstract-post-meta">
@@ -353,25 +329,21 @@ n是查找长度，PiP_iP​i​​是查找第i个元素的概率，CiC_iC​i�
                         <span>Sort of Data Structure</span>
                     </h2>
                 <div class="abstract-content">
-                     排序算法
-这里讨论的排序算法都是内排序算法
+                    排序算法这里讨论的排序算法都是内排序算法
 排序分为：
 
 插入排序
-
 直接插入排序
-折半插入排序
+折半插入排序 
 Shell排序
 
 
 交换排序
-
 冒泡排序
 快速排序
 
 
 选择排序
-
 简单选择排序
 堆排序
 
@@ -379,14 +351,12 @@ Shell排序
 归并排序
 基数排序
 
- 插入排序
-插入排序是一种简单直观的排序方法,其基本思想在于每次将一个待排序的记录,按其关键字大小插入到前面已经排好序的子序列中,直到全部记录完成.
+插入排序插入排序是一种简单直观的排序方法,其基本思想在于每次将一个待排序的记录,按其关键字大小插入到前面已经排好序的子序列中,直到全部记录完成.
 
 由插入排序的思想可以引伸出三个重要排序算法: 直接插入排序 / 折半插入排序 / 希尔排序
 
- 直接插入排序
-在排序过程中序列的状态如下:
-1|  有序序列L[1...i-1]  |   L[i]   |    无序序列L[i...
+直接插入排序在排序过程中序列的状态如下:
+1|  有序序列L[1...i-1]  |   L[i]   |    无序序列L[i+1...n] ...
                 </div>
             </a>
             <div class="abstract-post-meta">
@@ -414,15 +384,14 @@ Shell排序
                         <span>Docker-Primer</span>
                     </h2>
                 <div class="abstract-content">
-                     一、 Docker简介
-Docker 是一个开源项目。
+                    一、 Docker简介Docker 是一个开源项目。
 可以把它理解为是一种新兴的超轻量级虚拟化技术。
 传统虚拟化技术需要模拟计算机的一整套硬件出来，而且还要有自己的一套操作系统。
 而 Docker 却不需要，它只需要与主机共享同一个内核，并充分利用 Linux 上内核的“环境隔离方案”来实现轻量级的虚拟化。
 它在一些特定场景下与传统虚拟化技术相比，效率大幅提高，而资源开销却大幅降低。
 Docker 的迁移也是十分方便的，基本上只需要把整个 Docker 目录搬过去即可。
 Docker 使用 服务器-客户端 架构。
-如果想在 Docker 上运行 exe 软件的话，那不用看下去了，左转...
+如果想在 Docker 上运行 exe 软件的话，那不用看下去了，左转找 ...
                 </div>
             </a>
             <div class="abstract-post-meta">
@@ -601,6 +570,18 @@ Docker 使用 服务器-客户端 架构。
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-archive"> Total : 6 </div>
     
     <div class="post-archive">
@@ -646,9 +627,9 @@ Docker 使用 服务器-客户端 架构。
         <div class="sidebar-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name"><a href= "#">Data Structure</a></span>
-    
         <span class="sidebar-tag-name"><a href= "#">docker</a></span>
+    
+        <span class="sidebar-tag-name"><a href= "#">Data Structure</a></span>
     
     </div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
