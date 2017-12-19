@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://blog.geekfan.top/2017/10/23/sort/</loc>
+    
+    <lastmod>2017-12-19T06:58:07.457Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://blog.geekfan.top/2017/12/12/Binary-tree/</loc>
     
     <lastmod>2017-12-12T23:58:26.936Z</lastmod>
@@ -40,13 +47,6 @@
     <loc>http://blog.geekfan.top/about/index.html</loc>
     
     <lastmod>2017-10-24T13:03:20.456Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://blog.geekfan.top/2017/10/23/sort/</loc>
-    
-    <lastmod>2017-10-24T10:36:41.440Z</lastmod>
     
   </url>
   
