@@ -1,0 +1,1133 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Linus Lee">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Linus Lee">
+    <meta name="keywords" content="Funky's NoteBook | Linus Lee">
+    <meta name="description" content="It's Funky's NoteBook">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>Docker-Primer · Funky&#39;s NoteBook</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/gun.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Funky&#39;s NoteBook</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Docker-Primer</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Funky's NoteBook</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Docker-Primer
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">7,591</span> / Reading time: <span class="post-count">30 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2017/10/20</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="一、-Docker简介"><a href="#一、-Docker简介" class="headerlink" title="一、 Docker简介"></a>一、 Docker简介</h2><p>Docker 是一个开源项目。</p>
+<p>可以把它理解为是一种新兴的超轻量级虚拟化技术。</p>
+<p>传统虚拟化技术需要模拟计算机的一整套硬件出来，而且还要有自己的一套操作系统。</p>
+<p>而 Docker 却不需要，它只需要与主机共享同一个内核，并充分利用 Linux 上内核的“环境隔离方案”来实现轻量级的虚拟化。</p>
+<p>它在一些特定场景下与传统虚拟化技术相比，效率大幅提高，而资源开销却大幅降低。</p>
+<p>Docker 的迁移也是十分方便的，基本上只需要把整个 Docker 目录搬过去即可。</p>
+<p>Docker 使用 服务器-客户端 架构。</p>
+<p>如果想在 Docker 上运行 exe 软件的话，那不用看下去了，左转找 KVM 去吧。</p>
+<h2 id="二、理解-Docker-的结构"><a href="#二、理解-Docker-的结构" class="headerlink" title="二、理解 Docker 的结构"></a>二、理解 Docker 的结构</h2><p>四个基本结构：容器（Container）、镜像（Image）、仓库（Repository）、注册点（Registry）。</p>
+<p>看着一脸懵逼对吧！是的，这几个概念确实比较难理解。但是我用类比法还是把它搞明白了。</p>
+<p>先想象一个无盘系统是怎么样的，下面我们用一般的无盘系统来类比。</p>
+<h3 id="2-1-镜像"><a href="#2-1-镜像" class="headerlink" title="2.1 镜像"></a>2.1 镜像</h3><p>无盘服务器硬盘内有各种软件。比如说有 Win 7，还有各类应用软件。</p>
+<p>而这些软件是相互依赖的。比如微信需要装 Win 7 系统才能运行。</p>
+<p>各个无盘计算机（容器）想要运行什么软件可以直接告诉无盘服务器。</p>
+<p>无盘服务器会准备好一切所需软件，打成一个包（镜像），然后推送给无盘计算机。</p>
+<p>假设整个无盘系统中只有两种包。一种包是 Win 7 &amp; QQ，另一种包是 Win 7 &amp; 微信。</p>
+<p>但是无论这两种包有多少个，都不会占用额外的硬盘空间（利用 Union mount 实现镜像分层）。只有 Win 7（某个镜像层） 、QQ、微信 这三个软件会占用硬盘空间。</p>
+<p>一个镜像是这样被标识的：&lt;仓库名&gt;:&lt;标签名（版本号）&gt; ，例如nginx:latest。如果不指定标签，默认为 latest。</p>
+<h3 id="2-2-容器"><a href="#2-2-容器" class="headerlink" title="2.2 容器"></a>2.2 容器</h3><p>相当于无盘计算机。</p>
+<p>无盘计算机启动（容器启动）时，要从无盘服务器上拉取所需文件。如果无盘计算机对硬盘有写入操作的话，写入的数据将保存到无盘服务器的缓存区（容器存储层）。</p>
+<p>无盘计算机关机（容器停止）时，如果没有额外设置，所有保存到无盘服务器的缓存区的文件（容器存储层）都将丢失。除非另外保存在 U 盘等外接设备（数据卷）中。</p>
+<p>各个无盘计算机之间的运行互不干扰。（利用 cgroups 、namespace 实现隔离）</p>
+<h3 id="2-3-仓库"><a href="#2-3-仓库" class="headerlink" title="2.3 仓库"></a>2.3 仓库</h3><p>相当于同一个软件所有版本的集合。</p>
+<h3 id="2-4-注册点"><a href="#2-4-注册点" class="headerlink" title="2.4 注册点"></a>2.4 注册点</h3><p>相当于一个应用商店。</p>
+<p>无盘服务器会来这里查找并下载软件。</p>
+<h2 id="三、Docker安装"><a href="#三、Docker安装" class="headerlink" title="三、Docker安装"></a>三、Docker安装</h2><h3 id="3-1-安装"><a href="#3-1-安装" class="headerlink" title="3.1 安装"></a>3.1 安装</h3><p>Docker 有好几个版本，社区版（Community Edition）、企业基础版（Enterprise Edition Basic）、企业标准版（Enterprise Edition Standard）、企业高级版（Enterprise Edition Advanced）。对于我们一般学习使用而言，使用社区版就已足够，所以记住CE就可以了。</p>
+<p>其次，我们会看到一堆平台特定的版本， <code>Docker for Mac</code>、<code>Docker for Windows</code>、 <code>Docker Toolbox</code> 、 <code>Docker for Azure</code> 、<code>Docker for AWS</code> 等等，还有一堆不同 <code>Linux</code> 的发行版。那我们应该用哪个？其实不难选择，这都是平台特定的东西嘛，选择自己平台就完了：</p>
+<ul>
+<li>macOS 就选择 Docker for Mac；<ul>
+<li>阿里云（未及时更新）：  <a href="https://mirrors.aliyun.com/docker-toolbox/mac/docker-for-mac/stable/" target="_blank" rel="noopener">https://mirrors.aliyun.com/docker-toolbox/mac/docker-for-mac/stable/</a></li>
+</ul>
+</li>
+<li>Linux 就选择自己平台的 Docker 源：<ul>
+<li>Ubuntu: <a href="https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/" target="_blank" rel="noopener">https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/</a></li>
+<li>Debian: <a href="https://docs.docker.com/engine/installation/linux/docker-ce/debian/" target="_blank" rel="noopener">https://docs.docker.com/engine/installation/linux/docker-ce/debian/</a></li>
+<li>CentOS: <a href="https://docs.docker.com/engine/installation/linux/docker-ce/centos/" target="_blank" rel="noopener">https://docs.docker.com/engine/installation/linux/docker-ce/centos/</a></li>
+<li>Fedora: <a href="https://docs.docker.com/engine/installation/linux/docker-ce/fedora/" target="_blank" rel="noopener">https://docs.docker.com/engine/installation/linux/docker-ce/fedora/</a></li>
+</ul>
+</li>
+<li>Windows 要麻烦些：<ul>
+<li>如果是 Windows 10 专业版、企业版、教育版，并且版本在 <code>10586</code> 以后，并且不打算在 Docker 运行同时再运行其它虚拟机的情况下，可以装 <code>Docker for Windows</code> 。 <ul>
+<li>阿里云（未及时更新）：<a href="https://mirrors.aliyun.com/docker-toolbox/windows/docker-for-windows/stable/" target="_blank" rel="noopener">https://mirrors.aliyun.com/docker-toolbox/windows/docker-for-windows/stable/</a></li>
+</ul>
+</li>
+<li>其它情况都装 Docker Toolbox<ul>
+<li>阿里云：<a href="https://mirrors.aliyun.com/docker-toolbox/windows/docker-toolbox/" target="_blank" rel="noopener">https://mirrors.aliyun.com/docker-toolbox/windows/docker-toolbox/</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>如果是特定云服务平台，可以考虑特定服务平台的版本（当然，这不是必须）：<ul>
+<li>AWS：Docker for AWS</li>
+<li>Azure：Docker for Azure</li>
+</ul>
+</li>
+</ul>
+<p>最后是发布通道，从今年初开始，也就是从 <code>1.13</code> 以后，Docker 使用了新的版本号规则，将采用类似 Ubuntu 那种 <code>&lt;年&gt;.&lt;月&gt;</code> 的形式，比如 <code>17.03</code> , <code>17.06</code> 等。并且，将发布通道分为前沿版本(Edge)和稳定版本(Stable)。前沿通道将基本每个月发布一个版本，而稳定通道将基本每3个月发布一个版本。这样 Docker 的发布将有规律可寻。对于喜欢尝鲜的可以选择前沿版本，对于需要稳定的，可以选择稳定版本。</p>
+<blockquote>
+<p>这里面需要注意的是，在参考官方安装文档 (中文)配置 Linux 源的时候，如果是国内服务器，要将其中的 <code>https://download.docker.com/linux/</code> 替换为   <code>https://mirrors.aliyun.com/docker-ce/linux/</code>。</p>
+</blockquote>
+<p>比如，文档如果要求执行下面的命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ sudo add-apt-repository \</span><br><span class="line">   <span class="string">"deb [arch=amd64] https://download.docker.com/linux/ubuntu \</span></span><br><span class="line"><span class="string">   <span class="variable">$(lsb_release -cs)</span> \</span></span><br><span class="line"><span class="string">   stable"</span></span><br></pre></td></tr></table></figure>
+<p>那么就替换为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ sudo add-apt-repository \</span><br><span class="line">   <span class="string">"deb [arch=amd64] https://mirrors.aliyun.com/docker-ce/linux/ubuntu \</span></span><br><span class="line"><span class="string">   <span class="variable">$(lsb_release -cs)</span> \</span></span><br><span class="line"><span class="string">   stable"</span></span><br></pre></td></tr></table></figure>
+<p>这样安装 <code>Docker</code>就会使用阿里云的软件源，而不需要翻墙了。</p>
+<blockquote>
+<p>（注：这不是加速器，不要搞错了，加速器依旧需要配！）</p>
+</blockquote>
+<h4 id="是直接用-yum-apt-get-安装-Docker-吗？"><a href="#是直接用-yum-apt-get-安装-Docker-吗？" class="headerlink" title="是直接用 yum / apt-get 安装 Docker 吗？"></a>是直接用 yum / apt-get 安装 Docker 吗？</h4><h4 id="很多人问到-docker-docker-io-docker-engine-甚至-lxc-docker-都有什么区别？"><a href="#很多人问到-docker-docker-io-docker-engine-甚至-lxc-docker-都有什么区别？" class="headerlink" title="很多人问到 docker, docker.io, docker-engine 甚至 lxc-docker 都有什么区别？"></a>很多人问到 docker, docker.io, docker-engine 甚至 lxc-docker 都有什么区别？</h4><p>其中，RHEL/CentOS 软件源中的 Docker 包名为 docker；Ubuntu 软件源中的 Docker 包名为 docker.io；而很古老的 Docker 源中 Docker 也曾叫做 lxc-docker。这些都是非常老旧的 Docker 版本，并且基本不会更新到最新的版本，而对于使用 Docker 而言，使用最新版本非常重要。另外，17.04 以后，包名从 docker-engine 改为 docker-ce，因此从现在开始安装，应该都使用 docker-ce 这个包。</p>
+<blockquote>
+<p>不要使用操作系统提供的软件源中的 Docker 包，去使用 Docker 官方源的包。</p>
+</blockquote>
+<h4 id="正确的安装方法有两种："><a href="#正确的安装方法有两种：" class="headerlink" title="正确的安装方法有两种："></a>正确的安装方法有两种：</h4><p>一种是参考官方安装文档去配置 apt 或者 yum 的源；<br>另一种则是使用官方提供的安装脚本快速安装。<br>官方文档对配置源的方法已经有很详细的讲解，这里就不赘述，需要的直接去看官方文档。这里只介绍使用官方的脚本快速安装：</p>
+<ul>
+<li>17.04 及以后的版本 </li>
+</ul>
+<p>从 17.04 以后，可以用下面的命令安装。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export CHANNEL=stable</span><br><span class="line">curl -fsSL https://get.docker.com/ | sh -s -- --mirror Aliyun</span><br></pre></td></tr></table></figure>
+<p>这里使用的是官方脚本安装，通过环境变量指定安装通道为 stable，（如果喜欢尝鲜可以改为 edge, test），并且指定使用阿里云的源(apt/yum)来安装 Docker CE 版本。</p>
+<ul>
+<li>17.03 及以前的版本</li>
+</ul>
+<p>早期的版本可以使用阿里云或者 DaoCloud 老的脚本安装：</p>
+<p>使用阿里云的安装脚本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL http://acs-public-mirror.oss-cn-hangzhou.aliyuncs.com/docker-engine/internet | sh -</span><br></pre></td></tr></table></figure>
+<p>使用DaoCloud的Docker安装脚本：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL https://get.daocloud.io/docker | sh</span><br></pre></td></tr></table></figure></p>
+<h4 id="不是都已经发布-Docker-17-07-了么？我怎么升级到最新还是-17-05-呀？"><a href="#不是都已经发布-Docker-17-07-了么？我怎么升级到最新还是-17-05-呀？" class="headerlink" title="不是都已经发布 Docker 17.07 了么？我怎么升级到最新还是 17.05 呀？"></a>不是都已经发布 Docker 17.07 了么？我怎么升级到最新还是 17.05 呀？</h4><p>从 17.04 以后，Docker 的源的结构以及包名都进行了调整，因此如果你你还使用的是旧的源，那么需要参照官方文档，更新源的地址为新的源。前面的问答中已经给出了链接和替代用的阿里云源镜像地址，参照修改（apt/yum）源。</p>
+<p>修改好后，卸载旧的 docker-engine，安装新的 docker-ce 即可。</p>
+<h3 id="3-2-配置加速器"><a href="#3-2-配置加速器" class="headerlink" title="3.2 配置加速器"></a>3.2 配置加速器</h3><p>首先，要“感谢”伟大的墙及其亲属。</p>
+<p>然后，我们可以使用 Docker 镜像加速器来解决这个问题，加速器就是镜像、代理的概念。国内有不少机构提供了免费的加速器以方便大家使用，这里列出一些常用的加速器服务：</p>
+<ul>
+<li><p>Docker 官方的中国镜像加速器：从2017年6月9日起，Docker 官方提供了在中国的加速器，以解决墙的问题。不用注册，直接使用加速器地址：<code>https://registry.docker-cn.com</code> 即可。<br>中国科技大学的镜像加速器：中科大的加速器不用注册，直接使用地址 <code>https://docker.mirrors.ustc.edu.cn/</code> 配置加速器即可。进一步的信息可以访问：<code>http://mirrors.ustc.edu.cn/help/dockerhub.html?highlight=docker</code></p>
+</li>
+<li><p>阿里云加速器：注册阿里云开发账户(免费的)后，访问这个链接就可以看到加速器地址： <code>https://cr.console.aliyun.com/#/accelerator</code></p>
+</li>
+<li><p>DaoCloud 加速器：注册 DaoCloud 账户(支持微信登录)，然后访问： <code>https://www.daocloud.io/mirror#accelerator-doc</code></p>
+</li>
+</ul>
+<p>注意：不要使用加速器网站所给的配置脚本，容易导致错误。我们只需获取其提供的加速器地址即可。</p>
+<h4 id="Ubuntu-14-04-配置加速器（或其它使用-Upstart-的系统）"><a href="#Ubuntu-14-04-配置加速器（或其它使用-Upstart-的系统）" class="headerlink" title="Ubuntu 14.04 配置加速器（或其它使用 Upstart 的系统）"></a>Ubuntu 14.04 配置加速器（或其它使用 Upstart 的系统）</h4><p>Ubuntu 14.04 是使用 upstart 进行系统初始化的，对于这类系统，可以用通过编辑配置文件的方法来配置加速器。</p>
+<p>如果是 Ubuntu 14.04，那么编辑 <code>/etc/default/docker</code> ，在里面寻找 DOCKER_OPTS 环境变量设置的这一行，在其后添加  <code>-–registry-mirror=&lt;加速器地址&gt;</code>。如果发现该行已被注释，或者不存在该行，那么新添一行即可。</p>
+<p>比如，在使用官方源安装了 <code>docker-engine</code> 后，会建立一个默认的 <code>/etc/default/docker</code>，其中相关 <code>DOCKER_OPTS</code> 的行是这样的：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Use DOCKER_OPTS to modify the daemon startup options.</span></span><br><span class="line"><span class="comment">#DOCKER_OPTS="--dns 8.8.8.8 --dns 8.8.4.4"</span></span><br></pre></td></tr></table></figure>
+<p>假设我们的加速器地址为 <code>https://registry.docker-cn.com</code>，我们添加一行配置，将其改为：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Use DOCKER_OPTS to modify the daemon startup options.</span></span><br><span class="line"><span class="comment">#DOCKER_OPTS="--dns 8.8.8.8 --dns 8.8.4.4"</span></span><br><span class="line">DOCKER_OPTS=<span class="string">"--registry-mirror=https://registry.docker-cn.com"</span></span><br></pre></td></tr></table></figure></p>
+<p>保存文件后，重启 Docker 引擎：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service docker restart</span><br><span class="line">docker stop/waiting</span><br><span class="line">docker start/running, process 3620</span><br></pre></td></tr></table></figure>
+<p>重启成功后，确认一下配置是否已经生效：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ps -ef | grep dockerd</span><br><span class="line">root      3620     1  0 04:26 ?        00:00:00 /usr/bin/dockerd --registry-mirror=https://registry.docker-cn.com --raw-logs</span><br></pre></td></tr></table></figure></p>
+<p>如果配置成功，生效后这里就会看到自己所配置的加速器的内容。</p>
+<h4 id="Ubuntu-16-04-或-CentOS-7-配置加速器（或其它使用-Systemd-的系统）"><a href="#Ubuntu-16-04-或-CentOS-7-配置加速器（或其它使用-Systemd-的系统）" class="headerlink" title="Ubuntu 16.04 或 CentOS 7 配置加速器（或其它使用 Systemd 的系统）"></a>Ubuntu 16.04 或 CentOS 7 配置加速器（或其它使用 Systemd 的系统）</h4><p>Ubuntu 16.04 和 CentOS 7 这类系统都已经开始使用 systemd 进行系统初始化管理了，对于使用 systemd 的系统，应该通过编辑服务配置文件 docker.service 来进行加速器的配置。</p>
+<p>在启用服务后<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl <span class="built_in">enable</span> docker</span><br></pre></td></tr></table></figure></p>
+<p>可以直接编辑 <code>/etc/systemd/system/multi-user.target.wants/docker.service</code> 文件来进行配置。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi /etc/systemd/system/multi-user.target.wants/docker.service</span><br></pre></td></tr></table></figure></p>
+<p>在文件中找到 ExecStart= 这一行，并且在其行尾添加上所需的配置。假设我们的加速器地址为 <code>https://registry.docker-cn.com</code> ，那么可以这样配置：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ExecStart=/usr/bin/dockerd --registry-mirror=https://registry.docker-cn.com</span><br></pre></td></tr></table></figure></p>
+<p>更多请参考官方文档：<br><code>https://docs.docker-cn.com/engine/installation/linux/docker-ce/ubuntu/</code></p>
+<h2 id="四、运行第一个容器"><a href="#四、运行第一个容器" class="headerlink" title="四、运行第一个容器"></a>四、运行第一个容器</h2><h3 id="4-1-运行-Helloworld-容器"><a href="#4-1-运行-Helloworld-容器" class="headerlink" title="4.1 运行 Helloworld 容器"></a>4.1 运行 Helloworld 容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run hello-world</span><br></pre></td></tr></table></figure>
+<h3 id="4-2-过程解析"><a href="#4-2-过程解析" class="headerlink" title="4.2 过程解析"></a>4.2 过程解析</h3><ul>
+<li>Docker 客户端向 Docker 守护进程发出运行命令。</li>
+<li>Docker 守护进程发现没有 hello-world 这个镜像，于是从仓库中寻找并下载它。</li>
+<li>下载完毕之后，Docker 守护进程以 hello-world 这个镜像创建一个新的容器。</li>
+<li>容器向 Docker 守护进程输出内容之后，容器停止。Docker 守护进程把输出的内容传递给 Docker 客户端。</li>
+</ul>
+<h2 id="五、Docker的基本操作"><a href="#五、Docker的基本操作" class="headerlink" title="五、Docker的基本操作"></a>五、Docker的基本操作</h2><p>下面以创建一个 Ubuntu 系统的容器为例来了解一下 Docker 的基本操作。</p>
+<p>为了方便理解，我把命令完整地写出来。</p>
+<p>本节的命令参数只有最基本的参数，需要其他设置（如数据卷）的话会在后面讲到。</p>
+<blockquote>
+<p>PS:   Docker 命令支持自动补全</p>
+</blockquote>
+<h3 id="5-1-常用格式"><a href="#5-1-常用格式" class="headerlink" title="5.1 常用格式"></a>5.1 常用格式</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker image pull [&lt;注册点名&gt;/]&lt;仓库名&gt;[:&lt;标签名（版本号）&gt;]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>若不指定注册点名，将使用默认的 library/。</p>
+</blockquote>
+<blockquote>
+<p>若不指定标签名，将使用默认的 latest。</p>
+</blockquote>
+<p>例如<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker image pull ubuntu</span><br></pre></td></tr></table></figure></p>
+<p>执行结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Using default tag: latest</span><br><span class="line">latest: Pulling from library/ubuntu</span><br><span class="line">d5c6f90da05d: Pull complete </span><br><span class="line">1300883d87d5: Pull complete </span><br><span class="line">c220aa3cfc1b: Pull complete </span><br><span class="line">2e9398f099dc: Pull complete </span><br><span class="line">dc27a084064f: Pull complete </span><br><span class="line">Digest: sha256:34471448724419596ca4e890496d375801de21b0e67b81a77fd6155ce001edad</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> ubuntu:latest</span><br></pre></td></tr></table></figure></p>
+<p>可以明显地看出，镜像被分为了多个块。523315523315</p>
+<h3 id="5-2-以某个镜像建立一个容器"><a href="#5-2-以某个镜像建立一个容器" class="headerlink" title="5.2 以某个镜像建立一个容器"></a>5.2 以某个镜像建立一个容器</h3><p>常用格式<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container create --interactive --tty [--name=&lt;容器名&gt;] &lt;镜像名&gt; [要运行的程序和参数]</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><p>如果不指定容器名，系统会自动为之分配一个无重复的容器名。</p>
+</li>
+<li><p>如果本地不存在指定的镜像，会自动从注册点中拉取。</p>
+</li>
+</ul>
+<blockquote>
+<p>–interactive 表示持续为容器打开 stdin 以便随时接受操作。</p>
+</blockquote>
+<blockquote>
+<p>–tty 表示为容器分配一个伪终端，这样我们才可以方便的操作容器。</p>
+</blockquote>
+<p>要运行的程序和参数 指定容器启动后要运行镜像里的哪一个程序。这个程序运行结束后，容器也会停止。如果不指定，则使用镜像的默认值。</p>
+<p>例如</p>
+<p>以 ubuntu 为镜像，建立一个名为 ubuntu_test 的容器<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container create --interactive --tty --name=ubuntu_test ubuntu</span><br></pre></td></tr></table></figure></p>
+<p>执行结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">46cc818c92f0780ccd89811c12906c4527b554d18a61e72b0b2337b663ebab5f</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>这是自动生成的容器唯一长 ID。</p>
+</blockquote>
+<h3 id="5-3-启动一个容器"><a href="#5-3-启动一个容器" class="headerlink" title="5.3 启动一个容器"></a>5.3 启动一个容器</h3><p>常用格式<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container start &lt;容器名&gt; [容器名] [容器名] ...</span><br></pre></td></tr></table></figure></p>
+<p>可同时启动多个容器。</p>
+<p>例如</p>
+<p>启动刚才创建的 ubuntu_test 容器。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container start ubuntu_test</span><br></pre></td></tr></table></figure></p>
+<p>执行结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ubuntu_test</span><br></pre></td></tr></table></figure></p>
+<p>返回容器名称，说明启动成功。</p>
+<h3 id="5-4-查看容器信息"><a href="#5-4-查看容器信息" class="headerlink" title="5.4 查看容器信息"></a>5.4 查看容器信息</h3><p>常用格式<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container ls [--all] [--no-trunc]</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>如果不加 –all 选项，则只显示运行中的容器。</li>
+</ul>
+<blockquote>
+<p>–no-trunc 表示完整显示容器的长 ID （形如 7.2 中命令的执行结果）。为了方便查看，一般不需要加此选项。</p>
+</blockquote>
+<p>例如</p>
+<p>查看本机所有容器的状态。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container ls --all</span><br></pre></td></tr></table></figure></p>
+<p>执行结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                      PORTS               NAMES</span><br><span class="line"><span class="comment">#&lt;容器ID&gt;         &lt;镜像名&gt;               &lt;命令参数&gt;          &lt;创建时间&gt;          &lt;状态&gt;                        &lt;打开的端口&gt;         &lt;容器名称&gt;</span></span><br><span class="line">d4bc3be9148d        hello-world         <span class="string">"/hello"</span>            5 hours ago         Exited (0) 5 hours ago                          practical_rosalind</span><br><span class="line">46cc818c92f0        ubuntu              <span class="string">"/bin/bash"</span>         3 hours ago         Up 2 minutes                                    ubuntu_test</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，除了刚创建的 ubuntu_test 容器之外，还有一个名为 practical_rosalind 容器。practical_rosalind 这个容器正是刚才运行 docker run hello-world 时生成的。</p>
+<h3 id="5-5-操作一个容器-amp-容器内外进程简析"><a href="#5-5-操作一个容器-amp-容器内外进程简析" class="headerlink" title="5.5 操作一个容器 &amp; 容器内外进程简析"></a>5.5 操作一个容器 &amp; 容器内外进程简析</h3><h4 id="5-5-1-操作一个容器"><a href="#5-5-1-操作一个容器" class="headerlink" title="5.5.1 操作一个容器"></a>5.5.1 操作一个容器</h4><p>常用格式<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container attach &lt;容器名&gt;</span><br></pre></td></tr></table></figure></p>
+<p>例如<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container attach ubuntu_test</span><br></pre></td></tr></table></figure></p>
+<p>执行之后按几下回车，如果出现类似 root@46cc818c92f0:/# 的提示符，那说明您已经在容器内操作了。</p>
+<p>我们来查看下系统的版本。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">uname -a</span><br><span class="line"></span><br><span class="line">Linux 46cc818c92f0 3.10.0-514.26.2.el7.x86_64 <span class="comment">#1 SMP Tue Jul 4 15:04:05 UTC 2017 x86_64 x86_64 x86_64 GNU/Linux</span></span><br></pre></td></tr></table></figure></p>
+<p>好像看不出是 Ubuntu 系统，没关系，我们再执行下以下命令。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/os-release</span><br><span class="line"></span><br><span class="line">NAME=<span class="string">"Ubuntu"</span></span><br><span class="line">VERSION=<span class="string">"16.04.3 LTS (Xenial Xerus)"</span></span><br><span class="line">ID=ubuntu</span><br><span class="line">ID_LIKE=debian</span><br><span class="line">PRETTY_NAME=<span class="string">"Ubuntu 16.04.3 LTS"</span></span><br><span class="line">VERSION_ID=<span class="string">"16.04"</span></span><br><span class="line">HOME_URL=<span class="string">"http://www.ubuntu.com/"</span></span><br><span class="line">SUPPORT_URL=<span class="string">"http://help.ubuntu.com/"</span></span><br><span class="line">BUG_REPORT_URL=<span class="string">"http://bugs.launchpad.net/ubuntu/"</span></span><br><span class="line">VERSION_CODENAME=xenial</span><br><span class="line">UBUNTU_CODENAME=xenial</span><br></pre></td></tr></table></figure></p>
+<p>好，已经确定了是在虚拟的 Ubuntu 系统中操作了！我们再来看一下容器内都有什么进程吧。</p>
+<h4 id="5-5-2-容器内进程简析"><a href="#5-5-2-容器内进程简析" class="headerlink" title="5.5.2 容器内进程简析"></a>5.5.2 容器内进程简析</h4><p>在容器内执行以下命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps aux</span><br></pre></td></tr></table></figure></p>
+<p>执行结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">USER PID %CPU %MEM VSZ  RSS TTY STAT START  TIME COMMAND</span><br><span class="line">root 1 0.0 0.0 18304 2072 pts/0 Ss  05:19  0:00 /bin/bash</span><br><span class="line">root 229 0.0 0.0 34416 1436 pts/0 R+  07:27  0:00 ps aux</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，容器中目前只存在 bash 和刚开启的 ps 这两个进程，而且 bash 的 PID 为 1 ！</p>
+<p>这说明了容器处在与实体机不同的 namespace 中，容器看不到实体机的进程。</p>
+<p>容器进程数目与传统虚拟机的进程数目相比大幅减少了，所以说容器的效率非常高，启动基本上是毫秒级的！</p>
+<h4 id="5-5-3-容器外进程简析"><a href="#5-5-3-容器外进程简析" class="headerlink" title="5.5.3 容器外进程简析"></a>5.5.3 容器外进程简析</h4><p>实体机可以看到容器内的进程吗？答案是可以的。</p>
+<p>我们来看下实体机上的进程树。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">systemd─┬─ModemManager───2*[&#123;ModemManager&#125;</span><br><span class="line">        ├─dockerd─┬─docker-containe─┬─docker-containe─┬─bash</span><br><span class="line">        │         │                 │                 └─8*[&#123;docker-containe&#125;]</span><br><span class="line">        │         │                 └─12*[&#123;docker-containe&#125;]</span><br><span class="line">        │         └─11*[&#123;dockerd&#125;]</span><br><span class="line"><span class="comment">#无关部分已省略</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看出，bash 属于 dockerd 的子进程。</p>
+<p>这说明了容器处在实体机的子 namespace 中，同时需要依赖实体机中的进程才可以运行。</p>
+<p>所以，容器并不是完全的“虚拟化”。</p>
+<h3 id="5-6-从容器中脱开"><a href="#5-6-从容器中脱开" class="headerlink" title="5.6 从容器中脱开"></a>5.6 从容器中脱开</h3><p>前面 5.2 我们已经说过了：容器启动时会运行镜像里指定的应用程序，而这个程序运行结束后，容器也会停止。</p>
+<p>现在这个容器启动时运行了镜像默认设定的的 /bin/bash ，所以当 /bin/bash 关闭时，容器就会跟着关闭。</p>
+<p>如果直接按 Ctrl + D 退出容器操作的话，bash 就会退出而使整个容器停止运行，我们显然不希望这样。</p>
+<p>正确的脱开方法是 先按 Ctrl+P 再按 Q （跟 Screen 的操作方法非常相似）。</p>
+<p>执行完该操作之后，如果出现 read escape sequence ，就说明已经从容器中脱开了。</p>
+<h3 id="5-7-停止一个容器"><a href="#5-7-停止一个容器" class="headerlink" title="5.7 停止一个容器"></a>5.7 停止一个容器</h3><p>常用格式<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container stop &lt;容器名&gt;</span><br></pre></td></tr></table></figure></p>
+<p>执行完以上命令之后，实体机将向容器内所有的进程发送 SIGTERM 信号，然后给 10 秒的时间，让容器内的进程可以“优雅地”结束。</p>
+<p>如果容器内的进程在 10 秒内没有结束，则实体机向未结束的进程发送 SIGKILL 信号来强制结束。</p>
+<p>如果想立即强制结束容器的话把 stop 换成 kill 就行了。</p>
+<p>例如<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container stop ubuntu_test</span><br></pre></td></tr></table></figure></p>
+<p>执行结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ubuntu_test</span><br></pre></td></tr></table></figure></p>
+<p>返回容器名称，说明容器已经停止。</p>
+<h3 id="5-8-删除一个容器"><a href="#5-8-删除一个容器" class="headerlink" title="5.8 删除一个容器"></a>5.8 删除一个容器</h3><p>常用格式<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container rm &lt;容器名&gt;</span><br></pre></td></tr></table></figure></p>
+<p>请注意：运行中的容器不能被删除。</p>
+<p>例如</p>
+<p>我们把刚才第一个使用 hello-world 镜像的容器给删掉，容器名从上面 5.4 中得到。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container rm practical_rosalind</span><br></pre></td></tr></table></figure></p>
+<p>执行结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">practical_rosalind</span><br></pre></td></tr></table></figure></p>
+<p>返回容器名称，说明容器已经删除。</p>
+<h3 id="5-9-查看镜像信息"><a href="#5-9-查看镜像信息" class="headerlink" title="5.9 查看镜像信息"></a>5.9 查看镜像信息</h3><p>常用格式<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images [--all]</span><br></pre></td></tr></table></figure></p>
+<p>没有加 -all 的话将只显示顶层镜像，加了 -all 的话除了显示顶层镜像之外还会显示中间层（依赖）镜像。</p>
+<p>例如<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure></p>
+<p>执行结果</p>
+<p>这里我们顺便回顾一下，一个镜像是这样标识的： &lt;仓库名&gt;:&lt;标签名（版本号）&gt; 。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE</span><br><span class="line"><span class="comment">#&lt;所在仓库&gt;        &lt;标签&gt;               &lt;镜像 ID&gt;            &lt;创建时间&gt;          &lt;大小&gt;</span></span><br><span class="line">ubuntu              latest              ccc7a11d65b1        4 weeks ago         120MB</span><br><span class="line">hello-world         latest              1815c82652c0        2 months ago        1.84kB</span><br></pre></td></tr></table></figure></p>
+<h3 id="5-10-删除一个镜像"><a href="#5-10-删除一个镜像" class="headerlink" title="5.10 删除一个镜像"></a>5.10 删除一个镜像</h3><p>常用格式<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker image rm &lt;镜像名&gt;</span><br></pre></td></tr></table></figure></p>
+<p>请注意：如果有基于要删除镜像的容器，则该镜像不能被删除。</p>
+<p>例如</p>
+<p>我们把刚才第一个下载的 hello-world:latest 镜像给删掉。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker image rm hello-world:latest</span><br></pre></td></tr></table></figure></p>
+<p>执行结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Untagged: hello-world:latest</span><br><span class="line">Untagged: hello-world@sha256:f3b3b28a45160805bb16542c9531888519430e9e6d6ffc09d72261b0d26ff74f</span><br><span class="line">Deleted: sha256:1815c82652c03bfd8644afda26fb184f2ed891d921b20a0703b46768f9755c57</span><br><span class="line">Deleted: sha256:45761469c965421a92a69cc50e92c01e0cfa94fe026cdd1233445ea00e96289a</span><br></pre></td></tr></table></figure></p>
+<p>镜像已经删除。</p>
+<h3 id="5-11-使用一次性容器（推荐用于测试或开发环境）"><a href="#5-11-使用一次性容器（推荐用于测试或开发环境）" class="headerlink" title="5.11 使用一次性容器（推荐用于测试或开发环境）"></a>5.11 使用一次性容器（推荐用于测试或开发环境）</h3><p>上述步骤目的其实是为了让大家更好地理解 Docker 的结构。</p>
+<p>我认为 Docker 有一个缺点，那就是容器一旦创建完成之后，想要修改配置就有点麻烦。而在测试或开发环境中，经常需要修改容器的配置。</p>
+<p>好在，容器非常轻，完全可以做到“用时创建、用完即删”！</p>
+<p>所以，我还是推荐大家使用以下命令，来做到容器创建、启动、删除三合一。</p>
+<p>常用格式<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container run --rm [--detach] --interactive --tty [--name=&lt;容器名&gt;] &lt;镜像名&gt; [要运行的程序和参数]</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>–rm 表示容器停止之后删除容器。</p>
+</blockquote>
+<blockquote>
+<p>–detach 表示容器启动之后不进入容器内操作。</p>
+</blockquote>
+<ul>
+<li>其他选项请参考 5.2。</li>
+</ul>
+<p>执行完该命令之后，容器会自动创建然后启动。如果没有加入 –detach 选项，容器启动完成后会直接进入到容器中操作（可随时脱开）。</p>
+<p>而容器停止之后，容器就会马上被删除，非常方便。</p>
+<p>下文均使用一次性容器。</p>
+<h3 id="5-12-配置容器的自重启（推荐用于生产环境）"><a href="#5-12-配置容器的自重启（推荐用于生产环境）" class="headerlink" title="5.12 配置容器的自重启（推荐用于生产环境）"></a>5.12 配置容器的自重启（推荐用于生产环境）</h3><p>常用格式</p>
+<p>在 5.2 或 5.11 的 –tty 后面插入如下格式的内容：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--restart on-failure|unless-stopped|always</span><br></pre></td></tr></table></figure></p>
+<p>有三种自重启方式。</p>
+<blockquote>
+<p>on-failure 表示容器停止时，若出现错误则自动重启（进程返回值不为 0）。在 Docker 服务重启时，不能自动重启。</p>
+</blockquote>
+<blockquote>
+<p>unless-stopped 表示容器停止时，若没有出现错误则自动重启（进程返回值为 0）。在 Docker 服务重启时，通常可以自动重启。</p>
+</blockquote>
+<blockquote>
+<p>always 表示一旦容器停止，都将自动重启。在 Docker 服务重启时，可以自动重启。</p>
+</blockquote>
+<ul>
+<li><p>请注意，如果执行了 docker container stop 或者 docker container kill 命令，容器自重启将失效。</p>
+</li>
+<li><p>–restart 不能和 –rm 同时使用，也就是说不适用于一次性容器。</p>
+</li>
+</ul>
+<h3 id="5-13-查看容器的详细配置信息"><a href="#5-13-查看容器的详细配置信息" class="headerlink" title="5.13 查看容器的详细配置信息"></a>5.13 查看容器的详细配置信息</h3><p>把容器所有配置参数以 json 格式显示出来，这里只做了解。</p>
+<p>常用格式<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container inspect &lt;容器名&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="5-14-查看镜像的详细信息"><a href="#5-14-查看镜像的详细信息" class="headerlink" title="5.14 查看镜像的详细信息"></a>5.14 查看镜像的详细信息</h3><p>把镜像所有参数以 json 格式显示出来，这里只做了解。</p>
+<p>常用格式<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker image inspect &lt;镜像名&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="5-15-快速删除所有容器"><a href="#5-15-快速删除所有容器" class="headerlink" title="5.15 快速删除所有容器"></a>5.15 快速删除所有容器</h3><p>常用格式<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container rm $(docker container ls --all -q)</span><br></pre></td></tr></table></figure></p>
+<p>请注意：运行中的容器不能被删除。</p>
+<h2 id="六、保存容器中的数据"><a href="#六、保存容器中的数据" class="headerlink" title="六、保存容器中的数据"></a>六、保存容器中的数据</h2><p>前面我们已经说过，容器一旦停止，容器内文件的所有改动都将丢失。</p>
+<p>所以，我们必须指定一个可以存储数据的方法，才能保存容器内的数据。</p>
+<h3 id="6-1-使用数据卷"><a href="#6-1-使用数据卷" class="headerlink" title="6.1 使用数据卷"></a>6.1 使用数据卷</h3><p>简单地说，数据卷就是在容器内指定一个目录，存储在这个目录下的数据都可以持久化保存。</p>
+<p>常用格式</p>
+<p>在 5.2 或 5.11 的 –tty 后面插入如下格式的内容</p>
+<blockquote>
+<p>–volume [&lt;实体机文件或目录&gt;:]&lt;容器内文件或目录&gt; [–volume [&lt;实体机文件或目录&gt;:]&lt;容器内文件或目录&gt;] …</p>
+</blockquote>
+<p>为了方便容器的迁移以及维护工作，通常会指定实体机内的某个文件或目录映射到容器内的某个文件或目录中。</p>
+<p>如果不指定实体机文件或目录，Docker 将会自动分配一个实体机目录。</p>
+<p>可以创建多个数据卷。</p>
+<p>例如</p>
+<p>以 ubuntu 为镜像，建立一个名为 ubuntu_test2 的容器并启动，将实体机上的 /root/ubuntu_files1目录挂载到容器中的 /test/ubuntu_files1 目录中去（实体机上的目录已存在）。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container run --rm --interactive --tty --volume /root/ubuntu_files1:/<span class="built_in">test</span>/ubuntu_files1 --name=ubuntu_test2 ubuntu:latest</span><br></pre></td></tr></table></figure></p>
+<p>执行完该命令后，我们已经是在容器内操作了。此时我们来看看容器内是否出现了挂载的目录。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls /<span class="built_in">test</span>/ubuntu_files1</span><br></pre></td></tr></table></figure></p>
+<p>如果没有返回错误信息，说明挂载成功。现在我们来向里面写一点东西，看下能不能保存。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">"File saved"</span> &gt; /<span class="built_in">test</span>/ubuntu_files1/1.txt</span><br></pre></td></tr></table></figure></p>
+<p>然后按 Ctrl + D 关闭容器。我们就来到实体机下了，接下来我们来看看实体机有没有这个文件。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /root/ubuntu_files1/1.txt</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>如果返回了  <code>File saved</code> ，说明数据已经可以保存了！</li>
+</ul>
+<p>您也可以再次创建容器，然后在容器内看看 <code>/test/ubuntu_files1/1.txt</code> 这个文件在不在。</p>
+<h3 id="6-2-打包一个新的镜像（不推荐）"><a href="#6-2-打包一个新的镜像（不推荐）" class="headerlink" title="6.2 打包一个新的镜像（不推荐）"></a>6.2 打包一个新的镜像（不推荐）</h3><p>这种方法十分简单粗暴，就是把容器内现有文件全部打包成一个新的镜像，然后新建一个使用该映像的容器即可实现文件的保存。</p>
+<p>之所以不推荐，主要是因为这样做会把容器内运行程序的缓存等无用文件一并打包下来。如果多次执行该操作，容器会变得非常臃肿。其次也可能会造成一定的安全隐患。</p>
+<p>常用格式</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container commit &lt;需要保存的容器名&gt; &lt;打包之后的镜像名&gt;</span><br></pre></td></tr></table></figure>
+<p>这里就不举例了。</p>
+<h2 id="七、容器的网络连接"><a href="#七、容器的网络连接" class="headerlink" title="七、容器的网络连接"></a>七、容器的网络连接</h2><h3 id="7-1-容器联网的基本方式"><a href="#7-1-容器联网的基本方式" class="headerlink" title="7.1 容器联网的基本方式"></a>7.1 容器联网的基本方式</h3><p>NAT 模式是容器默认的联网模式。</p>
+<p>在启动 Docker 服务之后，Docker 会自动往实体机内添加一个名为 docker0 的网桥，这个网桥默认可以与实体机内所有的网络接口通信。</p>
+<p>我们通过执行 <code>brctl show</code>  这条命令来看一下 docker0 网桥的状态。</p>
+<p>执行结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bridge name  bridge id  STP enabled  interfaces</span><br><span class="line">docker0  8000.024229c84e5a  no</span><br></pre></td></tr></table></figure></p>
+<p>当容器启动之后，会生成一个形如 vethXXXXXXX 的容器专用接口。这个接口也会加入到 docker0 的桥接列表中。</p>
+<p>docker0 上面有 IP 地址，也可以自动为每个容器分配 IP 地址（非 DHCP 协议）。</p>
+<p>我们通过执行 <code>ip addr show dev docker0</code> 还有  <code>brctl show docker0</code> 这条两命令来看一下。</p>
+<p>执行结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">6: docker0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP </span><br><span class="line"> link/ether 02:42:29:c8:4e:5a brd ff:ff:ff:ff:ff:ff</span><br><span class="line"> inet 172.17.0.1/16 scope global docker0</span><br><span class="line"> valid_lft forever preferred_lft forever</span><br><span class="line"> inet6 fe80::42:29ff:fec8:4e5a/64 scope link</span><br><span class="line"> valid_lft forever preferred_lft forever</span><br><span class="line"></span><br><span class="line">bridge name  bridge id  STP enabled  interfaces</span><br><span class="line">docker0  8000.024229c84e5a  no  vethcd2a637</span><br></pre></td></tr></table></figure></p>
+<p>其实 docker0 就相当于一个普通的路由器，通过 NAT 转换实现容器间的相互通信和连接外网。</p>
+<p>我们通过执行 <code>iptables -t nat -L POSTROUTING -v -n</code> 来查看相关的 NAT 规则。</p>
+<p>执行结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Chain POSTROUTING (policy ACCEPT 373 packets, 31640 bytes)</span><br><span class="line"> pkts bytes target  prot opt <span class="keyword">in</span>  out  <span class="built_in">source</span>  destination         </span><br><span class="line"> 12  729 MASQUERADE all -- * !docker0 172.17.0.0/16 0.0.0.0/0</span><br></pre></td></tr></table></figure></p>
+<p>很显然，存在 docker0 网段的 SNAT 规则，说明容器都是通过 NAT 的方式与实体机共享网络的。</p>
+<p>如需查看容器的 IP 地址，请执行以下命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container inspect --format=<span class="string">'&#123;&#123;.NetworkSettings.IPAddress&#125;&#125;'</span> &lt;容器名&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="7-2-自定义网桥-amp-容器-IP-地址"><a href="#7-2-自定义网桥-amp-容器-IP-地址" class="headerlink" title="7.2 自定义网桥 &amp; 容器 IP 地址"></a>7.2 自定义网桥 &amp; 容器 IP 地址</h3><p>使用默认网桥一般是不能自定义容器 IP 地址的，会提示以下错误：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">User specified IP address is supported only when connecting to networks with user configured subnets</span><br></pre></td></tr></table></figure></p>
+<p>这时候，我们就需要自定义一个网桥。</p>
+<h4 id="7-2-1-自定义网桥"><a href="#7-2-1-自定义网桥" class="headerlink" title="7.2.1 自定义网桥"></a>7.2.1 自定义网桥</h4><p>常用格式<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network create --driver bridge --subnet &lt;网桥网段&gt; &lt;网桥名&gt;</span><br></pre></td></tr></table></figure></p>
+<p>例如</p>
+<p>创建一个名为 docker_br1 的网桥，网段为 192.168.10.0/24<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker network create --driver bridge --subnet 192.168.10.0/24 docker_br1</span><br></pre></td></tr></table></figure></p>
+<p>执行结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">46cc818c92f0780ccd89811c12906c4527b554d18a61e72b0b2337b663ebab5f</span><br></pre></td></tr></table></figure></p>
+<p>这是自动生成的网桥唯一长 ID。</p>
+<p>网桥的管理和删除命令格式和上面镜像管理的相似，这里就不再说了。</p>
+<h4 id="7-2-2-自定义容器-IP-地址"><a href="#7-2-2-自定义容器-IP-地址" class="headerlink" title="7.2.2 自定义容器 IP 地址"></a>7.2.2 自定义容器 IP 地址</h4><p>常用格式</p>
+<p>在 5.2 或 5.11 的 –tty 后面插入如下格式的内容</p>
+<blockquote>
+<p>–network=&lt;网桥名&gt; –ip=&lt;IP地址&gt;</p>
+</blockquote>
+<p>例如</p>
+<p>创建并运行一个使用刚才创建的 docker_br1 网桥的容器，把 IP 地址设定为 192.168.10.211 ，然后验证结果。</p>
+<p>为了方便，这里将直接运行一个包含 ifconfig 命令的镜像的容器，然后执行 ifconfig eth0 命令来验证。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container run --rm --interactive --tty --network=docker_br1 --ip=192.168.10.211 --name=see_ip_addr ianneub/network-tools ifconfig eth0</span><br></pre></td></tr></table></figure></p>
+<p>执行结果<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#镜像下载过程略</span></span><br><span class="line">eth0 Link encap:Ethernet HWaddr 02:42:c0:a8:0a:02  </span><br><span class="line"> inet addr:192.168.10.211 Bcast:0.0.0.0 Mask:255.255.255.0</span><br><span class="line"> UP BROADCAST RUNNING MULTICAST MTU:1500 Metric:1</span><br><span class="line"> RX packets:2 errors:0 dropped:0 overruns:0 frame:0</span><br><span class="line"> TX packets:0 errors:0 dropped:0 overruns:0 carrier:0</span><br><span class="line"> collisions:0 txqueuelen:0</span><br><span class="line"> RX bytes:180 (180.0 B) TX bytes:0 (0.0 B)</span><br></pre></td></tr></table></figure></p>
+<p>显然，这里的 IP 地址已经是我们设定的 192.168.10.211 。</p>
+<h3 id="7-3-端口映射"><a href="#7-3-端口映射" class="headerlink" title="7.3 端口映射"></a>7.3 端口映射</h3><p>如果容器需要对外提供服务，在默认情况下需要把容器内的端口映射到实体机上。</p>
+<p>常用格式</p>
+<p>在 5.2 或 5.11 的 –tty 后面插入如下格式的内容</p>
+<blockquote>
+<p>-p [&lt;实体机接口 IP 地址&gt;:]&lt;实体机端口&gt;:&lt;容器内端口&gt;[/&lt;tcp|udp&gt;] [-p [&lt;实体机接口 IP 地址&gt;:]&lt;实体机端口&gt;:&lt;容器内端口&gt;[/&lt;tcp|udp&gt;]] …</p>
+</blockquote>
+<p>可以创建多个端口映射。</p>
+<p>如果不指定实体机接口 IP 地址，则容器内端口将映射到实体机的所有网络接口上。</p>
+<p>如果不指定 TCP 或 UDP 协议，默认使用 TCP 协议。</p>
+<p>例如</p>
+<p>运行一个提供 HTTP 服务的镜像（这里用 nginx）的容器，然后把容器中的 80 端口映射到实体机上的 8888 端口，最后测试能否访问。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker container run --detach --rm --interactive --tty -p 8888:80 --name=nginx_test nginx &amp;&amp; curl 127.0.0.1:8888</span><br></pre></td></tr></table></figure>
+<p>执行结果<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">title</span>&gt;</span>Welcome to nginx!<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>如果含有以上内容的界面，说明端口映射成功。</p>
+<h3 id="7-4-为容器设置域名解析-不建议使用"><a href="#7-4-为容器设置域名解析-不建议使用" class="headerlink" title="7.4 为容器设置域名解析(不建议使用)"></a>7.4 为容器设置域名解析(不建议使用)</h3><p>在很多情况下，我们需要在容器之间进行网络通信。而它们的 IP 地址又是不固定的，这就需要为容器固定一个 DNS 名称。</p>
+<p>假设现在有一个容器 A ，而新建的容器 B 需要访问容器 A 上的网络服务，在没设置域名解析的情况下容器 B 只能通过容器 A 的 IP 地址来访问容器 A 。而如果在容器 B 建立的时候设置了域名解析，容器 B 就可以通过容器 A 的名称或别名来访问容器 A 。</p>
+<p>常用格式</p>
+<p>在 5.2 或 5.11 的 –tty 后面插入如下格式的内容</p>
+<blockquote>
+<p>–link &lt;容器名称&gt;[:&lt;容器别名&gt;]<br>如果不设置容器别名，将自动使用容器名称。</p>
+</blockquote>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://note.geekfan.top">Linus Lee</a>
+            <p>原文链接: <a href="http://note.geekfan.top/2017/10/20/Docker-Primer/">http://note.geekfan.top/2017/10/20/Docker-Primer/</a>
+            <p>发表日期: <a href="http://note.geekfan.top/2017/10/20/Docker-Primer/">October 20th 2017, 3:34:21 pm</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2017/10/23/sort/" title= Sort of Data Structure >
+                    <div class="nextTitle">Sort of Data Structure</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zMjU0Ni85MTA3>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:708863861@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/mr-linus" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、-Docker简介"><span class="toc-number">1.</span> <span class="toc-text">一、 Docker简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、理解-Docker-的结构"><span class="toc-number">2.</span> <span class="toc-text">二、理解 Docker 的结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-镜像"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-容器"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-仓库"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-注册点"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 注册点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、Docker安装"><span class="toc-number">3.</span> <span class="toc-text">三、Docker安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-安装"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 安装</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#是直接用-yum-apt-get-安装-Docker-吗？"><span class="toc-number">3.1.1.</span> <span class="toc-text">是直接用 yum / apt-get 安装 Docker 吗？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#很多人问到-docker-docker-io-docker-engine-甚至-lxc-docker-都有什么区别？"><span class="toc-number">3.1.2.</span> <span class="toc-text">很多人问到 docker, docker.io, docker-engine 甚至 lxc-docker 都有什么区别？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#正确的安装方法有两种："><span class="toc-number">3.1.3.</span> <span class="toc-text">正确的安装方法有两种：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#不是都已经发布-Docker-17-07-了么？我怎么升级到最新还是-17-05-呀？"><span class="toc-number">3.1.4.</span> <span class="toc-text">不是都已经发布 Docker 17.07 了么？我怎么升级到最新还是 17.05 呀？</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-配置加速器"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 配置加速器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Ubuntu-14-04-配置加速器（或其它使用-Upstart-的系统）"><span class="toc-number">3.2.1.</span> <span class="toc-text">Ubuntu 14.04 配置加速器（或其它使用 Upstart 的系统）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Ubuntu-16-04-或-CentOS-7-配置加速器（或其它使用-Systemd-的系统）"><span class="toc-number">3.2.2.</span> <span class="toc-text">Ubuntu 16.04 或 CentOS 7 配置加速器（或其它使用 Systemd 的系统）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、运行第一个容器"><span class="toc-number">4.</span> <span class="toc-text">四、运行第一个容器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-运行-Helloworld-容器"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 运行 Helloworld 容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-过程解析"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 过程解析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五、Docker的基本操作"><span class="toc-number">5.</span> <span class="toc-text">五、Docker的基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-常用格式"><span class="toc-number">5.1.</span> <span class="toc-text">5.1 常用格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2-以某个镜像建立一个容器"><span class="toc-number">5.2.</span> <span class="toc-text">5.2 以某个镜像建立一个容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-3-启动一个容器"><span class="toc-number">5.3.</span> <span class="toc-text">5.3 启动一个容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-4-查看容器信息"><span class="toc-number">5.4.</span> <span class="toc-text">5.4 查看容器信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-5-操作一个容器-amp-容器内外进程简析"><span class="toc-number">5.5.</span> <span class="toc-text">5.5 操作一个容器 &amp; 容器内外进程简析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-5-1-操作一个容器"><span class="toc-number">5.5.1.</span> <span class="toc-text">5.5.1 操作一个容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-5-2-容器内进程简析"><span class="toc-number">5.5.2.</span> <span class="toc-text">5.5.2 容器内进程简析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-5-3-容器外进程简析"><span class="toc-number">5.5.3.</span> <span class="toc-text">5.5.3 容器外进程简析</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-6-从容器中脱开"><span class="toc-number">5.6.</span> <span class="toc-text">5.6 从容器中脱开</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-7-停止一个容器"><span class="toc-number">5.7.</span> <span class="toc-text">5.7 停止一个容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-8-删除一个容器"><span class="toc-number">5.8.</span> <span class="toc-text">5.8 删除一个容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-9-查看镜像信息"><span class="toc-number">5.9.</span> <span class="toc-text">5.9 查看镜像信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-10-删除一个镜像"><span class="toc-number">5.10.</span> <span class="toc-text">5.10 删除一个镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-11-使用一次性容器（推荐用于测试或开发环境）"><span class="toc-number">5.11.</span> <span class="toc-text">5.11 使用一次性容器（推荐用于测试或开发环境）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-12-配置容器的自重启（推荐用于生产环境）"><span class="toc-number">5.12.</span> <span class="toc-text">5.12 配置容器的自重启（推荐用于生产环境）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-13-查看容器的详细配置信息"><span class="toc-number">5.13.</span> <span class="toc-text">5.13 查看容器的详细配置信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-14-查看镜像的详细信息"><span class="toc-number">5.14.</span> <span class="toc-text">5.14 查看镜像的详细信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-15-快速删除所有容器"><span class="toc-number">5.15.</span> <span class="toc-text">5.15 快速删除所有容器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#六、保存容器中的数据"><span class="toc-number">6.</span> <span class="toc-text">六、保存容器中的数据</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-使用数据卷"><span class="toc-number">6.1.</span> <span class="toc-text">6.1 使用数据卷</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-打包一个新的镜像（不推荐）"><span class="toc-number">6.2.</span> <span class="toc-text">6.2 打包一个新的镜像（不推荐）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#七、容器的网络连接"><span class="toc-number">7.</span> <span class="toc-text">七、容器的网络连接</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#7-1-容器联网的基本方式"><span class="toc-number">7.1.</span> <span class="toc-text">7.1 容器联网的基本方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-2-自定义网桥-amp-容器-IP-地址"><span class="toc-number">7.2.</span> <span class="toc-text">7.2 自定义网桥 &amp; 容器 IP 地址</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-1-自定义网桥"><span class="toc-number">7.2.1.</span> <span class="toc-text">7.2.1 自定义网桥</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-2-自定义容器-IP-地址"><span class="toc-number">7.2.2.</span> <span class="toc-text">7.2.2 自定义容器 IP 地址</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-3-端口映射"><span class="toc-number">7.3.</span> <span class="toc-text">7.3 端口映射</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-4-为容器设置域名解析-不建议使用"><span class="toc-number">7.4.</span> <span class="toc-text">7.4 为容器设置域名解析(不建议使用)</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 9
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2018/07/01/Scraping-Primer/" >Scraping-Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2018/06/21/Linux-Primer/" >Linux-Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/15</span><a class="archive-post-title" href= "/2018/06/15/Docker-faq/" >Docker-FAQ</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span><a class="archive-post-title" href= "/2017/12/12/Binary-tree/" >Binary tree  of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span><a class="archive-post-title" href= "/2017/12/12/Graph-traversal/" >Graph traversal  of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/search/" >Search of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2017/10/24/struct/" >Concept of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/sort/" >Sort of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2017/10/20/Docker-Primer/" >Docker-Primer</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
+    
+        <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Linus Lee"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
