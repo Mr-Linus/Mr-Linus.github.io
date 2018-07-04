@@ -6,7 +6,7 @@
 
 
 <head>
-    <meta charset="utf-8">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
     <meta name="author" content="Linus Lee">
     <meta name="renderer" content="webkit">
@@ -191,7 +191,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
     <!-- 百度统计  -->
     
-    <!-- 谷歌统计  -->
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
     
 </head>
 
@@ -199,7 +199,7 @@
         <body class="post-body">
     
     
-<header class="header">
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">39,979</span> / Reading time: <span class="post-count">158 min</span></span>
+                        <span>Word count: <span class="post-count">39,975</span> / Reading time: <span class="post-count">158 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -727,7 +727,7 @@ height:50vh;
 <p>但是这种办法并不是好的解决方案，Docker 早在一年多以前就已经使用自定义网络了。在同一个网络中的容器，可以互联，并且，Docker 内置了 DNS，容器内的应用可以使用服务名、容器名、别名来进行服务发现，名称会经由内置的 DNS 进行解析，其结果是动态的；而不在同一网络中的容器，不可以互联。</p>
 <p>因此，现在早就不用 <code>--link</code> 了，而且非常不建议使用。</p>
 <blockquote>
-<p>PS：貌似智障zabbix的镜像的引导上还写着–link </p>
+<p>PS：貌似智障zabbix的镜像的引导上还写着—link </p>
 </blockquote>
 <p>首先是因为使用 <code>--link</code> 就很可能还在用默认桥接网络，这很不安全，所有容器都没有适度隔离，用自定义网络才比较方便互联隔离。</p>
 <p>其次，修改 <code>/etc/hosts</code> 文件有很多弊病。比如，高频繁的容器启停环境时，容易产生竞争冒险，导致 <code>/etc/hosts</code> 文件损坏，出现访问故障；或者有些应用发现是来自于 <code>/etc/hosts</code> 文件后，就假定其为静态文件，而缓存结果不再查询，从而导致容器启停 IP 变更后，使用旧的条目而无法连接到正确的容器等等。</p>
@@ -990,6 +990,7 @@ height:50vh;
 <p>如果觉得文本格式太繁杂，也可以生成 <a href="https://en.wikipedia.org/wiki/DOT_(graph_description_language" target="_blank" rel="noopener">DOT 图</a>)，使用命令 <code>dockviz images -d | dot -Tpng -o image_tree.png</code> 就可以将你的镜像依赖关系绘制成图（<a href="https://imagebin.ca/v/3ZhFvSPeqAi0" target="_blank" rel="noopener">https://imagebin.ca/v/3ZhFvSPeqAi0</a>）。</p>
 <h2 id="日志问题-2"><a href="#日志问题-2" class="headerlink" title="日志问题 (2)"></a>日志问题 <code>(2)</code></h2><h3 id="Docker-日志都在哪里？怎么收集？"><a href="#Docker-日志都在哪里？怎么收集？" class="headerlink" title="Docker 日志都在哪里？怎么收集？"></a>Docker 日志都在哪里？怎么收集？</h3><p>日志分两类，一类是 <code>Docker 引擎日志</code>；另一类是 <code>容器日志</code>。</p>
 <h4 id="Docker-引擎日志"><a href="#Docker-引擎日志" class="headerlink" title="Docker 引擎日志"></a>Docker 引擎日志</h4><p><code>Docker 引擎日志</code> 一般是交给了 <code>Upstart</code>(Ubuntu 14.04) 或者 <code>systemd</code> (CentOS 7, Ubuntu 16.04)。前者一般位于 <code>/var/log/upstart/docker.log</code> 下，后者一般通过 <code>jounarlctl -u docker</code> 来读取。不同系统的位置都不一样，SO上有人总结了一份列表，我修正了一下，可以参考：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -1036,6 +1037,7 @@ height:50vh;
 </tr>
 </tbody>
 </table>
+</div>
 <h4 id="容器日志"><a href="#容器日志" class="headerlink" title="容器日志"></a>容器日志</h4><p><code>容器的日志</code> 则可以通过 <code>docker logs</code> 命令来访问，而且可以像 <code>tail -f</code> 一样，使用 <code>docker logs -f</code> 来实时查看。如果使用 Docker Compose，则可以通过 <code>docker-compose logs &lt;服务名&gt;</code> 来查看。</p>
 <p>如果深究其日志位置，每个容器的日志默认都会以 <code>json-file</code> 的格式存储于 <code>/var/lib/docker/containers/&lt;容器id&gt;/&lt;容器id&gt;-json.log</code> 下，不过并不建议去这里直接读取内容，因为 Docker 提供了更完善地日志收集方式 - <code>Docker 日志收集驱动</code>。</p>
 <p>关于日志收集，<code>Docker</code> 内置了很多日志驱动，可以通过类似于 <code>fluentd</code>, <code>syslog</code> 这类服务收集日志。无论是 <code>Docker</code> 引擎，还是容器，都可以使用日志驱动。比如，如果打算用 <code>fluentd</code> 收集某个容器日志，可以这样启动容器：</p>
@@ -1432,7 +1434,7 @@ height:50vh;
 <p>里面说的很清楚，默认用户是 <code>root</code>，但如果通过 <code>--generic-ssh-user</code> 指定其它用户的话，该用户必须拥有无密码<code>sudo</code>的能力，换句话说，就是在 <code>sudoers</code> 文件中对该用户配置 <code>NOPASSWD</code>。</p>
 <h1 id="Docker-Registry-相关问题-10"><a href="#Docker-Registry-相关问题-10" class="headerlink" title="Docker Registry 相关问题 (10)"></a>Docker Registry 相关问题 <code>(10)</code></h1><h2 id="我-docker-push-的时候怎么报-authentication-required-错误？"><a href="#我-docker-push-的时候怎么报-authentication-required-错误？" class="headerlink" title="我 docker push 的时候怎么报 authentication required 错误？"></a>我 <code>docker push</code> 的时候怎么报 <code>authentication required</code> 错误？</h2><p>因为你没有登录。如果是向 Docker Hub 推送镜像，需要在注册一个用户： <a href="https://hub.docker.com/" target="_blank" rel="noopener">https://hub.docker.com/</a></p>
 <h2 id="为什么我-docker-login-失败了？我注册用户了，在网站登录也没问题呀？"><a href="#为什么我-docker-login-失败了？我注册用户了，在网站登录也没问题呀？" class="headerlink" title="为什么我 docker login 失败了？我注册用户了，在网站登录也没问题呀？"></a>为什么我 <code>docker login</code> 失败了？我注册用户了，在网站登录也没问题呀？</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ docker login</span><br><span class="line">Login with your Docker ID to push and pull images from Docker Hub. If you don<span class="string">'t have a Docker ID, </span></span><br><span class="line"><span class="string">head over to https://hub.docker.com to create one.</span></span><br><span class="line"><span class="string">Username: pinkman@heisenb.org</span></span><br><span class="line"><span class="string">Password:</span></span><br><span class="line"><span class="string">Error response from daemon: Get https://registry-1.docker.io/v2/: unauthorized: incorrect username or password</span></span><br></pre></td></tr></table></figure>
-<p>呃，这里应该是<strong>用户名</strong>的，怎么写了个<strong>电子邮件</strong> <a href="mailto:`pinkman@heisenb.org" target="_blank" rel="noopener">`pinkman@heisenb.org</a><code>呢？虽然 [Docker Hub 网站](https://hub.docker.com)允许你使用用户名或电子邮件登录，但是</code>docker login` 只可以使用用户名，换成你的用户名登录就好了。</p>
+<p>呃，这里应该是<strong>用户名</strong>的，怎么写了个<strong>电子邮件</strong> <code>pinkman@heisenb.org</code> 呢？虽然 <a href="https://hub.docker.com" target="_blank" rel="noopener">Docker Hub 网站</a>允许你使用用户名或电子邮件登录，但是 <code>docker login</code> 只可以使用用户名，换成你的用户名登录就好了。</p>
 <h2 id="我注册用户-pinkman-了，怎么还是无法-docker-push-mrwhite-xxx-啊？"><a href="#我注册用户-pinkman-了，怎么还是无法-docker-push-mrwhite-xxx-啊？" class="headerlink" title="我注册用户 pinkman 了，怎么还是无法 docker push mrwhite/xxx 啊？"></a>我注册用户 <code>pinkman</code> 了，怎么还是无法 <code>docker push mrwhite/xxx</code> 啊？</h2><p>😒……因为你 <code>push</code> 到别人（<strong>mrwhite</strong>）的 <code>repo</code> 了，你只能 <code>push</code> 到 <code>pinkman/xxx</code> 下。</p>
 <h2 id="不管用啊，我这回-docker-push-pinkman-xxx-了，怎么告诉我镜像不存在啊？"><a href="#不管用啊，我这回-docker-push-pinkman-xxx-了，怎么告诉我镜像不存在啊？" class="headerlink" title="不管用啊，我这回 docker push pinkman/xxx 了，怎么告诉我镜像不存在啊？"></a>不管用啊，我这回 <code>docker push pinkman/xxx</code> 了，怎么告诉我镜像不存在啊？</h2><p>😓……因为你没有 <code>tag</code> 对应的镜像为 <code>pinkman/xxx</code>。</p>
 <p>所有这些问题，都是由于你没有去看文档，建议不要这么一次次的瞎撞，去看官网文档：</p>
@@ -1927,7 +1929,24 @@ jsonContent:
     </div>
     <!-- async load share.js -->
     
-        <script src="/scripts/share.js" async></script>    
+        <script src="/scripts/share.js" async></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->    
      
     </body>
 </html>

@@ -6,7 +6,7 @@
 
 
 <head>
-    <meta charset="utf-8">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
     <meta name="author" content="Linus Lee">
     <meta name="renderer" content="webkit">
@@ -191,7 +191,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
     <!-- 百度统计  -->
     
-    <!-- 谷歌统计  -->
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
     
 </head>
 
@@ -199,7 +199,7 @@
         <body class="post-body">
     
     
-<header class="header">
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">2,605</span> / Reading time: <span class="post-count">10 min</span></span>
+                        <span>Word count: <span class="post-count">2,600</span> / Reading time: <span class="post-count">10 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -434,7 +434,7 @@ height:50vh;
 </ul>
 <h3 id="效率与低存储量需求"><a href="#效率与低存储量需求" class="headerlink" title="效率与低存储量需求"></a>效率与低存储量需求</h3><p>通俗的说，效率指的是算法执行的时间。对于同一个问题如果有多种算法可以解决，执行时间短的算法效率高。低存储量需求指的是算法执行工程中所需要的最大存储空间。</p>
 <h4 id="渐进时间复杂度"><a href="#渐进时间复杂度" class="headerlink" title="渐进时间复杂度"></a>渐进时间复杂度</h4><p>一般情况下，算法中基本操作重复执行的次数是问题规模n的某个函数f(n)，算法的时间量度记作：</p>
-<p>$$T(n)=O(f(n))$$<br>它表示随问题规模n的增大,算法执行时间的增长率和f(n)的增长率相同,称做算法的渐进时间复杂度,简称时间复杂度,语句的频度指的是该语句重复执行的次数.<br>举例:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">       (a)&#123;++x;s=<span class="number">0</span>;&#125;</span><br><span class="line">(b)<span class="keyword">for</span>(i= <span class="number">1</span>;i&lt;=n;++i)&#123;++x;s+=x;&#125;</span><br><span class="line">(c)<span class="keyword">for</span> (j=<span class="number">1</span>;j&lt;=n;++j)</span><br><span class="line">       <span class="keyword">for</span>(k=<span class="number">1</span>;k&lt;=n;++k)&#123;++x;s+=x;&#125;</span><br></pre></td></tr></table></figure></p>
+<script type="math/tex; mode=display">T(n)=O(f(n))</script><p>它表示随问题规模n的增大,算法执行时间的增长率和f(n)的增长率相同,称做算法的渐进时间复杂度,简称时间复杂度,语句的频度指的是该语句重复执行的次数.<br>举例:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">       (a)&#123;++x;s=<span class="number">0</span>;&#125;</span><br><span class="line">(b)<span class="keyword">for</span>(i= <span class="number">1</span>;i&lt;=n;++i)&#123;++x;s+=x;&#125;</span><br><span class="line">(c)<span class="keyword">for</span> (j=<span class="number">1</span>;j&lt;=n;++j)</span><br><span class="line">       <span class="keyword">for</span>(k=<span class="number">1</span>;k&lt;=n;++k)&#123;++x;s+=x;&#125;</span><br></pre></td></tr></table></figure></p>
 <p>含基本操作”x增1”的语句频度分别为1、n和n2，则这三个程序段的时间复杂度分别为$O(1)$、$O(n)$、$O(n^2)$ 分别称为常量阶、线性阶和平方阶，算法可能还有对数阶$O(log_2 n)$、指数阶$O(2^n)$等。</p>
 <h3 id="数据结构的基本概念"><a href="#数据结构的基本概念" class="headerlink" title="数据结构的基本概念"></a>数据结构的基本概念</h3><h4 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h4><p>数据，是对客观事务的符号表示,在计算机科学中是指所有能输入到计算机中并被计算机程序处理的符号的总称</p>
 <h4 id="数据元素"><a href="#数据元素" class="headerlink" title="数据元素"></a>数据元素</h4><p>数据元素，是数据的基本单位,在计算机程序中通常作为一个整体进行考虑和处理</p>
@@ -886,7 +886,24 @@ jsonContent:
     </div>
     <!-- async load share.js -->
     
-        <script src="/scripts/share.js" async></script>    
+        <script src="/scripts/share.js" async></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->    
      
     </body>
 </html>

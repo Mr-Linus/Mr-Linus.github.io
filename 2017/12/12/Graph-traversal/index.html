@@ -6,7 +6,7 @@
 
 
 <head>
-    <meta charset="utf-8">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
     <meta name="author" content="Linus Lee">
     <meta name="renderer" content="webkit">
@@ -191,7 +191,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
     <!-- 百度统计  -->
     
-    <!-- 谷歌统计  -->
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
     
 </head>
 
@@ -199,7 +199,7 @@
         <body class="post-body">
     
     
-<header class="header">
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
@@ -404,8 +404,8 @@ height:50vh;
 <h3 id="BFS-广度优先搜索"><a href="#BFS-广度优先搜索" class="headerlink" title="BFS 广度优先搜索"></a>BFS 广度优先搜索</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> visited[MaxNum];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BFSTraverse</span><span class="params">(Graph G)</span></span>&#123;</span><br><span class="line">    Queue Q;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;G.vexnum;++i)&#123; <span class="comment">//数组下标初始化</span></span><br><span class="line">        visited[i]=False;</span><br><span class="line">    &#125;</span><br><span class="line">    InitQueue Q;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;G.vexnum;++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(!visited[i])&#123; <span class="comment">//对每个连通分量调用一次BFS</span></span><br><span class="line">            BFS(G,i); <span class="comment">//i如果没被访问，从i开始BFS</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BFS</span><span class="params">(Graph G,<span class="keyword">int</span> v)</span></span>&#123;</span><br><span class="line">    visit(v);</span><br><span class="line">    visited[v]=True;</span><br><span class="line">    EnQueue(Q,v);</span><br><span class="line">    <span class="keyword">while</span>(!IsEmpty(Q))&#123;</span><br><span class="line">        DeQueue(Q,v);</span><br><span class="line">        <span class="keyword">for</span>(w=FirstNeighbour(G,v);w&gt;=<span class="number">0</span>;w=NextNeighbor(G,v,w))&#123;</span><br><span class="line">            <span class="keyword">if</span>(!visited[w])&#123;</span><br><span class="line">                visit(w);</span><br><span class="line">                visited[w]=True;</span><br><span class="line">                EnQueue(Q,w);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="BFS-性能分析"><a href="#BFS-性能分析" class="headerlink" title="BFS 性能分析"></a>BFS 性能分析</h4><blockquote>
 <p>空间复杂度：$O(|V|)$<br>时间复杂度：$O(|V|^2)$</p>
-</blockquote>
 <h3 id="BFS算法求单源最短路径"><a href="#BFS算法求单源最短路径" class="headerlink" title="BFS算法求单源最短路径"></a>BFS算法求单源最短路径</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">min_Distance</span><span class="params">(Graph G,<span class="keyword">int</span> u)</span></span>&#123;</span><br><span class="line">    <span class="comment">//d[i]表示从u到i节点的最短路径</span></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;G.vexnum;++i)&#123;</span><br><span class="line">        d[i]=MaxSize; <span class="comment">//初始化长度</span></span><br><span class="line">    &#125;</span><br><span class="line">    visited[u]=True;</span><br><span class="line">    d[u]=<span class="number">0</span>;</span><br><span class="line">    EnQueue(Q,u);</span><br><span class="line">    <span class="keyword">while</span>(!IsEmpty(Q))&#123;</span><br><span class="line">        DeQueue(Q,u);</span><br><span class="line">        <span class="keyword">for</span>(w=FirstNeighbour(G,u),w&gt;=<span class="number">0</span>;w=NextNeighbour(G,u,w))&#123;</span><br><span class="line">            <span class="keyword">if</span>(!visited[w])&#123;</span><br><span class="line">                visited[w]=True;</span><br><span class="line">                d[w]=d[u]+<span class="number">1</span>;</span><br><span class="line">                EnQueue(Q,w);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
 <h3 id="DFS-深度优先搜索"><a href="#DFS-深度优先搜索" class="headerlink" title="DFS 深度优先搜索"></a>DFS 深度优先搜索</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> visited[MaxNum];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DFSTraverse</span><span class="params">(Graph G)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(v=<span class="number">0</span>;v&lt;G.vexnum;++v)&#123;</span><br><span class="line">        visited[v]=False;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(v=<span class="number">0</span>;v&lt;G.vexnum;++v)&#123;</span><br><span class="line">        <span class="keyword">if</span>(!visited[v])&#123;</span><br><span class="line">            DFS(G,v);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DFS</span><span class="params">(Graph G,<span class="keyword">int</span> v)</span></span>&#123;</span><br><span class="line">    visit(v);</span><br><span class="line">    visited[v]=True;</span><br><span class="line">    <span class="keyword">for</span>(w=FirstNeighbour(G,v);w&gt;=<span class="number">0</span>;w=NextNeighbour(G,v,w))&#123;</span><br><span class="line">        DFS(G,w);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="DFS性能分析"><a href="#DFS性能分析" class="headerlink" title="DFS性能分析"></a>DFS性能分析</h4><blockquote>
 <p>空间复杂度： $O(|V|)$<br>时间复杂度： $O(|V|+|E|)$</p>
@@ -823,7 +823,24 @@ jsonContent:
     </div>
     <!-- async load share.js -->
     
-        <script src="/scripts/share.js" async></script>    
+        <script src="/scripts/share.js" async></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->    
      
     </body>
 </html>

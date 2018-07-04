@@ -6,7 +6,7 @@
 
 
 <head>
-    <meta charset="utf-8">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
     <meta name="author" content="Linus Lee">
     <meta name="renderer" content="webkit">
@@ -191,7 +191,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
     <!-- 百度统计  -->
     
-    <!-- 谷歌统计  -->
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
     
 </head>
 
@@ -199,7 +199,7 @@
         <body class="post-body">
     
     
-<header class="header">
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
@@ -412,7 +412,8 @@ height:50vh;
 <p>平均查找长度：<br>$ASL_{success}=log_2 (n+1)-1$</p>
 <h3 id="分块查找"><a href="#分块查找" class="headerlink" title="分块查找"></a>分块查找</h3><p>分块查找又称索引查找，吸取了折半查找和顺序查找的优点，块内元素可以无序，但是块之间是有序的。<br>示意图：</p>
 <pre><code>索引表：
-</code></pre><table>
+</code></pre><div class="table-container">
+<table>
 <thead>
 <tr>
 <th>24</th>
@@ -430,7 +431,8 @@ height:50vh;
 </tr>
 </tbody>
 </table>
-<p>查找表：<br>|24|21|6|11|8|22|32|31|54|72|61|78|88|83|<br>| — | –:| :–: | :-|–:|–:|–:|:–|—|—|—|—|—|—|—|—|—|</p>
+</div>
+<p>查找表：<br>|24|21|6|11|8|22|32|31|54|72|61|78|88|83|<br>| —- | —:| :—: | :-|—:|—:|—:|:—|—-|—-|—-|—-|—-|—-|—-|—-|—-|</p>
 <p>平均查找长度：<br>$ASL=L_I+L_S$</p>
 <blockquote>
 <p>$L_I$ 和 $L_S$分别为索引查找和块内查找的平均查找长度</p>
@@ -453,14 +455,11 @@ height:50vh;
 <h5 id="1-直接地址法"><a href="#1-直接地址法" class="headerlink" title="1.直接地址法"></a>1.直接地址法</h5><p>散列函数： H(key)=a*key+b</p>
 <blockquote>
 <p>特点: 计算简单，不会产生冲突，适合连续存储的情况，但如果关键字分布不连续，空位较多，将造成存储空间浪费。</p>
-</blockquote>
-<h5 id="2-除留余数法"><a href="#2-除留余数法" class="headerlink" title="2.除留余数法"></a>2.除留余数法</h5><p>散列函数：H(key)=key%p</p>
-<blockquote>
-<p>特点：简单、常用，使用关键是选好p，尽量减少冲突</p>
-</blockquote>
+<h5 id="2-除留余数法"><a href="#2-除留余数法" class="headerlink" title="2.除留余数法"></a>2.除留余数法</h5><p>散列函数：H(key)=key%p<br>特点：简单、常用，使用关键是选好p，尽量减少冲突</p>
 <h5 id="3-数字分析法"><a href="#3-数字分析法" class="headerlink" title="3.数字分析法"></a>3.数字分析法</h5><p>设关键字是r进制数，而r个数码在各个位置上出现的频率不一定相同，在某些位上经常出现，则应选取数码分布较为均匀的若干位作为散列地址。</p>
 <h5 id="4-平方取中法"><a href="#4-平方取中法" class="headerlink" title="4.平方取中法"></a>4.平方取中法</h5><p>顾名思义，取关键字的平方值的中间几位作为散列地址:$10^{k-1} \leq n \leq 10^k $(其中n为集合中元素个数)</p>
 <h5 id="5-折叠法"><a href="#5-折叠法" class="headerlink" title="5.折叠法"></a>5.折叠法</h5><p>将关键字分割成位数相同的几部分（最后一部分可以短一点），然后取这几部分的叠加作为散列地址。</p>
+</blockquote>
 <h4 id="处理冲突的方法"><a href="#处理冲突的方法" class="headerlink" title="处理冲突的方法"></a>处理冲突的方法</h4><h5 id="1-开地址法（闭散列法）"><a href="#1-开地址法（闭散列法）" class="headerlink" title="1.开地址法（闭散列法）"></a>1.开地址法（闭散列法）</h5><p>数学递推公式<br>$H_i=((H(key)+d_i)\%m)$<br>式中,$i=1,2,3,…,k(k \geq m-1 )$;m表示散列表表长；$d_i$为增量序列。</p>
 <h6 id="1）-线性探测法"><a href="#1）-线性探测法" class="headerlink" title="1） 线性探测法"></a>1） 线性探测法</h6><p>不多说，冲突就往后挪，挪到有位置，停止</p>
 <h6 id="2）-平方探测法"><a href="#2）-平方探测法" class="headerlink" title="2） 平方探测法"></a>2） 平方探测法</h6><p>当 $d_i = 1^2,-1^2,2^2,-2^2,…,k^2,-k^2,$其中$k \leq m/2 $，m必须是一个可以表示成4k+3的质数，又称二次探测法</p>
@@ -468,9 +467,9 @@ height:50vh;
 <h6 id="4-伪随机序列法（简答题）"><a href="#4-伪随机序列法（简答题）" class="headerlink" title="4)伪随机序列法（简答题）"></a>4)伪随机序列法（简答题）</h6><p>当$d_i$=伪随机序列，称为伪随机序列法。</p>
 <blockquote>
 <p>注意在开放地址的情形下，不能随便物理删除所有元素，因为若删除元素将会截断其他具有相同散列地址元素的查找地址。所以若想删除一个元素时，给它做一个删除标记，进行逻辑删除。但副作用是，执行多次删除后，散列表表面上看起来很满，实际上有许多位置没用利用，因此需要定期维护散列表，要把删除标记的元素物理删除。</p>
-</blockquote>
 <h5 id="2-拉链法"><a href="#2-拉链法" class="headerlink" title="2.拉链法"></a>2.拉链法</h5><p>假设散列地址为i的同义词链表的头指针存放在散列表的第i个单元中，因而查找、插入、删除都在同义词链中进行。</p>
 <h3 id="散列查找及性能分析"><a href="#散列查找及性能分析" class="headerlink" title="散列查找及性能分析"></a>散列查找及性能分析</h3><p>散列表的查找过程与构造散列表的过程基本一致。<br>装填因子：散列表的装填因子一般记为$\alpha$,定义为一个表的装满程度，即：<br>$\alpha =\frac{n}{m}$ 其中n为表中记录数，m为散列表长度。</p>
+</blockquote>
 
     </article>
     <!-- license  -->
@@ -871,7 +870,24 @@ jsonContent:
     </div>
     <!-- async load share.js -->
     
-        <script src="/scripts/share.js" async></script>    
+        <script src="/scripts/share.js" async></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->    
      
     </body>
 </html>

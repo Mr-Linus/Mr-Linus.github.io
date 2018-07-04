@@ -6,7 +6,7 @@
 
 
 <head>
-    <meta charset="utf-8">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
     <meta name="author" content="Linus Lee">
     <meta name="renderer" content="webkit">
@@ -191,7 +191,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
     <!-- 百度统计  -->
     
-    <!-- 谷歌统计  -->
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
     
 </head>
 
@@ -199,7 +199,7 @@
         <body class="post-body">
     
     
-<header class="header">
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
@@ -407,8 +407,6 @@ height:50vh;
 <h4 id="基础命令："><a href="#基础命令：" class="headerlink" title="基础命令："></a>基础命令：</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">lsblk 查看分区情况</span><br><span class="line"></span><br><span class="line">ls -l  显示目录详细信息</span><br><span class="line"></span><br><span class="line">ls -lh 详细显示大小</span><br><span class="line"></span><br><span class="line">ls -a 显示全部文件（包括隐藏文件）</span><br><span class="line"></span><br><span class="line">ls -d 查看目录本身属性 建议使用 ls -ld</span><br><span class="line"></span><br><span class="line">ll 等价于ls -l</span><br><span class="line"></span><br><span class="line">cp -a 复制并保留原有属性（不改变属主和组）</span><br><span class="line"></span><br><span class="line">cp -r 拷贝跟目录下的</span><br><span class="line"></span><br><span class="line">mv -f 强制移动（覆盖不提示）</span><br><span class="line"></span><br><span class="line">rm -r 删除目录以及文件</span><br><span class="line"></span><br><span class="line">rm -i 带提示的删除</span><br><span class="line"></span><br><span class="line">rm -rf / 多多执行23333</span><br></pre></td></tr></table></figure>
 <h4 id="获取帮助的方法："><a href="#获取帮助的方法：" class="headerlink" title="获取帮助的方法："></a>获取帮助的方法：</h4><h5 id="man-命令"><a href="#man-命令" class="headerlink" title="man  命令"></a>man  命令</h5><blockquote>
 <p>手册级别是分类的意思 1（普通用户手册）5（配置文件手册）8（管理员命令手册）<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man 5 passwd</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<blockquote>
 <p> g回到手册顶部 G回到底部  /输入搜索关键字</p>
 </blockquote>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">man -a &lt;命令&gt;查看改命令所有手册</span><br></pre></td></tr></table></figure>
@@ -507,8 +505,6 @@ height:50vh;
 </ul>
 <blockquote>
 <p>搜索用户：grep user_name /etc/passwd</p>
-</blockquote>
-<blockquote>
 <p>Tip: <code>/etc/passwd</code>保存用户信息,  <code>/etc/group</code>保存组信息  <code>passwd user_name</code> 给指定用户设定密码</p>
 </blockquote>
 <h5 id="如何查看用户被锁定："><a href="#如何查看用户被锁定：" class="headerlink" title="如何查看用户被锁定："></a>如何查看用户被锁定：</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grep user_name /etc/shadow#组密码的位置</span><br></pre></td></tr></table></figure>
@@ -552,6 +548,7 @@ height:50vh;
 <p> 一个用户要对目录有基本访问操作，必须有r，x权限</p>
 </blockquote>
 <p> 用户对资源来说用三种角色：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -574,7 +571,9 @@ height:50vh;
 </tr>
 </tbody>
 </table>
-<h5 id="drwxrwxrwx对应"><a href="#drwxrwxrwx对应" class="headerlink" title="drwxrwxrwx对应"></a><code>drwxrwxrwx</code>对应</h5><table>
+</div>
+<h5 id="drwxrwxrwx对应"><a href="#drwxrwxrwx对应" class="headerlink" title="drwxrwxrwx对应"></a><code>drwxrwxrwx</code>对应</h5><div class="table-container">
+<table>
 <thead>
 <tr>
 <th>文件权限</th>
@@ -592,6 +591,7 @@ height:50vh;
 </tr>
 </tbody>
 </table>
+</div>
 <blockquote>
 <p>使用者如果所在目录有写权限就可以删除目录中的文件</p>
 </blockquote>
@@ -599,14 +599,8 @@ height:50vh;
 <h5 id="更改目录-文件的所有者"><a href="#更改目录-文件的所有者" class="headerlink" title="更改目录/文件的所有者"></a>更改目录/文件的所有者</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">chown host_name:group_name file_name#同时修改文件属主和属组</span><br><span class="line"></span><br><span class="line">chown host_name file_name#修改文件的属主</span><br><span class="line"></span><br><span class="line">chown :group_name file_name#修改文件的属组</span><br><span class="line"></span><br><span class="line">chgrp root file_name #修改文件属组效果和上面等价</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>-R递归使用，在文件夹里面的文件也生效</p>
-</blockquote>
-<blockquote>
 <p>特权位(s)和粘贴位(t)权限，用户权限掩码（umask）</p>
-</blockquote>
-<blockquote>
 <p>setuid（修改文件的特权位权限）=u+s=4</p>
-</blockquote>
-<blockquote>
 <p>文件执行有效身份为文件的<strong>拥有者</strong>，而不是执行者的身份</p>
 </blockquote>
 <h5 id="例子1"><a href="#例子1" class="headerlink" title="例子1:"></a>例子1:</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod 4(755)  file_name #u+s</span><br></pre></td></tr></table></figure>
@@ -632,8 +626,6 @@ height:50vh;
 <p>修改umask：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">umask 0000、0001 #此修改只影响当前终端</span><br></pre></td></tr></table></figure></p>
 <blockquote>
 <p> 掩码机制保存在/etc/profile</p>
-</blockquote>
-<blockquote>
 <p> 修改umask 在 ~/.bash_profile后加入umask 0002重新登录系统后生效</p>
 </blockquote>
 <h4 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h4><blockquote>
@@ -671,6 +663,7 @@ height:50vh;
 </blockquote>
 <p><strong>使用信号管理进程：</strong></p>
 <p>常见信号列表：</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -722,6 +715,7 @@ height:50vh;
 </tr>
 </tbody>
 </table>
+</div>
 <h5 id="kill命令发送信号："><a href="#kill命令发送信号：" class="headerlink" title="kill命令发送信号："></a>kill命令发送信号：</h5><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">kill</span> PID（默认的发15）</span><br><span class="line"></span><br><span class="line"><span class="built_in">kill</span> -signal PID（执行相关信号）</span><br><span class="line"></span><br><span class="line"><span class="built_in">kill</span> -l（显示<span class="built_in">kill</span>支持的型号表）</span><br><span class="line"></span><br><span class="line"><span class="comment"># pstree (打印进程树)</span></span><br><span class="line"></span><br><span class="line">pstree -p user_name （列出student用户的进程树）</span><br><span class="line"></span><br><span class="line"><span class="comment"># killall 可以通过模糊匹配同时给多个进程发送信号（需要输入完整的进程名：ps）</span></span><br><span class="line"></span><br><span class="line">killall &lt;完整进程的名字&gt;</span><br><span class="line"></span><br><span class="line">killall -signal command_pattern</span><br><span class="line"></span><br><span class="line">killall -signal -u username command_pattern <span class="comment">#管理员才可以使用</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># pkill命令类似killall（不需要输入完整的进程名，支持模糊匹配）</span></span><br><span class="line"></span><br><span class="line">pkill command_pattern</span><br><span class="line"></span><br><span class="line">pkill -signal command_pattern（精确匹配执行相关进程，并执行相关信号）</span><br><span class="line"></span><br><span class="line">pkill -G GID command_pattern（<span class="built_in">kill</span>固定组下的进程）</span><br><span class="line"></span><br><span class="line">pkill -p PPID command_pattern（<span class="built_in">kill</span>父进程下的子进程）</span><br><span class="line"></span><br><span class="line">pkill -t terminal_name  command_pattern (杀死指定终端下的进程，不写进程默认杀死所有，但是杀不死bash需要-9才能杀死，并且让他退出终端)</span><br><span class="line"></span><br><span class="line"><span class="comment">#  w -h -u （查看用户会话情况  也就是每个用户登录的终端）</span></span><br><span class="line"></span><br><span class="line">pkill -U UID  command_pattern （杀死相应用户的进程，不写默认杀死所有）</span><br><span class="line"></span><br><span class="line"><span class="comment"># pgrep命令捕捉进程（命令中的选项和pkill差不多）</span></span><br><span class="line"></span><br><span class="line">pgrep -l -u student（-u是指定用户 -l输出pid）</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>*一般而言，kill别的用户的进程都需要启用root用户</p>
@@ -1014,7 +1008,7 @@ height:50vh;
 <h5 id="管理yum软件仓库"><a href="#管理yum软件仓库" class="headerlink" title="管理yum软件仓库"></a>管理yum软件仓库</h5><p>   可以给yum配置第三方软件仓库，仓库可以使用http，ftp或者file（本地）协议提供的软件集合。</p>
 <p>   软件仓库的定义存在于/etc/yum.repos.d/目录下以.repo结尾的配置文件</p>
 <p>（1）使用yum-config-manager命令管理</p>
-<p># yum-config-manager –add-repo=”<a href="http://xx.asd.com/sda/qwe/rht&quot;" target="_blank" rel="noopener">http://xx.asd.com/sda/qwe/rht&quot;</a></p>
+<p># yum-config-manager —add-repo=”<a href="http://xx.asd.com/sda/qwe/rht" target="_blank" rel="noopener">http://xx.asd.com/sda/qwe/rht</a>“</p>
 <p># yum repolist  查看系统上的软件仓库</p>
 <p>（2）手工编辑配置文件：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/yum.repos/errata.repo（名字随便起要.repo结尾）</span><br><span class="line"></span><br><span class="line">[uodates]</span><br><span class="line"></span><br><span class="line">name=Red Hat Updates （名字也可以随便气）</span><br><span class="line"></span><br><span class="line">baseurl=http://xxx.asd.com/rhel7.0/asdad/extra</span><br><span class="line"></span><br><span class="line"><span class="built_in">enable</span>=1                                                  （<span class="built_in">enable</span>设置是否启用该源）</span><br><span class="line"></span><br><span class="line">gpgcheck=0                                           （gpg校验值，启动校验需要设置gpgkey）</span><br></pre></td></tr></table></figure>
@@ -1470,7 +1464,24 @@ jsonContent:
     </div>
     <!-- async load share.js -->
     
-        <script src="/scripts/share.js" async></script>    
+        <script src="/scripts/share.js" async></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->    
      
     </body>
 </html>
