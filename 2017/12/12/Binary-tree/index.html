@@ -15,7 +15,7 @@
     <meta name="description" content="It's Funky's NoteBook">
     <meta name="Cache-Control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>Binary tree  of Data Structure · fi3ework&#39;s Studio</title>
+    <title>Binary tree  of Data Structure · Funky&#39;s NoteBook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -180,7 +180,7 @@
 }( typeof global !== "undefined" ? global : this ) );
 </script>
 
-    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="icon" href= "/assets/gun.ico" />
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
     <link rel="preload" href="/scripts/main.js" as="script" />
@@ -207,14 +207,14 @@
     
     <div class="banner">
             <div class="blog-title">
-                <a href="/" >fi3ework&#39;s Studio.</a>
+                <a href="/" >Funky&#39;s NoteBook</a>
             </div>
             <div class="post-title">
                 <a href="#" class="post-name">Binary tree  of Data Structure</a>
             </div>
     </div>
     
-    <a class="home-link" href=/>fi3ework's Studio.</a>
+    <a class="home-link" href=/>Funky's NoteBook</a>
 </header>
     <div class="wrapper">
         <div class="site-intro" style=
@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">2,867</span> / Reading time: <span class="post-count">12 min</span></span>
+                        <span>Word count: <span class="post-count">2,869</span> / Reading time: <span class="post-count">12 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -430,22 +430,7 @@ height:50vh;
 </ul>
 <h3 id="二叉树的存储结构"><a href="#二叉树的存储结构" class="headerlink" title="二叉树的存储结构"></a>二叉树的存储结构</h3><p>根据二叉树的性质，完全二叉树和满二叉树采用顺序存储合适，但是其他二叉树采用顺序存储会有很多空节点，浪费存储空间，因此一般的二叉树采用链式存储。</p>
 <p>节点结构：</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th>lchilld</th>
-<th>data</th>
-<th>rchild </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
+<p>| lchilld | data | rchild |</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取二叉树高度</span></span><br><span class="line"><span class="comment">//递归算法</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">TreeDepth</span><span class="params">(BiTree T)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">      <span class="keyword">if</span>(!T)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">int</span> Left = TreeDepth(T-&gt;lchild); <span class="comment">//先获取左子树高度</span></span><br><span class="line">      <span class="keyword">int</span> Right = TreeDepth(T-&gt;rchild); <span class="comment">//获取右子树高度</span></span><br><span class="line">      <span class="keyword">return</span> (Left &gt; Right) ? (Left + <span class="number">1</span>) : (Right + <span class="number">1</span>); <span class="comment">//当前高度加上两边子树的最大值</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//非递归</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">TreeDepth</span><span class="params">(BiTree T)</span></span>&#123;</span><br><span class="line">    <span class="comment">//last指向下一层第一个节点的位置</span></span><br><span class="line">    <span class="keyword">int</span> front = <span class="number">-1</span> ,rear = <span class="number">-1</span> ,last = <span class="number">0</span> , level = <span class="number">0</span>;</span><br><span class="line">    Queue Q[MaxSize],p;</span><br><span class="line">    <span class="keyword">if</span>(!T)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    Q[++rear]=T; <span class="comment">//根节点入队</span></span><br><span class="line">    <span class="keyword">while</span>(front&lt;rear)&#123; <span class="comment">//如果队非空则循环</span></span><br><span class="line">        p=Q[++front]; <span class="comment">//队列元素出队，即正在访问的节点</span></span><br><span class="line">        <span class="keyword">if</span>(p-&gt;lchild)&#123; <span class="comment">//左孩子入队 </span></span><br><span class="line">            Q[++rear]=p-&gt;lchild; </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(p-&gt;rchild)&#123; <span class="comment">//右孩子入队</span></span><br><span class="line">            Q[++rear]=p-&gt;rchild;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(front==last)&#123; <span class="comment">//处理该层的最右节点</span></span><br><span class="line">            level++; <span class="comment">//层数增1</span></span><br><span class="line">            last=rear++; <span class="comment">//last指向下一层</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> level;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="补充-m叉树"><a href="#补充-m叉树" class="headerlink" title="补充 * m叉树"></a>补充 * m叉树</h3><p>一颗高为h的满m叉树的性质：</p>
 <ul>
@@ -497,7 +482,7 @@ height:50vh;
 <hr>
 <h3 id="线索二叉树"><a href="#线索二叉树" class="headerlink" title="线索二叉树"></a>线索二叉树</h3><p>将遍历结果的前后驱关系存入二叉树中，二叉树中存在很多空指针，利用这些空指针用来存取二叉树遍历的前驱和后驱</p>
 <p>节点结构：</p>
-<p>| ltag    | lchild <em>  | data  | rchild </em>  | rtag  |</p>
+<p>| ltag | lchild | data | rchild | rtag |</p>
 <p>这里举个例子：<br>中序线索化二叉树<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InThread</span><span class="params">(ThreadTree &amp;p,ThreadTree &amp;pre)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(p!=<span class="literal">NULL</span>)&#123;</span><br><span class="line">        InThread(p-&gt;lchild,pre);<span class="comment">//递归线索左子树</span></span><br><span class="line">        <span class="keyword">if</span>(p-&gt;lchild==<span class="literal">NULL</span>)&#123;<span class="comment">//左子树为空，建立前驱线索</span></span><br><span class="line">            p-&gt;lchild=pre;</span><br><span class="line">            p-&gt;ltag=<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(pre!=<span class="literal">NULL</span>&amp;&amp;pre-&gt;rchild==<span class="literal">NULL</span>)&#123; <span class="comment">//建立前驱节点的后继线索</span></span><br><span class="line">            pre-&gt;rchild=p;</span><br><span class="line">            pre-&gt;rtag=<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        pre= p; <span class="comment">//标记当前节点称为刚刚访问的节点</span></span><br><span class="line">        InThread(p-&gt;rchild,pre); <span class="comment">//递归，线索化右子树</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//主函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">CreateThread</span><span class="params">(ThreadTree T)</span></span>&#123;</span><br><span class="line">    ThreadTree pre =<span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">if</span>(T!=<span class="literal">NULL</span>)&#123;</span><br><span class="line">        InTread(T,pre);</span><br><span class="line">        pre-&gt;rchild=<span class="literal">NULL</span>;</span><br><span class="line">        pre-&gt;rtag=<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h3 id="二叉排序树-（BST）"><a href="#二叉排序树-（BST）" class="headerlink" title="二叉排序树 （BST）"></a>二叉排序树 （BST）</h3><p>二叉树排序树的特点：<br>左子树上所有节点的值均小于根节点的值，右子树上所有节点的值均大于根节点的值</p>
 <h4 id="BST查找"><a href="#BST查找" class="headerlink" title="BST查找"></a>BST查找</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">BiTree <span class="title">Search</span> <span class="params">(BiTree T ,ElemType key)</span></span>&#123;</span><br><span class="line">    BiTree p=T;</span><br><span class="line">    <span class="keyword">if</span>(!p)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>; <span class="comment">//return  NULL;</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span>(p||key!=p-&gt;data)&#123;</span><br><span class="line">        <span class="keyword">if</span>(key&gt;p-&gt;data)&#123;</span><br><span class="line">            p=p-&gt;rchild;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span>&#123;</span><br><span class="line">            p=p-lchild;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -560,6 +545,21 @@ height:50vh;
     <!-- 评论插件 -->
     <!-- 来必力City版安装代码 -->
 
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zMjU0Ni85MTA3>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
 <!-- City版安装代码已完成 -->
     
     
@@ -584,25 +584,14 @@ height:50vh;
     
         
             
-                <a href="mailto:12345@qq.com" class="iconfont-archer email" title=email ></a>
+                <a href="mailto:708863861@qq.com" class="iconfont-archer email" title=email ></a>
             
         
     
         
             
-                <a href="//github.com/fi3ework" class="iconfont-archer github" target="_blank" title=github></a>
+                <a href="//github.com/mr-linus" class="iconfont-archer github" target="_blank" title=github></a>
             
-        
-    
-        
-            
-                <span class="iconfont-archer wechat" title=wechat>
-                  
-                  <img class="profile-qr" src="/assets/example_qr.png" />
-                </span>
-            
-        
-    
         
     
         
