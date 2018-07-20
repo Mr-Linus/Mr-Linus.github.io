@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">3</span> / Reading time: <span class="post-count">1 min</span></span>
+                        <span>Word count: <span class="post-count">1,966</span> / Reading time: <span class="post-count">7 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -396,7 +396,199 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h2 id="Kubernetes-Information-collection"><a href="#Kubernetes-Information-collection" class="headerlink" title="Kubernetes Information collection"></a>Kubernetes Information collection</h2>
+        <h2 id="Kubernetes-Information-Collection"><a href="#Kubernetes-Information-Collection" class="headerlink" title="Kubernetes Information Collection"></a>Kubernetes Information Collection</h2><h3 id="kubernetes-架构"><a href="#kubernetes-架构" class="headerlink" title="kubernetes 架构"></a>kubernetes 架构</h3><h4 id="分层架构"><a href="#分层架构" class="headerlink" title="分层架构"></a>分层架构</h4><ul>
+<li><p>核心层:Kubernetes最核心的功能，对外提供API构建高层的应用，对内提供 插件式应用执行环境 </p>
+</li>
+<li><p>应用层:部署(无状态应用、有状态应用、批处理任务、集群应用等)和路 由(服务发现、DNS解析等) </p>
+</li>
+<li><p>管理层:系统度量(如基础设施、容器和网络的度量)，自动化(如自动扩 展、动态Provision等)以及策略管理(RBAC、Quota、PSP、NetworkPolicy 等) </p>
+</li>
+<li><p>接口层:kubectl命令行工具、客户端SDK以及集群联邦 </p>
+</li>
+<li><p>生态系统:在接口层之上的庞大容器集群管理调度的生态系统，可以划分为 </p>
+<p>两个范畴 :</p>
+<ul>
+<li>Kubernetes外部:日志、监控、配置管理、CI、CD、Workflow、FaaS、OTS应用 、ChatOps等 </li>
+<li>Kubernetes内部:CRI、CNI、CVI、镜像仓库、CloudProvider、集群自身的配置 和管理等 </li>
+</ul>
+</li>
+</ul>
+<h4 id="架构设计优缺点"><a href="#架构设计优缺点" class="headerlink" title="架构设计优缺点"></a>架构设计优缺点</h4><ul>
+<li><p>优点</p>
+<ul>
+<li>容错性:保证Kubernetes系统稳定性和安全性的基础 </li>
+<li>易扩展性:保证Kubernetes对变更友好，可以快速迭代增 加新功能的基础。 </li>
+<li>API分版本，API可自由扩展(CRD)</li>
+<li>插件化，调度器，容器运行时，存储均可扩展 </li>
+<li>声明式(Declarative)的而不是命令式(Imperative): 声明式操作在分布式系统中的好处是稳定，不怕丢操作 或运行多次，例如设置副本数为3的操作运行多次也还是 一个结果，而给副本数加1的操作就不是声明式的，运行 多次结果就错了。 </li>
+</ul>
+</li>
+<li><p>缺点</p>
+<ul>
+<li><p>配置中心化:所有状态都保存在中心的etcd上，而非分布 </p>
+<p>式存储，性能有一定制约 </p>
+</li>
+<li><p>单体调度:调度一致性好而吞吐低 </p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="k8s提供的抽象"><a href="#k8s提供的抽象" class="headerlink" title="k8s提供的抽象"></a>k8s提供的抽象</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>EN</th>
+<th>CN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Container</td>
+<td>容器</td>
+</tr>
+<tr>
+<td>Pod</td>
+<td>容器组</td>
+</tr>
+<tr>
+<td>ReplicaSet</td>
+<td>副本组合</td>
+</tr>
+<tr>
+<td>Service</td>
+<td>服务</td>
+</tr>
+<tr>
+<td>Label</td>
+<td>标签</td>
+</tr>
+<tr>
+<td>Node</td>
+<td>节点</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ul>
+<li><p>Pod</p>
+<ul>
+<li>Pod是在Kubernetes集群中运行部署应用或服务的最小单元，它是可以支持多容器的。Pod的设计理念是支持多个 容器在一个Pod中共享网络地址和文件系统，可以通过进程间通信和文件共享这种简单高效的方式组合完成服务 。Pod对多容器的支持是K8最基础的设计理念。比如你运行一个操作系统发行版的软件仓库，一个Nginx容器用 来发布软件，另一个容器专门用来从源仓库做同步，这两个容器的镜像不太可能是一个团队开发的，但是他们 一块儿工作才能提供一个微服务;这种情况下，不同的团队各自开发构建自己的容器镜像，在部署的时候组合 成一个微服务对外提供服务。 </li>
+<li>Pod是Kubernetes集群中所有业务类型的基础，可以看作运行在K8集群中的小机器人，不同类型的业务就需要不 同类型的小机器人去执行。目前Kubernetes中的业务主要可以分为长期伺服型(long-running)、批处理型( batch)、节点后台支撑型(node-daemon)和有状态应用型(stateful application);分别对应的控制器为 Deployment、Job、DaemonSet和PetSet。 </li>
+</ul>
+</li>
+<li><p>副本集 (Replica Set，RS)</p>
+<p><strong>Replica Set</strong>:Kubernetes集群中保证Pod高可用的API对象。 通过监控运行中的Pod来保证集群中运行指定数目的Pod副本 。指定的数目可以是多个也可以是1个;少于指定数目，RS 就会启动运行新的Pod副本;多于指定数目，RS就会杀死多 余的Pod副本。即使在指定数目为1的情况下，通过RS运行 Pod也比直接运行Pod更明智，因为RS也可以发挥它高可用 的能力，保证永远有1个Pod在运行。RS适用于长期伺服型的 业务类型，比如提供高可用的Web服务。 </p>
+</li>
+<li><p>服务 (Service)</p>
+<p>RS只是保证了支撑服务的微服务Pod的 数量，但是没有解决如何访问这些服务 的问题。一个Pod只是一个运行服务的 实例，随时可能在一个节点上停止，在 另一个节点以一个新的IP启动一个新的 Pod，因此不能以确定的IP和端口号提 供服务。要稳定地提供服务需要服务发 现和负载均衡能力。服务发现完成的工 作，是针对客户端访问的服务，找到对 应的的后端服务实例。在K8集群中， 客户端需要访问的服务就是Service对象 。每个Service会对应一个集群内部有效 的虚拟IP，集群内部通过虚拟IP访问一 个服务。</p>
+<h5 id="kubernetes-中的对象"><a href="#kubernetes-中的对象" class="headerlink" title="kubernetes 中的对象"></a>kubernetes 中的对象</h5></li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">apiVersion: apps/v1beta1 kind: Deployment metadata:</span><br><span class="line">name: nginx-deployment spec:</span><br><span class="line">replicas: 3 template:</span><br><span class="line">metadata: labels:</span><br><span class="line">app: nginx spec:</span><br><span class="line">containers:</span><br><span class="line">- name: nginx</span><br><span class="line">image: nginx:1.7.9 ports:</span><br><span class="line">- containerPort: 80</span><br><span class="line">status:</span><br><span class="line">...</span><br><span class="line">..</span><br><span class="line">.</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Metadata:标识API对象，每个对象都至少有3个元数 据:namespace，name和uid;除此以外还有各种各样的 标签labels用来标识和匹配不同的对象，例如用户可以 用标签env来标识区分不同的服务部署环境，分别用 env=dev、env=testing、env=production来标识开发、 测试、生产的不同服务 </li>
+<li>Spec: 描述了用户期望Kubernetes集群中 的分布式系统达到的理想状态(Desired State)，例如用户可以通过复制控制器 Replication Controller设置期望的Pod副本 数为3 </li>
+<li>Status:系统实际当前达到的状态(Status) ，例如系统当前实际的Pod副本数为2;那么复制 控制器当前的程序逻辑就是自动启动新的Pod， 争取达到副本数为3 </li>
+</ul>
+<h3 id="对象分类"><a href="#对象分类" class="headerlink" title="对象分类"></a>对象分类</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th style="text-align:left">名称</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>资源对象</td>
+<td style="text-align:left">Pod、ReplicaSet、ReplicationController、Deployment 、StatefulSet、DaemonSet、Job、CronJob、 HorizontalPodAutoscaling</td>
+</tr>
+<tr>
+<td>配置对象</td>
+<td style="text-align:left">Node、Namespace、Service、Secret、ConfigMap、 Ingress、Label、ThirdPartyResource、 ServiceAccount</td>
+</tr>
+<tr>
+<td>存储对象</td>
+<td style="text-align:left">Volume、Persistent Volume</td>
+</tr>
+<tr>
+<td>策略对象</td>
+<td style="text-align:left">SecurityContext、ResourceQuota、LimitRange</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="业界各种安装方式对比"><a href="#业界各种安装方式对比" class="headerlink" title="业界各种安装方式对比"></a>业界各种安装方式对比</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>安装方式</th>
+<th>安装前准备</th>
+<th>特点</th>
+<th>高可用</th>
+<th>复杂度</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kubeadm</td>
+<td>kubectl + kubelet</td>
+<td>不对接节点，自己准备 节点环境，容易被集成 到其他工具链中</td>
+<td>HA(T+)</td>
+<td>高</td>
+</tr>
+<tr>
+<td>kops</td>
+<td>kubectl</td>
+<td>对接AWS/GCE/Vmware 帮助你管理虚机</td>
+<td>HA</td>
+<td>中</td>
+</tr>
+<tr>
+<td>minikube</td>
+<td>kubectl</td>
+<td>单机对接VM</td>
+<td>无</td>
+<td>低</td>
+</tr>
+<tr>
+<td>rancher</td>
+<td>rancher</td>
+<td>墙内加速，跨云能力</td>
+<td>不清楚</td>
+<td>中</td>
+</tr>
+<tr>
+<td>手工</td>
+<td>11+组件</td>
+<td>任意集群</td>
+<td>HA</td>
+<td>疯狂</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="当pod创建时-k8s到底干了啥"><a href="#当pod创建时-k8s到底干了啥" class="headerlink" title="当pod创建时,k8s到底干了啥"></a>当pod创建时,k8s到底干了啥</h3><ul>
+<li>kubectl提交创建请求，可以通过API Server的Restful API，也可以使用kubectl命令行工具。支持的数据类型包括JSON和YAML。 </li>
+<li>kube-apiserver处理用户请求，存储Pod数据到etcd。 </li>
+<li>kube-scheduler通过API Server查看未绑定的Pod。尝试为Pod分配主机。 <ul>
+<li>过滤主机 (调度预选):调度器用一组规则过滤掉不符合要求的主机。比如Pod指定了所需要的资源量，那么可用资源比Pod需要的资源量少的主机会被过滤掉。</li>
+<li>主机打分(调度优选):对第一步筛选出的符合要求的主机进行打分，在主机打分阶段，调度器会考虑一些整体优化策略，比如把容一个Replication Controller的副本分布到不同的主机上，使用最低负载的主机等。 </li>
+</ul>
+</li>
+<li><p>kube-scheduler选择主机:选择打分最高的主机，进行binding操作，这个操作本质是通过kube-apisever修改Pod的字段，结果存储到etcd中。 </p>
+</li>
+<li><p>kubelet根据调度结果执行Pod创建操作: 绑定成功后，pod.spec.nodeName有值了。运行在每个工作节点上的kubelet也会定期与etcd同步pod信息(属于自己这个node的) </p>
+</li>
+<li>docker接受到kubelet下发的命令，启动相应容器，至此，一个Pod启动完毕 </li>
+</ul>
+<blockquote>
+<p>kubectl自动补全:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&gt; $ <span class="built_in">source</span> &lt;(kubectl completion bash) <span class="comment">#bash下自动补全</span></span><br><span class="line">&gt; $ <span class="built_in">source</span> &lt;(kubectl completion zsh) <span class="comment"># zsh下自动补全</span></span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="kubectl-常见命令"><a href="#kubectl-常见命令" class="headerlink" title="kubectl 常见命令"></a><a href="https://kubernetes.io/docs/reference/kubectl/cheatsheet/" target="_blank" rel="noopener">kubectl 常见命令</a></h4><p>推荐工具:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install kube-shell</span><br></pre></td></tr></table></figure>
+<p><strong>持续更新</strong></p>
+
     </article>
     <!-- license  -->
     
@@ -532,7 +724,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Kubernetes-Information-collection"><span class="toc-number">1.</span> <span class="toc-text">Kubernetes Information collection</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Kubernetes-Information-Collection"><span class="toc-number">1.</span> <span class="toc-text">Kubernetes Information Collection</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#kubernetes-架构"><span class="toc-number">1.1.</span> <span class="toc-text">kubernetes 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#分层架构"><span class="toc-number">1.1.1.</span> <span class="toc-text">分层架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#架构设计优缺点"><span class="toc-number">1.1.2.</span> <span class="toc-text">架构设计优缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s提供的抽象"><span class="toc-number">1.2.</span> <span class="toc-text">k8s提供的抽象</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#kubernetes-中的对象"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">kubernetes 中的对象</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象分类"><span class="toc-number">1.3.</span> <span class="toc-text">对象分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#业界各种安装方式对比"><span class="toc-number">1.4.</span> <span class="toc-text">业界各种安装方式对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#当pod创建时-k8s到底干了啥"><span class="toc-number">1.5.</span> <span class="toc-text">当pod创建时,k8s到底干了啥</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-常见命令"><span class="toc-number">1.5.1.</span> <span class="toc-text">kubectl 常见命令</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -545,6 +737,12 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
     
     
     
@@ -731,11 +929,11 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
+        <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
+    
         <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
     
         <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
-    
-        <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
