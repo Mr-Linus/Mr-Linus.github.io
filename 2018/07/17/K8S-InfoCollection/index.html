@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">3,280</span> / Reading time: <span class="post-count">14 min</span></span>
+                        <span>Word count: <span class="post-count">4,538</span> / Reading time: <span class="post-count">18 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -634,6 +634,183 @@ height:50vh;
 </ul>
 </li>
 </ul>
+<h3 id="k8s应用管理"><a href="#k8s应用管理" class="headerlink" title="k8s应用管理"></a>k8s应用管理</h3><h4 id="pod详解"><a href="#pod详解" class="headerlink" title="pod详解"></a>pod详解</h4><p><img src="/images/pod.png" alt="pod"></p>
+<ul>
+<li>Pod就像是豌豆荚一样，它由一个或者多个容器组成 </li>
+<li>Pod中的容器共享IP地址和端口号，它们之间可以通过localhost互相发现 。它们之间可以通过进程间通信，例如SystemV信号或者POSIX共享内 存。不同Pod之间的容器具有不同的IP地址，不能直接通过IPC通信。 </li>
+<li>Pod中的容器也有访问共享volume的权限，这些volume会被定义成pod的 一部分并挂载到应用容器的文件系统中。 </li>
+</ul>
+<h4 id="pod的设计动机"><a href="#pod的设计动机" class="headerlink" title="pod的设计动机"></a>pod的设计动机</h4><ul>
+<li><p>容器介于操作系统和应用之间，容器的推荐玩法是每个容器运行一个进程。 </p>
+<ul>
+<li>外部掌控多容器的组合和生命周期 — redhat和docker公司的控制权 之争 </li>
+<li>单容器多进程玩法的案例 — 阿里的pouch项目 </li>
+</ul>
+</li>
+<li><p>对外，Pod作为一个独立的部署单位，支持横向扩展和复制。 共生(协同调度)，命运共同体(例如被终结)，协同复制 ，资源共享，依赖管理 </p>
+</li>
+<li><p>对内，Pod内容器互相协作 </p>
+<ul>
+<li><p>pod中的应用必须协调端口占用。每个pod都有一个唯一的IP地址， 跟物理机和其他pod都处于一个扁平的网络空间中，它们之间可以 直接连通。 </p>
+</li>
+<li><p>Pod中应用容器的hostname被设置成Pod的名字。 </p>
+</li>
+<li><p>Pod中的应用容器可以共享volume。Volume能够保证pod重启时使 </p>
+<p>用的数据不丢失。 </p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="pod的非持久性"><a href="#pod的非持久性" class="headerlink" title="pod的非持久性"></a>pod的非持久性</h4><p>Pod在以下几种情况下都会被终结:</p>
+<ul>
+<li>调度失败 </li>
+<li>节点故障</li>
+<li>缺少资源</li>
+<li>节点维护</li>
+<li>用户主动干掉Pod </li>
+</ul>
+<h4 id="init容器"><a href="#init容器" class="headerlink" title="init容器"></a>init容器</h4><ul>
+<li><p>Init 容器是一种专用的容器，在应用程序容器启动之前运行 </p>
+</li>
+<li><p>init 容器总是运行到成功完成为止。 </p>
+</li>
+<li><p>每个 Init 容器都必须在下一个 Init 容器启动之前成功完 成。 </p>
+</li>
+<li><p>Init 容器能做什么?</p>
+<ul>
+<li><p>等待一个 Service 创建完成，通过类似如下 shell 命令: </p>
+<p>for i in {1..100}; do sleep 1; if dig myservice; then exit 0; fi; exit 1</p>
+</li>
+<li><p>在启动应用容器之前等一段时间，使用类似 sleep 60 的命令。 </p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="Pod中容器镜像常见设置"><a href="#Pod中容器镜像常见设置" class="headerlink" title="Pod中容器镜像常见设置"></a>Pod中容器镜像常见设置</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>pod.spec.containers[]. imagePullPolicy</th>
+<th>镜像拉取策略</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IfNotPresent(默认)</td>
+<td>在没有此镜像时下载</td>
+</tr>
+<tr>
+<td>Always</td>
+<td>每次必下载</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>镜像tag设置</th>
+<th>拉取策略</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Image:latest</td>
+<td>每次必下载</td>
+</tr>
+<tr>
+<td>image</td>
+<td>每次必下载</td>
+</tr>
+<tr>
+<td>image:*</td>
+<td>在没有此镜像时下载</td>
+</tr>
+</tbody>
+</table>
+</div>
+<blockquote>
+<p>扩展:</p>
+<ul>
+<li><a href="https://kubernetes.io/docs/concepts/containers/images/#configuring-nodes-to-authenticate-to-a-private-repository" target="_blank" rel="noopener">私有镜像仓库配置</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/containers/container-environment-variables/" target="_blank" rel="noopener">容器环境变量</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/" target="_blank" rel="noopener">容器生命周期</a></li>
+</ul>
+</blockquote>
+<h4 id="Pod-status-phase"><a href="#Pod-status-phase" class="headerlink" title="Pod.status.phase"></a>Pod.status.phase</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>容器状态</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>挂起(Pending)</td>
+<td>Pod 已被 Kubernetes 系统接受，但有一个或者多个容器 镜像尚未创建。等待时间包括调度 Pod 的时间和通过网 络下载镜像的时间，这可能需要花点时间。</td>
+</tr>
+<tr>
+<td>运行中(Running)</td>
+<td>该 Pod 已经绑定到了一个节点上，Pod 中所有的容器都 已被创建。至少有一个容器正在运行，或者正处于启动 或重启状态。</td>
+</tr>
+<tr>
+<td>成功(Successed)</td>
+<td>Pod 中的所有容器都被成功终止，并且不会再重启。</td>
+</tr>
+<tr>
+<td>失败(Failed)</td>
+<td>Pod 中的所有容器都已终止了，并且至少有一个容器是 因为失败终止。也就是说，容器以非0状态退出或者被 系统终止。</td>
+</tr>
+<tr>
+<td>未知(Unkonwn)</td>
+<td>因为某些原因无法取得 Pod 的状态，通常是因为与 Pod 所在主机通信失败。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="容器探针-注意不是Pod探针"><a href="#容器探针-注意不是Pod探针" class="headerlink" title="容器探针(注意不是Pod探针)"></a>容器探针(注意不是Pod探针)</h4><ul>
+<li>探针探查方式 <ul>
+<li>ExecAction:在容器内执行指定命令。如果命令退出时返回码为 0 则认为诊断成功。 </li>
+<li>TCPSocketAction:对指定端口上的容器的 IP 地址进行 TCP 检查。如果端口打开，则诊断被认为是成功的。</li>
+<li>HTTPGetAction:对指定的端口和路径上的容器的 IP 地址执行 HTTP Get 请求。如果响应的状态码大于等于200 且小于 400，则诊断被认为是成功的。</li>
+</ul>
+</li>
+<li>探针结果:成功、失败、未知 </li>
+<li>探针引起外部动作 <ul>
+<li>livenessProbe:指示容器是否正在运行。如果存活探测失败，则 kubelet 会杀死容器，并且容器将受到其 重启策略 的影响。如果容器 不提供存活探针，则默认状态为 Success。 </li>
+<li>readinessProbe:指示容器是否准备好服务请求。如果就绪探测失败 ，端点控制器将从与 Pod 匹配的所有 Service 的端点中删除该 Pod 的 IP 地址。初始延迟之前的就绪状态默认为 Failure。如果容器不提供 就绪探针，则默认状态为 Success </li>
+</ul>
+</li>
+</ul>
+<h4 id="容器重启策略"><a href="#容器重启策略" class="headerlink" title="容器重启策略"></a>容器重启策略</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Pod.spec.restart Policy字段</th>
+<th>行为:适用于Pod中所有失败的容器</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Always(默认)</td>
+<td>exitCode=任何数字，执行重启操作</td>
+</tr>
+<tr>
+<td>OnFailure</td>
+<td>exitCode!=0，执行重启操作</td>
+</tr>
+<tr>
+<td>Never</td>
+<td>exitCode=任何数字，不重启</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h5 id="以五分钟为上限的指数退避延迟-10秒，20秒，40秒…-重新启动，并在成功执行十分钟后重置。"><a href="#以五分钟为上限的指数退避延迟-10秒，20秒，40秒…-重新启动，并在成功执行十分钟后重置。" class="headerlink" title="以五分钟为上限的指数退避延迟(10秒，20秒，40秒… )重新启动，并在成功执行十分钟后重置。"></a>以五分钟为上限的指数退避延迟(10秒，20秒，40秒… )重新启动，并在成功执行十分钟后重置。</h5><blockquote>
+<p>更多信息: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; kubectl run -h</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></blockquote>
 
     </article>
     <!-- license  -->
@@ -770,7 +947,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#kubernetes-架构"><span class="toc-number">1.</span> <span class="toc-text">kubernetes 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#分层架构"><span class="toc-number">1.1.</span> <span class="toc-text">分层架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#架构设计优缺点"><span class="toc-number">1.2.</span> <span class="toc-text">架构设计优缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s提供的抽象"><span class="toc-number">2.</span> <span class="toc-text">k8s提供的抽象</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#kubernetes-中的对象"><span class="toc-number">2.0.1.</span> <span class="toc-text">kubernetes 中的对象</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象分类"><span class="toc-number">3.</span> <span class="toc-text">对象分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#业界各种安装方式对比"><span class="toc-number">4.</span> <span class="toc-text">业界各种安装方式对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#当pod创建时-k8s到底干了啥"><span class="toc-number">5.</span> <span class="toc-text">当pod创建时,k8s到底干了啥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kubectl-常见命令"><span class="toc-number">6.</span> <span class="toc-text">kubectl 常见命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl上下文和配置"><span class="toc-number">6.1.</span> <span class="toc-text">kubectl上下文和配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-创建对象"><span class="toc-number">6.2.</span> <span class="toc-text">kubectl 创建对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl显示和查找资源"><span class="toc-number">6.3.</span> <span class="toc-text">kubectl显示和查找资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl编辑资源"><span class="toc-number">6.4.</span> <span class="toc-text">kubectl编辑资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-Scale-资源"><span class="toc-number">6.5.</span> <span class="toc-text">kubectl Scale 资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-删除资源"><span class="toc-number">6.6.</span> <span class="toc-text">kubectl 删除资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl与运行中的-Pod-交互"><span class="toc-number">6.7.</span> <span class="toc-text">kubectl与运行中的 Pod 交互</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl与节点和集群交互"><span class="toc-number">6.8.</span> <span class="toc-text">kubectl与节点和集群交互</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s构建高可用集群"><span class="toc-number">7.</span> <span class="toc-text">k8s构建高可用集群</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#kubernetes-架构"><span class="toc-number">1.</span> <span class="toc-text">kubernetes 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#分层架构"><span class="toc-number">1.1.</span> <span class="toc-text">分层架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#架构设计优缺点"><span class="toc-number">1.2.</span> <span class="toc-text">架构设计优缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s提供的抽象"><span class="toc-number">2.</span> <span class="toc-text">k8s提供的抽象</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#kubernetes-中的对象"><span class="toc-number">2.0.1.</span> <span class="toc-text">kubernetes 中的对象</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象分类"><span class="toc-number">3.</span> <span class="toc-text">对象分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#业界各种安装方式对比"><span class="toc-number">4.</span> <span class="toc-text">业界各种安装方式对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#当pod创建时-k8s到底干了啥"><span class="toc-number">5.</span> <span class="toc-text">当pod创建时,k8s到底干了啥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kubectl-常见命令"><span class="toc-number">6.</span> <span class="toc-text">kubectl 常见命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl上下文和配置"><span class="toc-number">6.1.</span> <span class="toc-text">kubectl上下文和配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-创建对象"><span class="toc-number">6.2.</span> <span class="toc-text">kubectl 创建对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl显示和查找资源"><span class="toc-number">6.3.</span> <span class="toc-text">kubectl显示和查找资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl编辑资源"><span class="toc-number">6.4.</span> <span class="toc-text">kubectl编辑资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-Scale-资源"><span class="toc-number">6.5.</span> <span class="toc-text">kubectl Scale 资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-删除资源"><span class="toc-number">6.6.</span> <span class="toc-text">kubectl 删除资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl与运行中的-Pod-交互"><span class="toc-number">6.7.</span> <span class="toc-text">kubectl与运行中的 Pod 交互</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl与节点和集群交互"><span class="toc-number">6.8.</span> <span class="toc-text">kubectl与节点和集群交互</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s构建高可用集群"><span class="toc-number">7.</span> <span class="toc-text">k8s构建高可用集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s应用管理"><span class="toc-number">8.</span> <span class="toc-text">k8s应用管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pod详解"><span class="toc-number">8.1.</span> <span class="toc-text">pod详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod的设计动机"><span class="toc-number">8.2.</span> <span class="toc-text">pod的设计动机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod的非持久性"><span class="toc-number">8.3.</span> <span class="toc-text">pod的非持久性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#init容器"><span class="toc-number">8.4.</span> <span class="toc-text">init容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pod中容器镜像常见设置"><span class="toc-number">8.5.</span> <span class="toc-text">Pod中容器镜像常见设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pod-status-phase"><span class="toc-number">8.6.</span> <span class="toc-text">Pod.status.phase</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器探针-注意不是Pod探针"><span class="toc-number">8.7.</span> <span class="toc-text">容器探针(注意不是Pod探针)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器重启策略"><span class="toc-number">8.8.</span> <span class="toc-text">容器重启策略</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#以五分钟为上限的指数退避延迟-10秒，20秒，40秒…-重新启动，并在成功执行十分钟后重置。"><span class="toc-number">8.8.1.</span> <span class="toc-text">以五分钟为上限的指数退避延迟(10秒，20秒，40秒… )重新启动，并在成功执行十分钟后重置。</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -783,6 +960,10 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
     
     
     
