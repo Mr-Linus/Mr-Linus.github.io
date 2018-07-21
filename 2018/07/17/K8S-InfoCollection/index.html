@@ -15,7 +15,7 @@
     <meta name="description" content="It's Funky's NoteBook">
     <meta name="Cache-Control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>Kubernetes Information collection · Funky&#39;s NoteBook</title>
+    <title>Kubernetes Information Collection · Funky&#39;s NoteBook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -210,7 +210,7 @@
                 <a href="/" >Funky&#39;s NoteBook</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">Kubernetes Information collection</a>
+                <a href="#" class="post-name">Kubernetes Information Collection</a>
             </div>
     </div>
     
@@ -242,7 +242,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            Kubernetes Information collection
+            Kubernetes Information Collection
             <!-- 404 -->
             
         </h1>
@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">4,538</span> / Reading time: <span class="post-count">18 min</span></span>
+                        <span>Word count: <span class="post-count">5,515</span> / Reading time: <span class="post-count">23 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -810,7 +810,181 @@ height:50vh;
 </div>
 <h5 id="以五分钟为上限的指数退避延迟-10秒，20秒，40秒…-重新启动，并在成功执行十分钟后重置。"><a href="#以五分钟为上限的指数退避延迟-10秒，20秒，40秒…-重新启动，并在成功执行十分钟后重置。" class="headerlink" title="以五分钟为上限的指数退避延迟(10秒，20秒，40秒… )重新启动，并在成功执行十分钟后重置。"></a>以五分钟为上限的指数退避延迟(10秒，20秒，40秒… )重新启动，并在成功执行十分钟后重置。</h5><blockquote>
 <p>更多信息: </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; kubectl run -h</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; kubectl run -h</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="pod状态与容器状态的关系"><a href="#pod状态与容器状态的关系" class="headerlink" title="pod状态与容器状态的关系"></a>pod状态与容器状态的关系</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>容器</th>
+<th>退出状态</th>
+<th>log event</th>
+<th>restartPolicy</th>
+<th>行为</th>
+<th>Pod.status.phase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1个</td>
+<td>success</td>
+<td>completion</td>
+<td>Always</td>
+<td>重启容器</td>
+<td>Running</td>
+</tr>
+<tr>
+<td>1个</td>
+<td>success</td>
+<td>completion</td>
+<td>OnFailure</td>
+<td>无</td>
+<td>Succeeded</td>
+</tr>
+<tr>
+<td>1个</td>
+<td>success</td>
+<td>completion</td>
+<td>Never</td>
+<td>无</td>
+<td>Succeeded</td>
+</tr>
+<tr>
+<td>1个</td>
+<td>fail</td>
+<td>failure</td>
+<td>Always</td>
+<td>重启容器</td>
+<td>Running</td>
+</tr>
+<tr>
+<td>1个</td>
+<td>fail</td>
+<td>failure</td>
+<td>OnFailure</td>
+<td>重启容器</td>
+<td>Running</td>
+</tr>
+<tr>
+<td>1个</td>
+<td>fail</td>
+<td>failure</td>
+<td>Never</td>
+<td>无</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>2个</td>
+<td>一个fail一个正常运行</td>
+<td>failure</td>
+<td>Always</td>
+<td>重启容器</td>
+<td>Running</td>
+</tr>
+<tr>
+<td>2个</td>
+<td>一个fail一个正常运行</td>
+<td>failure</td>
+<td>OnFailure</td>
+<td>重启容器</td>
+<td>Running</td>
+</tr>
+<tr>
+<td>2个</td>
+<td>一个fail一个正常运行</td>
+<td>failure</td>
+<td>Never</td>
+<td>无</td>
+<td>Running</td>
+</tr>
+<tr>
+<td>2个</td>
+<td>一个not running一个exit</td>
+<td>failure</td>
+<td>Always</td>
+<td>重启容器</td>
+<td>Running</td>
+</tr>
+<tr>
+<td>2个</td>
+<td>一个not running一个exit</td>
+<td>failure</td>
+<td>OnFailure</td>
+<td>重启容器</td>
+<td>Running</td>
+</tr>
+<tr>
+<td>2个</td>
+<td>一个not running一个exit</td>
+<td>failure</td>
+<td>Never</td>
+<td>无</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>1个</td>
+<td>out of memeory</td>
+<td>OOM</td>
+<td>Always</td>
+<td>重启容器</td>
+<td>Running</td>
+</tr>
+<tr>
+<td>1个</td>
+<td>out of memeory</td>
+<td>OOM</td>
+<td>OnFailure</td>
+<td>重启容器</td>
+<td>Running</td>
+</tr>
+<tr>
+<td>1个</td>
+<td>out of memeory</td>
+<td>OOM</td>
+<td>Nerver</td>
+<td>无</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>n个</td>
+<td>磁盘崩溃</td>
+<td>failure</td>
+<td>A/O/N</td>
+<td>杀死所有容器 如果pod被管 控，异地重建</td>
+<td>Failed</td>
+</tr>
+<tr>
+<td>n个</td>
+<td>node被分区</td>
+<td>failure</td>
+<td>A/O/N</td>
+<td>等待node超时 如果pod被管 控，异地重建</td>
+<td>Failed</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="ReplicaSet-副本集"><a href="#ReplicaSet-副本集" class="headerlink" title="ReplicaSet: 副本集"></a>ReplicaSet: 副本集</h4><p>ReplicaSet是下一代复制控制器。现在<em>ReplicaSet</em>和 <a href="https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/" target="_blank" rel="noopener"><em>Replication Controller</em></a>之间的唯一区别是选择器支持。ReplicaSet支持<a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors" target="_blank" rel="noopener">标签用户指南中</a>描述的新的基于集合的选择器要求，而Replication Controller仅支持基于等同的选择器要求。</p>
+<p>大多数<a href="https://kubernetes.io/docs/user-guide/kubectl/" target="_blank" rel="noopener"><code>kubectl</code></a>支持复制控制器的命令也支持ReplicaSet。<a href="https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#rolling-update" target="_blank" rel="noopener"><code>rolling-update</code></a>命令是一个例外 。如果您想要滚动更新功能，请考虑使用Deployment。此外， <a href="https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#rolling-update" target="_blank" rel="noopener"><code>rolling-update</code></a>命令是必需的，而Deployments是声明性的，因此我们建议通过<a href="https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#rollout" target="_blank" rel="noopener"><code>rollout</code></a>命令使用Deployments 。</p>
+<p>虽然ReplicaSet可以独立使用，但今天它主要被 <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/" target="_blank" rel="noopener">Deployments</a>用作协调pod创建，删除和更新的机制。使用“Deloyment”时，不必担心管理它们创建的副本集。部署拥有并管理其ReplicaSet。</p>
+<p>ReplicaSet确保在任何给定时间运行指定数量的pod副本。但是，Deployment是一个更高级别的概念，它管理ReplicaSet并为pod提供声明性更新以及许多其他有用的功能。因此，除非您需要自定义更新编排或根本不需要更新，否则我们建议您使用部署而不是直接使用ReplicaSet。</p>
+<p>这实际上意味着您可能永远不需要操作ReplicaSet对象：改为使用Deployment，并在spec部分中定义您的应用程序。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span> </span><br><span class="line"><span class="attr">kind:</span> <span class="string">ReplicaSet</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line">	<span class="attr">name:</span> <span class="string">frontend</span> <span class="comment">#自动插入pod template里面的label</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line">	<span class="attr">replicas:</span> <span class="number">3</span> <span class="comment">#维持3副本，可被修改</span></span><br><span class="line">	<span class="attr">selector:</span> <span class="comment">#选择器，也是自动从pod template里面获取</span></span><br><span class="line">		<span class="attr">matchLabels:</span> </span><br><span class="line">			<span class="attr">tier:</span> <span class="string">frontend</span></span><br><span class="line">		<span class="attr">matchExpressions:</span></span><br><span class="line">			<span class="bullet">-</span> <span class="string">&#123;key:</span> <span class="string">tier,</span> <span class="attr">operator:</span> <span class="string">In,</span> <span class="attr">values:</span> <span class="string">[frontend]&#125;</span></span><br><span class="line">	<span class="attr">template:</span> <span class="comment">#pod template，作为后续创建所 有Pod的模板</span></span><br><span class="line">		<span class="attr">metadata:</span></span><br><span class="line">			<span class="attr">labels:</span></span><br><span class="line">				<span class="attr">app:</span> <span class="string">guestbook</span> <span class="attr">tier:</span> <span class="string">frontend</span></span><br><span class="line">		<span class="attr">spec:</span></span><br><span class="line">			<span class="attr">containers:</span></span><br><span class="line">			<span class="bullet">-</span> <span class="attr">name:</span> <span class="string">php-redis</span></span><br><span class="line">			  <span class="attr">image:</span> <span class="string">gcr.io/google_samples/gb-frontend:v3</span> </span><br><span class="line">			  <span class="attr">resources:</span></span><br><span class="line">			    <span class="attr">requests:</span></span><br><span class="line">				  <span class="attr">cpu:</span> <span class="number">100</span><span class="string">m</span> <span class="comment">#资源限制</span></span><br><span class="line">				  <span class="attr">memory:</span> <span class="number">100</span><span class="string">Mi</span></span><br><span class="line">			  <span class="attr">env:</span></span><br><span class="line">        	  <span class="bullet">-</span> <span class="attr">name:</span> <span class="string">GET_HOSTS_FROM</span></span><br><span class="line">          		<span class="attr">value:</span> <span class="string">dns</span></span><br><span class="line">          		<span class="comment"># If your cluster config does not include a dns service, then to</span></span><br><span class="line">          		<span class="comment"># instead access environment variables to find service host</span></span><br><span class="line">          		<span class="comment"># info, comment out the 'value: dns' line above, and uncomment the</span></span><br><span class="line">          		<span class="comment"># line below.</span></span><br><span class="line">          		<span class="comment"># value: env</span></span><br><span class="line">			  <span class="attr">ports:</span></span><br><span class="line">				<span class="bullet">-</span> <span class="attr">containerPort:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>更多信息参考:<a href="https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/" target="_blank" rel="noopener">https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/</a></p>
+<p>K8s容器资源限制可以参考这篇:<a href="https://my.oschina.net/HardySimpson/blog/1359276" target="_blank" rel="noopener">https://my.oschina.net/HardySimpson/blog/1359276</a></p>
+</blockquote>
+<h4 id="Deployment的行为和定义"><a href="#Deployment的行为和定义" class="headerlink" title="Deployment的行为和定义"></a>Deployment的行为和定义</h4><p>Deployment为Pod和Replica Set（下一代Replication Controller）提供声明式更新。</p>
+<p>您只需要在 Deployment 中描述您想要的目标状态是什么，Deployment controller 就会帮您将 Pod 和ReplicaSet 的实际状态改变到您的目标状态。您可以定义一个全新的 Deployment 来创建 ReplicaSet 或者删除已有的 Deployment 并创建一个新的来替换。</p>
+<blockquote>
+<p><strong>注意</strong>：您不该手动管理由 Deployment 创建的 ReplicaSet，否则您就篡越了 Deployment controller 的职责！下文罗列了 Deployment 对象中已经覆盖了所有的用例。如果未有覆盖您所有需要的用例，请直接在 Kubernetes 的代码库中提 issue。</p>
+</blockquote>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#controllers/nginx-deployment.yaml  </span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">apps/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">nginx-deployment</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  replicas:</span> <span class="number">3</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    matchLabels:</span></span><br><span class="line"><span class="attr">      app:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">nginx</span></span><br><span class="line"><span class="attr">        image:</span> <span class="attr">nginx:1.7.9</span></span><br><span class="line"><span class="attr">        ports:</span></span><br><span class="line"><span class="attr">        - containerPort:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>更多信息:</p>
+<p>Deployment 文档:<a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/" target="_blank" rel="noopener">https://kubernetes.io/docs/concepts/workloads/controllers/deployment/</a></p>
+<p>Deployment 简述:<a href="https://jimmysong.io/kubernetes-handbook/concepts/deployment.html" target="_blank" rel="noopener">https://jimmysong.io/kubernetes-handbook/concepts/deployment.html</a></p>
+</blockquote>
 
     </article>
     <!-- license  -->
@@ -947,7 +1121,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#kubernetes-架构"><span class="toc-number">1.</span> <span class="toc-text">kubernetes 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#分层架构"><span class="toc-number">1.1.</span> <span class="toc-text">分层架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#架构设计优缺点"><span class="toc-number">1.2.</span> <span class="toc-text">架构设计优缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s提供的抽象"><span class="toc-number">2.</span> <span class="toc-text">k8s提供的抽象</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#kubernetes-中的对象"><span class="toc-number">2.0.1.</span> <span class="toc-text">kubernetes 中的对象</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象分类"><span class="toc-number">3.</span> <span class="toc-text">对象分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#业界各种安装方式对比"><span class="toc-number">4.</span> <span class="toc-text">业界各种安装方式对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#当pod创建时-k8s到底干了啥"><span class="toc-number">5.</span> <span class="toc-text">当pod创建时,k8s到底干了啥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kubectl-常见命令"><span class="toc-number">6.</span> <span class="toc-text">kubectl 常见命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl上下文和配置"><span class="toc-number">6.1.</span> <span class="toc-text">kubectl上下文和配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-创建对象"><span class="toc-number">6.2.</span> <span class="toc-text">kubectl 创建对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl显示和查找资源"><span class="toc-number">6.3.</span> <span class="toc-text">kubectl显示和查找资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl编辑资源"><span class="toc-number">6.4.</span> <span class="toc-text">kubectl编辑资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-Scale-资源"><span class="toc-number">6.5.</span> <span class="toc-text">kubectl Scale 资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-删除资源"><span class="toc-number">6.6.</span> <span class="toc-text">kubectl 删除资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl与运行中的-Pod-交互"><span class="toc-number">6.7.</span> <span class="toc-text">kubectl与运行中的 Pod 交互</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl与节点和集群交互"><span class="toc-number">6.8.</span> <span class="toc-text">kubectl与节点和集群交互</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s构建高可用集群"><span class="toc-number">7.</span> <span class="toc-text">k8s构建高可用集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s应用管理"><span class="toc-number">8.</span> <span class="toc-text">k8s应用管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pod详解"><span class="toc-number">8.1.</span> <span class="toc-text">pod详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod的设计动机"><span class="toc-number">8.2.</span> <span class="toc-text">pod的设计动机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod的非持久性"><span class="toc-number">8.3.</span> <span class="toc-text">pod的非持久性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#init容器"><span class="toc-number">8.4.</span> <span class="toc-text">init容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pod中容器镜像常见设置"><span class="toc-number">8.5.</span> <span class="toc-text">Pod中容器镜像常见设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pod-status-phase"><span class="toc-number">8.6.</span> <span class="toc-text">Pod.status.phase</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器探针-注意不是Pod探针"><span class="toc-number">8.7.</span> <span class="toc-text">容器探针(注意不是Pod探针)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器重启策略"><span class="toc-number">8.8.</span> <span class="toc-text">容器重启策略</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#以五分钟为上限的指数退避延迟-10秒，20秒，40秒…-重新启动，并在成功执行十分钟后重置。"><span class="toc-number">8.8.1.</span> <span class="toc-text">以五分钟为上限的指数退避延迟(10秒，20秒，40秒… )重新启动，并在成功执行十分钟后重置。</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#kubernetes-架构"><span class="toc-number">1.</span> <span class="toc-text">kubernetes 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#分层架构"><span class="toc-number">1.1.</span> <span class="toc-text">分层架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#架构设计优缺点"><span class="toc-number">1.2.</span> <span class="toc-text">架构设计优缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s提供的抽象"><span class="toc-number">2.</span> <span class="toc-text">k8s提供的抽象</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#kubernetes-中的对象"><span class="toc-number">2.0.1.</span> <span class="toc-text">kubernetes 中的对象</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象分类"><span class="toc-number">3.</span> <span class="toc-text">对象分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#业界各种安装方式对比"><span class="toc-number">4.</span> <span class="toc-text">业界各种安装方式对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#当pod创建时-k8s到底干了啥"><span class="toc-number">5.</span> <span class="toc-text">当pod创建时,k8s到底干了啥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kubectl-常见命令"><span class="toc-number">6.</span> <span class="toc-text">kubectl 常见命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl上下文和配置"><span class="toc-number">6.1.</span> <span class="toc-text">kubectl上下文和配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-创建对象"><span class="toc-number">6.2.</span> <span class="toc-text">kubectl 创建对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl显示和查找资源"><span class="toc-number">6.3.</span> <span class="toc-text">kubectl显示和查找资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl编辑资源"><span class="toc-number">6.4.</span> <span class="toc-text">kubectl编辑资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-Scale-资源"><span class="toc-number">6.5.</span> <span class="toc-text">kubectl Scale 资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-删除资源"><span class="toc-number">6.6.</span> <span class="toc-text">kubectl 删除资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl与运行中的-Pod-交互"><span class="toc-number">6.7.</span> <span class="toc-text">kubectl与运行中的 Pod 交互</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl与节点和集群交互"><span class="toc-number">6.8.</span> <span class="toc-text">kubectl与节点和集群交互</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s构建高可用集群"><span class="toc-number">7.</span> <span class="toc-text">k8s构建高可用集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s应用管理"><span class="toc-number">8.</span> <span class="toc-text">k8s应用管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pod详解"><span class="toc-number">8.1.</span> <span class="toc-text">pod详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod的设计动机"><span class="toc-number">8.2.</span> <span class="toc-text">pod的设计动机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod的非持久性"><span class="toc-number">8.3.</span> <span class="toc-text">pod的非持久性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#init容器"><span class="toc-number">8.4.</span> <span class="toc-text">init容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pod中容器镜像常见设置"><span class="toc-number">8.5.</span> <span class="toc-text">Pod中容器镜像常见设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pod-status-phase"><span class="toc-number">8.6.</span> <span class="toc-text">Pod.status.phase</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器探针-注意不是Pod探针"><span class="toc-number">8.7.</span> <span class="toc-text">容器探针(注意不是Pod探针)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器重启策略"><span class="toc-number">8.8.</span> <span class="toc-text">容器重启策略</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#以五分钟为上限的指数退避延迟-10秒，20秒，40秒…-重新启动，并在成功执行十分钟后重置。"><span class="toc-number">8.8.1.</span> <span class="toc-text">以五分钟为上限的指数退避延迟(10秒，20秒，40秒… )重新启动，并在成功执行十分钟后重置。</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod状态与容器状态的关系"><span class="toc-number">8.9.</span> <span class="toc-text">pod状态与容器状态的关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ReplicaSet-副本集"><span class="toc-number">8.10.</span> <span class="toc-text">ReplicaSet: 副本集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Deployment的行为和定义"><span class="toc-number">8.11.</span> <span class="toc-text">Deployment的行为和定义</span></a></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -960,6 +1134,8 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
     
     
     
@@ -1092,7 +1268,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2018/07/17/K8S-InfoCollection/" >Kubernetes Information collection</a>
+            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2018/07/17/K8S-InfoCollection/" >Kubernetes Information Collection</a>
         </li>
     
     
