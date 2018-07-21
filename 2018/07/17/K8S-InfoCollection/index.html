@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">6,273</span> / Reading time: <span class="post-count">26 min</span></span>
+                        <span>Word count: <span class="post-count">6,343</span> / Reading time: <span class="post-count">26 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -1011,23 +1011,18 @@ height:50vh;
 <p>默认的策略是，随机选择一个 backend。 实现基于客户端 IP 的会话亲和性，可以将 <code>service.spec.sessionAffinity</code> 的值设置为 <code>&quot;ClientIP&quot;</code> （默认值为 <code>&quot;None&quot;</code>）。</p>
 <p>和 userspace 代理类似，网络返回的结果是，任何到达 <code>Service</code> 的 IP:Port 的请求，都会被代理到一个合适的 backend，不需要客户端知道关于 Kubernetes、<code>Service</code>、或 <code>Pod</code> 的任何信息。 这应该比 userspace 代理更快、更可靠。然而，不像 userspace 代理，如果初始选择的 <code>Pod</code> 没有响应，iptables 代理不能自动地重试另一个 <code>Pod</code>，所以它需要依赖 <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#defining-readiness-probes" target="_blank" rel="noopener">readiness probes</a>。</p>
 <p><img src="/images/iptables.png" alt="iptables"></p>
-<h5 id="ipvs代理模式"><a href="#ipvs代理模式" class="headerlink" title="ipvs代理模式"></a>ipvs代理模式</h5><p>在此模式下，kube-proxy监视Kubernetes服务和端点，调用<code>netlink</code>接口以相应地创建ipvs规则并定期与Kubernetes服务和端点同步ipvs规则，以确保ipvs状态与期望一致。访问服务时，流量将被重定向到其中一个后端Pod。</p>
-<p>与iptables类似，Ipvs基于netfilter钩子函数，但使用哈希表作为底层数据结构并在内核空间中工作。这意味着ipvs可以更快地重定向流量，并且在同步代理规则时具有更好的性能。此外，ipvs为负载均衡算法提供了更多选项，例如：</p>
+<h5 id="ipvs代理模式"><a href="#ipvs代理模式" class="headerlink" title="ipvs代理模式"></a>ipvs代理模式</h5><p>这种模式，kube-proxy会监视Kubernetes <code>Service</code>对象和<code>Endpoints</code>，调用<code>netlink</code>接口以相应地创建ipvs规则并定期与Kubernetes <code>Service</code>对象和<code>Endpoints</code>对象同步ipvs规则，以确保ipvs状态与期望一致。访问服务时，流量将被重定向到其中一个后端Pod。</p>
+<p>与iptables类似，ipvs基于netfilter 的 hook 功能，但使用哈希表作为底层数据结构并在内核空间中工作。这意味着ipvs可以更快地重定向流量，并且在同步代理规则时具有更好的性能。此外，ipvs为负载均衡算法提供了更多选项，例如：</p>
 <ul>
-<li><p><code>rr</code>：循环赛</p>
-</li>
-<li><p><code>lc</code>：最少连接</p>
-</li>
-<li><p><code>dh</code>：目标哈希</p>
-</li>
-<li><p><code>sh</code>：源哈希</p>
-</li>
-<li><p><code>sed</code>：预计延迟时间最短</p>
-</li>
-<li><p><code>nq</code>：从不排队</p>
-<p><img src="/images/service-ipvs-overview.png" alt="ipvs"></p>
-</li>
+<li><code>rr</code>：轮询调度</li>
+<li><code>lc</code>：最小连接数</li>
+<li><code>dh</code>：目标哈希</li>
+<li><code>sh</code>：源哈希</li>
+<li><code>sed</code>：最短期望延迟</li>
+<li><code>nq</code>： 不排队调度</li>
 </ul>
+<p><strong>注意：</strong> ipvs模式假定在运行kube-proxy之前在节点上都已经安装了IPVS内核模块。当kube-proxy以ipvs代理模式启动时，kube-proxy将验证节点上是否安装了IPVS模块，如果未安装，则kube-proxy将回退到iptables代理模式。</p>
+<p><img src="/images/service-ipvs-overview.png" alt="ipvs"></p>
 <blockquote>
 <p>由于userspace使用并不常见,因此不在此赘述。</p>
 <p>更多详见:<a href="https://jimmysong.io/kubernetes-handbook/concepts/service.html" target="_blank" rel="noopener">https://jimmysong.io/kubernetes-handbook/concepts/service.html</a></p>
