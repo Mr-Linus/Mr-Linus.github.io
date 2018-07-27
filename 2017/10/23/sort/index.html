@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">3,696</span> / Reading time: <span class="post-count">16 min</span></span>
+                        <span>Word count: <span class="post-count">3,691</span> / Reading time: <span class="post-count">16 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -423,15 +423,41 @@ height:50vh;
 <li>由插入排序的思想可以引伸出三个重要排序算法: 直接插入排序 / 折半插入排序 / 希尔排序</li>
 </ul>
 <h4 id="直接插入排序"><a href="#直接插入排序" class="headerlink" title="直接插入排序"></a>直接插入排序</h4><p>在排序过程中序列的状态如下:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">|  有序序列L[1...i-1]  |   L[i]   |    无序序列L[i+1...n]  |</span><br></pre></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>有序序列L[1…i-1]</th>
+<th>L[i]</th>
+<th>无序序列L[i+1…n]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>前</td>
+<td>中</td>
+<td>后</td>
+</tr>
+</tbody>
+</table>
+</div>
 <p>也就是说，每趟排序保证前面的序列是有序的。</p>
-<p>排序流程:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1 ) 查找出L[i]在L[1...i-1]中的位置 k</span><br><span class="line"></span><br><span class="line">2 ) 将L[k...i-1]中所有元素全部后移一个位置</span><br><span class="line"></span><br><span class="line">3 )将L[i]复制到L[k]</span><br></pre></td></tr></table></figure></p>
+<p>排序流程:</p>
+<ul>
+<li>1.查找出L[i]在L[1…i-1]中的位置 k</li>
+<li>2.将L[k…i-1]中所有元素全部后移一个位置</li>
+<li>3.将L[i]复制到L[k] </li>
+</ul>
 <p>C代码实现:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">#不使用哨兵</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InsertSort</span> <span class="params">( ElemType A[ ],<span class="keyword">int</span> n )</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i , j;</span><br><span class="line">    <span class="comment">//定义temp用于存储L[i]</span></span><br><span class="line">    ElemType temp;</span><br><span class="line">    <span class="comment">//外层循环</span></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">1</span>;i&lt;n;i++)&#123;</span><br><span class="line">        j=i;</span><br><span class="line">        <span class="comment">//将待排序的值赋值给temp</span></span><br><span class="line">        temp=A[i];</span><br><span class="line">        <span class="comment">//内存循环</span></span><br><span class="line">        <span class="keyword">while</span>(j&gt;<span class="number">0</span> &amp;&amp; temp &lt; A[j<span class="number">-1</span>] )&#123;</span><br><span class="line">            <span class="comment">//依次把待排序数和有序序列从后往前比较,如果比其小就往后移动</span></span><br><span class="line">            A[j]=A[j<span class="number">-1</span>];</span><br><span class="line">            j--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//找到所在位置，赋值</span></span><br><span class="line">        A[j]=temp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">#使用哨兵</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InsertSort</span> <span class="params">( ElemType A[ ],<span class="keyword">int</span> n )</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i , j;</span><br><span class="line">    <span class="keyword">for</span>( i=<span class="number">2</span> ; i&lt;= n ; i++ )&#123;         <span class="comment">//依次将A[2]~A[n]插入到前面已排序</span></span><br><span class="line">        <span class="keyword">if</span>( A[i] &lt; A[i<span class="number">-1</span>] )&#123;  <span class="comment">//若A[i]小于其前驱</span></span><br><span class="line">            A[<span class="number">0</span>]=A[i];                <span class="comment">//复制为哨兵,A[0]不存放元素</span></span><br><span class="line">            <span class="keyword">for</span>( j=i<span class="number">-1</span> ; A[<span class="number">0</span>] &lt; A[j] ; --j )&#123;  <span class="comment">//从后往前查找待插入位置</span></span><br><span class="line">                A[j+<span class="number">1</span>] = A[j];        <span class="comment">//向后挪位</span></span><br><span class="line">            &#125;</span><br><span class="line">            A[j+<span class="number">1</span>] = A[<span class="number">0</span>];              <span class="comment">//复制到插入位置</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>平均时间复杂度O(n²)</p>
 <blockquote>
 <p>最好情况下，表中元素已经有序，此时没插入一个元素，都只需比较一次而不用移动元素，因而时间复杂度为O(n)<br>最坏情况下，表中的元素为逆序，总的比较次数和移动次数就达到最大，均为：$\sum _{i=1}^{n-1} i$</p>
 </blockquote>
-<h4 id="折半插入排序"><a href="#折半插入排序" class="headerlink" title="折半插入排序:"></a>折半插入排序:</h4><p>在前面简单插入排序过程中,每趟排序都进行了2项工作:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">1.从前面的子表中查找出待插入元素应该被插入的位置</span><br><span class="line">2.给插入位置腾出空间</span><br></pre></td></tr></table></figure></p>
+<h4 id="折半插入排序"><a href="#折半插入排序" class="headerlink" title="折半插入排序:"></a>折半插入排序:</h4><p>在前面简单插入排序过程中,每趟排序都进行了2项工作:</p>
+<ul>
+<li>1.从前面的子表中查找出待插入元素应该被插入的位置</li>
+<li>2.给插入位置腾出空间</li>
+</ul>
 <p>折半查找原理很简单，就是把直接插入排序过程中的直接查找过程用二分查找代替，即减少比较次数。 </p>
 <p>C代码算法实现:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">HalfInsertSort</span> <span class="params">(ElemType A[], <span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i , j , low , high , mid ;</span><br><span class="line">    <span class="keyword">for</span>( i=<span class="number">2</span> ; i &lt; n ; i++ )&#123;    <span class="comment">//依次将A[2]~A[n]插入到前面已排序序列</span></span><br><span class="line">        A[<span class="number">0</span>] = A[i];             <span class="comment">//将A[i]暂存到A[0]</span></span><br><span class="line">        low = <span class="number">1</span>;                 <span class="comment">//设置折半查找的范围</span></span><br><span class="line">        high = i <span class="number">-1</span> ;           </span><br><span class="line">        <span class="keyword">while</span>(low &lt;= high)&#123;      <span class="comment">//折半查找(默认递增有序)</span></span><br><span class="line">            mid = (low+high)/<span class="number">2</span>;  <span class="comment">//取中间点</span></span><br><span class="line">            <span class="keyword">if</span>(A[mid] &gt; A[<span class="number">0</span>])&#123; <span class="comment">//查找左半子表</span></span><br><span class="line">                high = mid<span class="number">-1</span>;   </span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> low = mid + <span class="number">1</span>;  <span class="comment">//查找右半子表</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(j=i<span class="number">-1</span>;j&gt;high+<span class="number">1</span>;--j)&#123;  <span class="comment">//统一后移元素,空出插入位置</span></span><br><span class="line">            A[j+<span class="number">1</span>]=A[j];</span><br><span class="line">        &#125;</span><br><span class="line">        A[high+<span class="number">1</span>]=A[<span class="number">0</span>];              <span class="comment">//插入操作</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <blockquote>
