@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">7,129</span> / Reading time: <span class="post-count">29 min</span></span>
+                        <span>Word count: <span class="post-count">9,488</span> / Reading time: <span class="post-count">38 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -1076,6 +1076,163 @@ height:50vh;
 </tbody>
 </table>
 </div>
+<h4 id="Job"><a href="#Job" class="headerlink" title="Job"></a>Job</h4><p>Job负责批处理任务，即仅执行一次的任务，它保证批处理任务的一个或多个Pod成功结束。</p>
+<h5 id="Job-Spec格式"><a href="#Job-Spec格式" class="headerlink" title="Job Spec格式"></a>Job Spec格式</h5><ul>
+<li>spec.template格式同Pod</li>
+<li>RestartPolicy仅支持Never或OnFailure</li>
+<li>单个Pod时，默认Pod成功运行后Job即结束</li>
+<li><code>.spec.completions</code>标志Job结束需要成功运行的Pod个数，默认为1</li>
+<li><code>.spec.parallelism</code>标志并行运行的Pod的个数，默认为1</li>
+<li><p><code>spec.activeDeadlineSeconds</code>标志失败Pod的重试最大时间，超过这个时间不会继续重试</p>
+<p>例子:</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">batch/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Job</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">pi</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      name:</span> <span class="string">pi</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">pi</span></span><br><span class="line"><span class="attr">        image:</span> <span class="string">perl</span></span><br><span class="line"><span class="attr">        command:</span> <span class="string">["perl",</span>  <span class="string">"-Mbignum=bpi"</span><span class="string">,</span> <span class="string">"-wle"</span><span class="string">,</span> <span class="string">"print bpi(2000)"</span><span class="string">]</span></span><br><span class="line"><span class="attr">      restartPolicy:</span> <span class="string">Never</span></span><br></pre></td></tr></table></figure>
+<h4 id="CronJob"><a href="#CronJob" class="headerlink" title="CronJob"></a>CronJob</h4><p><em>Cron Job</em> 管理基于时间的 <a href="https://kubernetes.io/docs/concepts/jobs/run-to-completion-finite-workloads/" target="_blank" rel="noopener">Job</a>，即：</p>
+<ul>
+<li>在给定时间点只运行一次</li>
+<li>周期性地在给定时间点运行</li>
+</ul>
+<p>一个 CronJob 对象类似于 <em>crontab</em> （cron table）文件中的一行。它根据指定的预定计划周期性地运行一个 Job，格式可以参考 <a href="https://en.wikipedia.org/wiki/Cron" target="_blank" rel="noopener">Cron</a> 。</p>
+<blockquote>
+<p>扩展阅读: <a href="http://dockone.io/article/2845" target="_blank" rel="noopener">瓜子云任务调度系统</a></p>
+</blockquote>
+<h5 id="CronJob-Spec"><a href="#CronJob-Spec" class="headerlink" title="CronJob Spec"></a>CronJob Spec</h5><ul>
+<li><p><code>.spec.schedule</code>：<strong>调度</strong>，必需字段，指定任务运行周期，格式同 <a href="https://en.wikipedia.org/wiki/Cron" target="_blank" rel="noopener">Cron</a></p>
+</li>
+<li><p><code>.spec.jobTemplate</code>：<strong>Job 模板</strong>，必需字段，指定需要运行的任务，格式同 <a href="https://jimmysong.io/kubernetes-handbook/concepts/job.html" target="_blank" rel="noopener">Job</a></p>
+</li>
+<li><p><code>.spec.startingDeadlineSeconds</code> ：<strong>启动 Job 的期限（秒级别）</strong>，该字段是可选的。如果因为任何原因而错过了被调度的时间，那么错过执行时间的 Job 将被认为是失败的。如果没有指定，则没有期限</p>
+</li>
+<li><p><code>.spec.concurrencyPolicy</code>：<strong>并发策略</strong>，该字段也是可选的。它指定了如何处理被 Cron Job 创建的 Job 的并发执行。只允许指定下面策略中的一种：</p>
+<ul>
+<li><code>Allow</code>（默认）：允许并发运行 Job</li>
+<li><code>Forbid</code>：禁止并发运行，如果前一个还没有完成，则直接跳过下一个</li>
+<li><code>Replace</code>：取消当前正在运行的 Job，用一个新的来替换</li>
+</ul>
+<p>注意，当前策略只能应用于同一个 Cron Job 创建的 Job。如果存在多个 Cron Job，它们创建的 Job 之间总是允许并发运行。</p>
+</li>
+<li><p><code>.spec.suspend</code> ：<strong>挂起</strong>，该字段也是可选的。如果设置为 <code>true</code>，后续所有执行都会被挂起。它对已经开始执行的 Job 不起作用。默认值为 <code>false</code>。</p>
+</li>
+<li><p><code>.spec.successfulJobsHistoryLimit</code> 和 <code>.spec.failedJobsHistoryLimit</code> ：<strong>历史限制</strong>，是可选的字段。它们指定了可以保留多少完成和失败的 Job。</p>
+<p>默认没有限制，所有成功和失败的 Job 都会被保留。然而，当运行一个 Cron Job 时，Job 可以很快就堆积很多，推荐设置这两个字段的值。设置限制的值为 <code>0</code>，相关类型的 Job 完成后将不会被保留。</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">batch/v2alpha1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">CronJob</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">hello</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  schedule:</span> <span class="string">"*/1 * * * *"</span></span><br><span class="line"><span class="attr">  jobTemplate:</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      template:</span></span><br><span class="line"><span class="attr">        spec:</span></span><br><span class="line"><span class="attr">          containers:</span></span><br><span class="line"><span class="attr">          - name:</span> <span class="string">hello</span></span><br><span class="line"><span class="attr">            image:</span> <span class="string">busybox</span></span><br><span class="line"><span class="attr">            args:</span></span><br><span class="line"><span class="bullet">            -</span> <span class="string">/bin/sh</span></span><br><span class="line"><span class="bullet">            -</span> <span class="bullet">-c</span></span><br><span class="line"><span class="bullet">            -</span> <span class="string">date;</span> <span class="string">echo</span> <span class="string">Hello</span> <span class="string">from</span> <span class="string">the</span> <span class="string">Kubernetes</span> <span class="string">cluster</span></span><br><span class="line"><span class="attr">          restartPolicy:</span> <span class="string">OnFailure</span></span><br></pre></td></tr></table></figure>
+<h5 id="Cron-Job-限制"><a href="#Cron-Job-限制" class="headerlink" title="Cron Job 限制"></a>Cron Job 限制</h5><p>Cron Job 在每次调度运行时间内 <em>大概</em> 会创建一个 Job 对象。我们之所以说 <em>大概</em> ，是因为在特定的环境下可能会创建两个 Job，或者一个 Job 都没创建。我们尝试少发生这种情况，但却不能完全避免。因此，创建 Job 操作应该是 <em>幂等的</em>。</p>
+<p>Job 根据它所创建的 Pod 的并行度，负责重试创建 Pod，并就决定这一组 Pod 的成功或失败。Cron Job 根本就不会去检查 Pod。</p>
+<h3 id="Volume"><a href="#Volume" class="headerlink" title="Volume"></a>Volume</h3><p>容器磁盘上的文件的生命周期是短暂的，这就使得在容器中运行重要应用时会出现一些问题。首先，当容器崩溃时，kubelet 会重启它，但是容器中的文件将丢失——容器以干净的状态（镜像最初的状态）重新启动。其次，在 <code>Pod</code> 中同时运行多个容器时，这些容器之间通常需要共享文件。Kubernetes 中的 <code>Volume</code>抽象就很好的解决了这些问题。</p>
+<h4 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h4><p>Docker 中也有一个 <a href="https://docs.docker.com/engine/admin/volumes/" target="_blank" rel="noopener">volume</a> 的概念，尽管它稍微宽松一些，管理也很少。在 Docker 中，卷就像是磁盘或是另一个容器中的一个目录。它的生命周期不受管理，直到最近才有了 local-disk-backed 卷。Docker 现在提供了卷驱动程序，但是功能还非常有限（例如Docker1.7只允许每个容器使用一个卷驱动，并且无法给卷传递参数）。</p>
+<p>另一方面，Kubernetes 中的卷有明确的寿命——与封装它的 Pod 相同。所以，卷的生命比 Pod 中的所有容器都长，当这个容器重启时数据仍然得以保存。当然，当 Pod 不再存在时，卷也将不复存在。也许更重要的是，Kubernetes 支持多种类型的卷，Pod 可以同时使用任意数量的卷。</p>
+<p>卷的核心是目录，可能还包含了一些数据，可以通过 pod 中的容器来访问。该目录是如何形成的、支持该目录的介质以及其内容取决于所使用的特定卷类型。</p>
+<p>要使用卷，需要为 pod 指定为卷（<code>spec.volumes</code> 字段）以及将它挂载到容器的位置（<code>spec.containers.volumeMounts</code> 字段）。</p>
+<p>容器中的进程看到的是由其 Docker 镜像和卷组成的文件系统视图。 <a href="https://docs.docker.com/userguide/dockerimages/" target="_blank" rel="noopener">Docker 镜像</a>位于文件系统层次结构的根目录，任何卷都被挂载在镜像的指定路径中。卷无法挂载到其他卷上或与其他卷有硬连接。Pod 中的每个容器都必须独立指定每个卷的挂载位置。</p>
+<h4 id="卷的类型"><a href="#卷的类型" class="headerlink" title="卷的类型"></a>卷的类型</h4><p>Kubernetes 支持以下类型的卷：</p>
+<ul>
+<li><code>awsElasticBlockStore</code></li>
+<li><code>azureDisk</code></li>
+<li><code>azureFile</code></li>
+<li><code>cephfs</code></li>
+<li><code>csi</code></li>
+<li><code>downwardAPI</code></li>
+<li><code>emptyDir</code></li>
+<li><code>fc</code> (fibre channel)</li>
+<li><code>flocker</code></li>
+<li><code>gcePersistentDisk</code></li>
+<li><code>gitRepo</code></li>
+<li><code>glusterfs</code></li>
+<li><code>hostPath</code></li>
+<li><code>iscsi</code></li>
+<li><code>local</code></li>
+<li><code>nfs</code></li>
+<li><code>persistentVolumeClaim</code></li>
+<li><code>projected</code></li>
+<li><code>portworxVolume</code></li>
+<li><code>quobyte</code></li>
+<li><code>rbd</code></li>
+<li><code>scaleIO</code></li>
+<li><code>secret</code></li>
+<li><code>storageos</code></li>
+<li><code>vsphereVolume</code></li>
+</ul>
+<p>这里以emptyDir为例,当 Pod 被分配给节点时，首先创建 <code>emptyDir</code> 卷，并且只要该 Pod 在该节点上运行，该卷就会存在。正如卷的名字所述，它最初是空的。Pod 中的容器可以读取和写入 <code>emptyDir</code> 卷中的相同文件，尽管该卷可以挂载到每个容器中的相同或不同路径上。当出于任何原因从节点中删除 Pod 时，<code>emptyDir</code> 中的数据将被永久删除。</p>
+<p><strong>注意</strong>：容器崩溃不会从节点中移除 pod，因此 <code>emptyDir</code> 卷中的数据在容器崩溃时是安全的。</p>
+<p><code>emptyDir</code> 的用法有：</p>
+<ul>
+<li>暂存空间，例如用于基于磁盘的合并排序</li>
+<li>用作长时间计算崩溃恢复时的检查点</li>
+<li><p>Web服务器容器提供数据时，保存内容管理器容器提取的文件</p>
+<p>Pod示例:</p>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">test-pd</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">  - image:</span> <span class="string">k8s.gcr.io/test-webserver</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">test-container</span></span><br><span class="line"><span class="attr">    volumeMounts:</span></span><br><span class="line"><span class="attr">    - mountPath:</span> <span class="string">/cache</span></span><br><span class="line"><span class="attr">      name:</span> <span class="string">cache-volume</span></span><br><span class="line"><span class="attr">  volumes:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">cache-volume</span></span><br><span class="line"><span class="attr">    emptyDir:</span> <span class="string">&#123;&#125;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<ol>
+<li>Volume -&gt; volumeMounts对应  </li>
+<li>通过名称对应  </li>
+<li>1:n对应，在多个容器里面同时挂载 </li>
+</ol>
+</blockquote>
+<h5 id="区分emptyDir与hostPath"><a href="#区分emptyDir与hostPath" class="headerlink" title="区分emptyDir与hostPath"></a>区分emptyDir与hostPath</h5><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>emptyDir</th>
+<th>hostPath</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>生命周期 = Pod</td>
+<td>生命周期 = Node</td>
+</tr>
+<tr>
+<td>不能指定路径</td>
+<td>指定路径</td>
+</tr>
+<tr>
+<td>同Pod的多容器间可共 享</td>
+<td>同Pod的多容器 同Node的多Pod</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h3><p>在一个Kubernetes集群中可以使用namespace创建多个“虚拟集群”，这些namespace之间可以完全隔离，也可以通过某种方式，让一个namespace中的service可以访问到其他的namespace中的服务，我们<a href="https://jimmysong.io/kubernetes-handbook/practice/install-kubernetes-on-centos.html" target="_blank" rel="noopener">在CentOS中部署kubernetes1.6集群</a>的时候就用到了好几个跨越namespace的服务，比如Traefik ingress和<code>kube-system</code>namespace下的service就可以为整个集群提供服务，这些都需要通过RBAC定义集群级别的角色来实现。</p>
+<h4 id="哪些情况下适合使用多个namespace"><a href="#哪些情况下适合使用多个namespace" class="headerlink" title="哪些情况下适合使用多个namespace"></a>哪些情况下适合使用多个namespace</h4><p>因为namespace可以提供独立的命名空间，因此可以实现部分的环境隔离。当你的项目和人员众多的时候可以考虑根据项目属性，例如生产、测试、开发划分不同的namespace。</p>
+<h5 id="Namespace使用"><a href="#Namespace使用" class="headerlink" title="Namespace使用"></a>Namespace使用</h5><p><strong>获取集群中有哪些namespace</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get ns</span><br></pre></td></tr></table></figure>
+<p>集群中默认会有<code>default</code>和<code>kube-system</code>这两个namespace。</p>
+<p>在执行<code>kubectl</code>命令时可以使用<code>-n</code>指定操作的namespace。</p>
+<p>用户的普通应用默认是在<code>default</code>下，与集群管理相关的为整个集群提供服务的应用一般部署在<code>kube-system</code>的namespace下，例如我们在安装kubernetes集群时部署的<code>kubedns</code>、<code>heapseter</code>、<code>EFK</code>等都是在这个namespace下面。</p>
+<p>另外，并不是所有的资源对象都会对应namespace，<code>node</code>和<code>persistentVolume</code>就不属于任何namespace。 </p>
+<h3 id="K8S调度机制"><a href="#K8S调度机制" class="headerlink" title="K8S调度机制"></a>K8S调度机制</h3><p><img src="/images/scheduler.png" alt="scheduler"></p>
+<ul>
+<li>预选 : 根据配置的 Predicates Policies(默认为 DefaultProvider 中定义的 default predicates policies 集合)过滤掉那些不满足 Policies的的Nodes，剩下的Nodes作为优选的输入。 </li>
+<li>优选 : 根据配置的 Priorities Policies(默认为 DefaultProvider 中定义的 default priorities policies 集合)给预选后的Nodes进 行打分排名，得分最高的Node即作为最适合的Node，该Pod 就Bind到这个Node。 </li>
+</ul>
+<h4 id="预选"><a href="#预选" class="headerlink" title="预选"></a>预选</h4><p><img src="/images/pre.png" alt="pre"></p>
+<ul>
+<li>系统当中有10个node，只有3台有GPU </li>
+<li>希望3个pod部署到这3个node上去 </li>
+<li>当有GPU的机器扩容时，希望动态增加pod </li>
+</ul>
+<h4 id="优选"><a href="#优选" class="headerlink" title="优选"></a>优选</h4><p><img src="/images/pri.png" alt="pri"></p>
+<h4 id="亲和-反亲和"><a href="#亲和-反亲和" class="headerlink" title="亲和/反亲和"></a>亲和/反亲和</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>亲和</th>
+<th>反亲和</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>传统应用进行容器化， 拆分微服务之后的部 署约束，需要按实例 逐一配对就近部署， 容器间通信就近路由， 减少网络消耗。</td>
+<td>高可靠性考虑，同个 应用的多个实例反亲 和部署，减少宕机影 响 互相干扰的应用反亲 和部署，避免干扰。</td>
+</tr>
+</tbody>
+</table>
+</div>
 <p><strong>持续更新</strong></p>
 
     </article>
@@ -1213,7 +1370,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#kubernetes-架构"><span class="toc-number">1.</span> <span class="toc-text">kubernetes 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#分层架构"><span class="toc-number">1.1.</span> <span class="toc-text">分层架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#架构设计优缺点"><span class="toc-number">1.2.</span> <span class="toc-text">架构设计优缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s提供的抽象"><span class="toc-number">2.</span> <span class="toc-text">k8s提供的抽象</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#kubernetes-中的对象"><span class="toc-number">2.0.1.</span> <span class="toc-text">kubernetes 中的对象</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象分类"><span class="toc-number">3.</span> <span class="toc-text">对象分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#业界各种安装方式对比"><span class="toc-number">4.</span> <span class="toc-text">业界各种安装方式对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#当pod创建时-k8s到底干了啥"><span class="toc-number">5.</span> <span class="toc-text">当pod创建时,k8s到底干了啥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kubectl-常见命令"><span class="toc-number">6.</span> <span class="toc-text">kubectl 常见命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl上下文和配置"><span class="toc-number">6.1.</span> <span class="toc-text">kubectl上下文和配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-创建对象"><span class="toc-number">6.2.</span> <span class="toc-text">kubectl 创建对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl显示和查找资源"><span class="toc-number">6.3.</span> <span class="toc-text">kubectl显示和查找资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl编辑资源"><span class="toc-number">6.4.</span> <span class="toc-text">kubectl编辑资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-Scale-资源"><span class="toc-number">6.5.</span> <span class="toc-text">kubectl Scale 资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-删除资源"><span class="toc-number">6.6.</span> <span class="toc-text">kubectl 删除资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl与运行中的-Pod-交互"><span class="toc-number">6.7.</span> <span class="toc-text">kubectl与运行中的 Pod 交互</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl与节点和集群交互"><span class="toc-number">6.8.</span> <span class="toc-text">kubectl与节点和集群交互</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s构建高可用集群"><span class="toc-number">7.</span> <span class="toc-text">k8s构建高可用集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s应用管理"><span class="toc-number">8.</span> <span class="toc-text">k8s应用管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pod详解"><span class="toc-number">8.1.</span> <span class="toc-text">pod详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod的设计动机"><span class="toc-number">8.2.</span> <span class="toc-text">pod的设计动机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod的非持久性"><span class="toc-number">8.3.</span> <span class="toc-text">pod的非持久性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#init容器"><span class="toc-number">8.4.</span> <span class="toc-text">init容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pod中容器镜像常见设置"><span class="toc-number">8.5.</span> <span class="toc-text">Pod中容器镜像常见设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pod-status-phase"><span class="toc-number">8.6.</span> <span class="toc-text">Pod.status.phase</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器探针-注意不是Pod探针"><span class="toc-number">8.7.</span> <span class="toc-text">容器探针(注意不是Pod探针)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器重启策略"><span class="toc-number">8.8.</span> <span class="toc-text">容器重启策略</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#以五分钟为上限的指数退避延迟-10秒，20秒，40秒…-重新启动，并在成功执行十分钟后重置。"><span class="toc-number">8.8.1.</span> <span class="toc-text">以五分钟为上限的指数退避延迟(10秒，20秒，40秒… )重新启动，并在成功执行十分钟后重置。</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod状态与容器状态的关系"><span class="toc-number">8.9.</span> <span class="toc-text">pod状态与容器状态的关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ReplicaSet-副本集"><span class="toc-number">8.10.</span> <span class="toc-text">ReplicaSet: 副本集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Deployment的行为和定义"><span class="toc-number">8.11.</span> <span class="toc-text">Deployment的行为和定义</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Deployment常见操作"><span class="toc-number">8.11.1.</span> <span class="toc-text">Deployment常见操作</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Services"><span class="toc-number">8.12.</span> <span class="toc-text">Services</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Services-→-Pod-→-Endpoints"><span class="toc-number">8.12.1.</span> <span class="toc-text">Services → Pod → Endpoints</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#VIP与Service代理"><span class="toc-number">8.13.</span> <span class="toc-text">VIP与Service代理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#iptables代理模式"><span class="toc-number">8.13.1.</span> <span class="toc-text">iptables代理模式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ipvs代理模式"><span class="toc-number">8.13.2.</span> <span class="toc-text">ipvs代理模式</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Service的发布类型"><span class="toc-number">8.14.</span> <span class="toc-text">Service的发布类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Services-→-无Selector"><span class="toc-number">8.15.</span> <span class="toc-text">Services → 无Selector</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Services-→-Headless-Services"><span class="toc-number">8.16.</span> <span class="toc-text">Services → Headless Services</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Services-→-Headless-Services-→-无Selector"><span class="toc-number">8.17.</span> <span class="toc-text">Services → Headless Services → 无Selector</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#服务发现-DNS"><span class="toc-number">8.18.</span> <span class="toc-text">服务发现:DNS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DaemonSet"><span class="toc-number">8.19.</span> <span class="toc-text">DaemonSet</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#kubernetes-架构"><span class="toc-number">1.</span> <span class="toc-text">kubernetes 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#分层架构"><span class="toc-number">1.1.</span> <span class="toc-text">分层架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#架构设计优缺点"><span class="toc-number">1.2.</span> <span class="toc-text">架构设计优缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s提供的抽象"><span class="toc-number">2.</span> <span class="toc-text">k8s提供的抽象</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#kubernetes-中的对象"><span class="toc-number">2.0.1.</span> <span class="toc-text">kubernetes 中的对象</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象分类"><span class="toc-number">3.</span> <span class="toc-text">对象分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#业界各种安装方式对比"><span class="toc-number">4.</span> <span class="toc-text">业界各种安装方式对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#当pod创建时-k8s到底干了啥"><span class="toc-number">5.</span> <span class="toc-text">当pod创建时,k8s到底干了啥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kubectl-常见命令"><span class="toc-number">6.</span> <span class="toc-text">kubectl 常见命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl上下文和配置"><span class="toc-number">6.1.</span> <span class="toc-text">kubectl上下文和配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-创建对象"><span class="toc-number">6.2.</span> <span class="toc-text">kubectl 创建对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl显示和查找资源"><span class="toc-number">6.3.</span> <span class="toc-text">kubectl显示和查找资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl编辑资源"><span class="toc-number">6.4.</span> <span class="toc-text">kubectl编辑资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-Scale-资源"><span class="toc-number">6.5.</span> <span class="toc-text">kubectl Scale 资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-删除资源"><span class="toc-number">6.6.</span> <span class="toc-text">kubectl 删除资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl与运行中的-Pod-交互"><span class="toc-number">6.7.</span> <span class="toc-text">kubectl与运行中的 Pod 交互</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl与节点和集群交互"><span class="toc-number">6.8.</span> <span class="toc-text">kubectl与节点和集群交互</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s构建高可用集群"><span class="toc-number">7.</span> <span class="toc-text">k8s构建高可用集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s应用管理"><span class="toc-number">8.</span> <span class="toc-text">k8s应用管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pod详解"><span class="toc-number">8.1.</span> <span class="toc-text">pod详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod的设计动机"><span class="toc-number">8.2.</span> <span class="toc-text">pod的设计动机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod的非持久性"><span class="toc-number">8.3.</span> <span class="toc-text">pod的非持久性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#init容器"><span class="toc-number">8.4.</span> <span class="toc-text">init容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pod中容器镜像常见设置"><span class="toc-number">8.5.</span> <span class="toc-text">Pod中容器镜像常见设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pod-status-phase"><span class="toc-number">8.6.</span> <span class="toc-text">Pod.status.phase</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器探针-注意不是Pod探针"><span class="toc-number">8.7.</span> <span class="toc-text">容器探针(注意不是Pod探针)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器重启策略"><span class="toc-number">8.8.</span> <span class="toc-text">容器重启策略</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#以五分钟为上限的指数退避延迟-10秒，20秒，40秒…-重新启动，并在成功执行十分钟后重置。"><span class="toc-number">8.8.1.</span> <span class="toc-text">以五分钟为上限的指数退避延迟(10秒，20秒，40秒… )重新启动，并在成功执行十分钟后重置。</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod状态与容器状态的关系"><span class="toc-number">8.9.</span> <span class="toc-text">pod状态与容器状态的关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ReplicaSet-副本集"><span class="toc-number">8.10.</span> <span class="toc-text">ReplicaSet: 副本集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Deployment的行为和定义"><span class="toc-number">8.11.</span> <span class="toc-text">Deployment的行为和定义</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Deployment常见操作"><span class="toc-number">8.11.1.</span> <span class="toc-text">Deployment常见操作</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Services"><span class="toc-number">8.12.</span> <span class="toc-text">Services</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Services-→-Pod-→-Endpoints"><span class="toc-number">8.12.1.</span> <span class="toc-text">Services → Pod → Endpoints</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#VIP与Service代理"><span class="toc-number">8.13.</span> <span class="toc-text">VIP与Service代理</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#iptables代理模式"><span class="toc-number">8.13.1.</span> <span class="toc-text">iptables代理模式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ipvs代理模式"><span class="toc-number">8.13.2.</span> <span class="toc-text">ipvs代理模式</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Service的发布类型"><span class="toc-number">8.14.</span> <span class="toc-text">Service的发布类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Services-→-无Selector"><span class="toc-number">8.15.</span> <span class="toc-text">Services → 无Selector</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Services-→-Headless-Services"><span class="toc-number">8.16.</span> <span class="toc-text">Services → Headless Services</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Services-→-Headless-Services-→-无Selector"><span class="toc-number">8.17.</span> <span class="toc-text">Services → Headless Services → 无Selector</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#服务发现-DNS"><span class="toc-number">8.18.</span> <span class="toc-text">服务发现:DNS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DaemonSet"><span class="toc-number">8.19.</span> <span class="toc-text">DaemonSet</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Job"><span class="toc-number">8.20.</span> <span class="toc-text">Job</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Job-Spec格式"><span class="toc-number">8.20.1.</span> <span class="toc-text">Job Spec格式</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CronJob"><span class="toc-number">8.21.</span> <span class="toc-text">CronJob</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#CronJob-Spec"><span class="toc-number">8.21.1.</span> <span class="toc-text">CronJob Spec</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Cron-Job-限制"><span class="toc-number">8.21.2.</span> <span class="toc-text">Cron Job 限制</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Volume"><span class="toc-number">9.</span> <span class="toc-text">Volume</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#背景"><span class="toc-number">9.1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#卷的类型"><span class="toc-number">9.2.</span> <span class="toc-text">卷的类型</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#区分emptyDir与hostPath"><span class="toc-number">9.2.1.</span> <span class="toc-text">区分emptyDir与hostPath</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Namespace"><span class="toc-number">10.</span> <span class="toc-text">Namespace</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#哪些情况下适合使用多个namespace"><span class="toc-number">10.1.</span> <span class="toc-text">哪些情况下适合使用多个namespace</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Namespace使用"><span class="toc-number">10.1.1.</span> <span class="toc-text">Namespace使用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#K8S调度机制"><span class="toc-number">11.</span> <span class="toc-text">K8S调度机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#预选"><span class="toc-number">11.1.</span> <span class="toc-text">预选</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#优选"><span class="toc-number">11.2.</span> <span class="toc-text">优选</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#亲和-反亲和"><span class="toc-number">11.3.</span> <span class="toc-text">亲和/反亲和</span></a></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
