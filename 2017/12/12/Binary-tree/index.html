@@ -499,7 +499,10 @@ height:50vh;
 <li>LR旋转：在节点A的左孩子的右子树插入新节点</li>
 <li>RL旋转：在节点A的右孩子的左子树插入新节点</li>
 </ul>
-<h4 id="AVL树的查找"><a href="#AVL树的查找" class="headerlink" title="AVL树的查找"></a>AVL树的查找</h4><p>假设以$N<em>h$表示深度为h的平衡树中含有的最少的节点树，则：<br>$N_0 = 0 , N_1 = 1 , N_2 =2$<br>并且满足:<br>$N_h = N</em>{h-1} + N_{h-2}+1$</p>
+<h4 id="AVL树的查找"><a href="#AVL树的查找" class="headerlink" title="AVL树的查找"></a>AVL树的查找</h4><p>假设以$N_h$表示深度为h的平衡树中含有的最少的节点树，则：</p>
+<p>$N_0 = 0 , N_1 = 1 , N_2 =2$</p>
+<p>并且满足: </p>
+<p>$N<em>h = N</em>{h-1} + N_{h-2}+1$</p>
 <h3 id="B树"><a href="#B树" class="headerlink" title="B树"></a>B树</h3><p>B树又称多路平衡查找树，B树中所有的节点的孩子节点树的最大值称为B树的阶，通常使用m表示。<br>一棵m阶B树或为空树或为满足下面条件的树：</p>
 <ul>
 <li>树中的每个节点至多有m棵子树，至多含有m-1个关键字</li>
@@ -507,7 +510,11 @@ height:50vh;
 <li>除了根节点外的非叶子节点至少含有<br>$\left \lceil m/2  \right \rceil$  棵子树</li>
 <li>至少含有<br>$\left \lceil m/2 \right \rceil-1$ 个关键字</li>
 <li>所有叶子节点都在同一层，而且实际上这些节点不存在</li>
-<li>B树的所有节点的平衡因子都为0<h4 id="B树的高度（磁盘存取次数）"><a href="#B树的高度（磁盘存取次数）" class="headerlink" title="B树的高度（磁盘存取次数）"></a>B树的高度（磁盘存取次数）</h4>B树的大部分操作所需的存盘次数跟B树的高度成正比<br>对于关键字个数为n的B树，叶子节点即查找不成功的节点为n+1<br>因此<br>$h \leq log_{ \left \lceil m/2  \right \rceil}(n+1)/2+1$<h4 id="B树的插入与删除"><a href="#B树的插入与删除" class="headerlink" title="B树的插入与删除"></a>B树的插入与删除</h4>插入先定位插入位置，如果节点不满则插入，如果节点已满，则分裂节点，插入。<br>删除分三个情况：</li>
+<li>B树的所有节点的平衡因子都为0<h4 id="B树的高度（磁盘存取次数）"><a href="#B树的高度（磁盘存取次数）" class="headerlink" title="B树的高度（磁盘存取次数）"></a>B树的高度（磁盘存取次数）</h4>B树的大部分操作所需的存盘次数跟B树的高度成正比<br>对于关键字个数为n的B树，叶子节点即查找不成功的节点为n+1<br>因此</li>
+</ul>
+<p>$h \leq log_{ \left \lceil m/2  \right \rceil}(n+1)/2+1$</p>
+<h4 id="B树的插入与删除"><a href="#B树的插入与删除" class="headerlink" title="B树的插入与删除"></a>B树的插入与删除</h4><p>插入先定位插入位置，如果节点不满则插入，如果节点已满，则分裂节点，插入。<br>删除分三个情况：</p>
+<ul>
 <li>直接删除关键字 直接删掉还是B树</li>
 <li>兄弟够借 直接从兄弟借关键字，生成新节点</li>
 <li>兄弟不够借 不够借则直接从双亲分裂再次合并节点</li>
