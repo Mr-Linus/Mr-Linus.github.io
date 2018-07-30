@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">11,163</span> / Reading time: <span class="post-count">44 min</span></span>
+                        <span>Word count: <span class="post-count">12,303</span> / Reading time: <span class="post-count">49 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -1110,33 +1110,157 @@ height:50vh;
 <p>要使用卷，需要为 pod 指定为卷（<code>spec.volumes</code> 字段）以及将它挂载到容器的位置（<code>spec.containers.volumeMounts</code> 字段）。</p>
 <p>容器中的进程看到的是由其 Docker 镜像和卷组成的文件系统视图。 <a href="https://docs.docker.com/userguide/dockerimages/" target="_blank" rel="noopener">Docker 镜像</a>位于文件系统层次结构的根目录，任何卷都被挂载在镜像的指定路径中。卷无法挂载到其他卷上或与其他卷有硬连接。Pod 中的每个容器都必须独立指定每个卷的挂载位置。</p>
 <h4 id="卷的类型"><a href="#卷的类型" class="headerlink" title="卷的类型"></a>卷的类型</h4><p>Kubernetes 支持以下类型的卷：</p>
-<ul>
-<li><code>awsElasticBlockStore</code></li>
-<li><code>azureDisk</code></li>
-<li><code>azureFile</code></li>
-<li><code>cephfs</code></li>
-<li><code>csi</code></li>
-<li><code>downwardAPI</code></li>
-<li><code>emptyDir</code></li>
-<li><code>fc</code> (fibre channel)</li>
-<li><code>flocker</code></li>
-<li><code>gcePersistentDisk</code></li>
-<li><code>gitRepo</code></li>
-<li><code>glusterfs</code></li>
-<li><code>hostPath</code></li>
-<li><code>iscsi</code></li>
-<li><code>local</code></li>
-<li><code>nfs</code></li>
-<li><code>persistentVolumeClaim</code></li>
-<li><code>projected</code></li>
-<li><code>portworxVolume</code></li>
-<li><code>quobyte</code></li>
-<li><code>rbd</code></li>
-<li><code>scaleIO</code></li>
-<li><code>secret</code></li>
-<li><code>storageos</code></li>
-<li><code>vsphereVolume</code></li>
-</ul>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>卷类型</th>
+<th>说明</th>
+<th>分类</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>awsElasticBlockStore</td>
+<td>亚马逊块存储</td>
+<td>云盘</td>
+</tr>
+<tr>
+<td>azureDisk</td>
+<td>微软azure DataDisk，单机挂载</td>
+<td>云盘</td>
+</tr>
+<tr>
+<td>azureFile</td>
+<td>微软azure File，可多机挂载</td>
+<td>云盘</td>
+</tr>
+<tr>
+<td>cephfs</td>
+<td><code>红帽推出的软件分布式存储</code></td>
+<td>分布式存储</td>
+</tr>
+<tr>
+<td>csi</td>
+<td><code>建立一个行业标准接口的规范</code></td>
+<td>接口</td>
+</tr>
+<tr>
+<td>downwardAPI</td>
+<td>从Pod元数据生成文件</td>
+<td>k8s元数据</td>
+</tr>
+<tr>
+<td>emptyDir</td>
+<td>空白目录，在node上开辟的临时空间</td>
+<td>本地盘</td>
+</tr>
+<tr>
+<td>fc (fibre channel)</td>
+<td>光纤通道</td>
+<td>远程存储</td>
+</tr>
+<tr>
+<td>flocker</td>
+<td>第三方平台，已倒闭</td>
+<td>平台</td>
+</tr>
+<tr>
+<td>gcePersistentDisk</td>
+<td>谷歌远程盘，一写多读</td>
+<td>云盘</td>
+</tr>
+<tr>
+<td>gitRepo</td>
+<td>Git仓库远程下载，无认证能力</td>
+<td>版本控制</td>
+</tr>
+<tr>
+<td>glusterfs</td>
+<td><code>另一种红帽推出的软分布式存储</code></td>
+<td>分布式存储</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>卷类型</th>
+<th>说明</th>
+<th>分类</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hostPath</td>
+<td>本机node节点路径，长期保存</td>
+<td>本地盘</td>
+</tr>
+<tr>
+<td>iscsi</td>
+<td>iSCSI(SCSI over IP)卷</td>
+<td>远程存储</td>
+</tr>
+<tr>
+<td>local</td>
+<td>将本地盘划为PV，Pod自动调度过来</td>
+<td>本地盘</td>
+</tr>
+<tr>
+<td>nfs</td>
+<td>NFS远程存储</td>
+<td>远程存储</td>
+</tr>
+<tr>
+<td>persistentVolumeClaim</td>
+<td>按需创建远程盘</td>
+<td>接口</td>
+</tr>
+<tr>
+<td>projected</td>
+<td>把secret，downwardAPI，configMap放同个目录下</td>
+<td>k8s元数据</td>
+</tr>
+<tr>
+<td>portworxVolume</td>
+<td>部署在k8s上的分布式存储，不成熟</td>
+<td>分布式存储</td>
+</tr>
+<tr>
+<td>quobyte</td>
+<td>一种小众的云存储方案</td>
+<td>远程存储</td>
+</tr>
+<tr>
+<td>rbd</td>
+<td>Ceph’s RADOS Block Devices，块设备</td>
+<td>分布式存储</td>
+</tr>
+<tr>
+<td>scaleIO</td>
+<td>EMC的存储方案</td>
+<td>远程存储</td>
+</tr>
+<tr>
+<td>secret</td>
+<td>K8s的secret对象</td>
+<td>k8s元数据</td>
+</tr>
+<tr>
+<td>storageos</td>
+<td>容器存储方案</td>
+<td>分布式存储</td>
+</tr>
+<tr>
+<td>vsphereVolume</td>
+<td>Vmware存储卷</td>
+<td>云盘</td>
+</tr>
+</tbody>
+</table>
+</div>
 <p>这里以emptyDir为例,当 Pod 被分配给节点时，首先创建 <code>emptyDir</code> 卷，并且只要该 Pod 在该节点上运行，该卷就会存在。正如卷的名字所述，它最初是空的。Pod 中的容器可以读取和写入 <code>emptyDir</code> 卷中的相同文件，尽管该卷可以挂载到每个容器中的相同或不同路径上。当出于任何原因从节点中删除 Pod 时，<code>emptyDir</code> 中的数据将被永久删除。</p>
 <p><strong>注意</strong>：容器崩溃不会从节点中移除 pod，因此 <code>emptyDir</code> 卷中的数据在容器崩溃时是安全的。</p>
 <p><code>emptyDir</code> 的用法有：</p>
@@ -1179,6 +1303,34 @@ height:50vh;
 </tbody>
 </table>
 </div>
+<h4 id="ConfigMap-k8s的应用配置解决方案"><a href="#ConfigMap-k8s的应用配置解决方案" class="headerlink" title="ConfigMap - k8s的应用配置解决方案"></a>ConfigMap - k8s的应用配置解决方案</h4><p>其实ConfigMap功能在Kubernetes1.2版本的时候就有了，许多应用程序会从配置文件、命令行参数或环境变量中读取配置信息。这些配置信息需要与docker image解耦，你总不能每修改一个配置就重做一个image吧？ConfigMap API给我们提供了向容器中注入配置信息的机制，ConfigMap可以被用来保存单个属性，也可以用来保存整个配置文件或者JSON二进制大对象。</p>
+<h5 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h5><p><strong>ConfigMap API</strong>资源用来保存<strong>key-value pair</strong>配置数据，这个数据可以在<strong>pods</strong>里使用，或者被用来为像<strong>controller</strong>一样的系统组件存储配置数据。虽然ConfigMap跟<a href="https://kubernetes.io/docs/user-guide/secrets/" target="_blank" rel="noopener">Secrets</a>类似，但是ConfigMap更方便的处理不含敏感信息的字符串。 注意：ConfigMaps不是属性配置文件的替代品。ConfigMaps只是作为多个properties文件的引用。你可以把它理解为Linux系统中的<code>/etc</code>目录，专门用来存储配置文件的目录。下面举个例子，使用ConfigMap配置来创建Kuberntes Volumes，ConfigMap中的每个data项都会成为一个新文件。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">ConfigMap</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  creationTimestamp:</span> <span class="number">2016</span><span class="bullet">-02</span><span class="bullet">-18</span><span class="attr">T19:14:38Z</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">example-config</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line">  <span class="string">example.property.1:</span> <span class="string">hello</span></span><br><span class="line">  <span class="string">example.property.2:</span> <span class="string">world</span></span><br><span class="line">  <span class="string">example.property.file:</span> <span class="string">|-</span></span><br><span class="line">    <span class="string">property.1=value-1</span></span><br><span class="line">    <span class="string">property.2=value-2</span></span><br><span class="line">    <span class="string">property.3=value-3</span></span><br></pre></td></tr></table></figure>
+<p><code>data</code>一栏包括了配置数据，ConfigMap可以被用来保存单个属性，也可以用来保存一个配置文件。 配置数据可以通过很多种方式在Pods里被使用。ConfigMaps可以被用来：</p>
+<ol>
+<li>设置环境变量的值</li>
+<li>在容器里设置命令行参数</li>
+<li>在数据卷里面创建config文件</li>
+</ol>
+<p>用户和系统组件两者都可以在ConfigMap里面存储配置数据。</p>
+<h4 id="Secret"><a href="#Secret" class="headerlink" title="Secret"></a>Secret</h4><p>Secret解决了密码、token、密钥等敏感数据的配置问题，而不需要把这些敏感数据暴露到镜像或者Pod Spec中。Secret可以以Volume或者环境变量的方式使用。</p>
+<p>Secret有三种类型：</p>
+<ul>
+<li><strong>Service Account</strong> ：用来访问Kubernetes API，由Kubernetes自动创建，并且会自动挂载到Pod的<code>/run/secrets/kubernetes.io/serviceaccount</code>目录中；</li>
+<li><strong>Opaque</strong> ：base64编码格式的Secret，用来存储密码、密钥等；</li>
+<li><strong>kubernetes.io/dockerconfigjson</strong> ：用来存储私有docker registry的认证信息。</li>
+</ul>
+<h5 id="Opaque-Secret"><a href="#Opaque-Secret" class="headerlink" title="Opaque Secret"></a>Opaque Secret</h5><p>Opaque类型的数据是一个map类型，要求value是base64编码格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> -n <span class="string">"admin"</span> | base64</span><br><span class="line">YWRtaW4=</span><br><span class="line">$ <span class="built_in">echo</span> -n <span class="string">"1f2d1e2e67df"</span> | base64</span><br><span class="line">MWYyZDFlMmU2N2Rm</span><br></pre></td></tr></table></figure>
+<h5 id="secrets-yml"><a href="#secrets-yml" class="headerlink" title="secrets.yml"></a>secrets.yml</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Secret</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">mysecret</span></span><br><span class="line"><span class="attr">type:</span> <span class="string">Opaque</span></span><br><span class="line"><span class="attr">data:</span></span><br><span class="line"><span class="attr">  password:</span> <span class="string">MWYyZDFlMmU2N2Rm</span></span><br><span class="line"><span class="attr">  username:</span> <span class="string">YWRtaW4=</span></span><br></pre></td></tr></table></figure>
+<p>接着，就可以创建secret了：<code>kubectl create -f secrets.yml</code>。</p>
+<p>创建好secret之后，有两种方式来使用它：</p>
+<ul>
+<li>以Volume方式</li>
+<li>以环境变量方式</li>
+</ul>
+<h5 id="将Secret挂载到Volume中"><a href="#将Secret挂载到Volume中" class="headerlink" title="将Secret挂载到Volume中"></a>将Secret挂载到Volume中</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">db</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">db</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  volumes:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">secrets</span></span><br><span class="line"><span class="attr">    secret:</span></span><br><span class="line"><span class="attr">      secretName:</span> <span class="string">mysecret</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">  - image:</span> <span class="string">gcr.io/my_project_id/pg:v1</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">db</span></span><br><span class="line"><span class="attr">    volumeMounts:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">secrets</span></span><br><span class="line"><span class="attr">      mountPath:</span> <span class="string">"/etc/secrets"</span></span><br><span class="line"><span class="attr">      readOnly:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">cp</span></span><br><span class="line"><span class="attr">      containerPort:</span> <span class="number">5432</span></span><br><span class="line"><span class="attr">      hostPort:</span> <span class="number">5432</span></span><br></pre></td></tr></table></figure>
+<h5 id="将Secret导出到环境变量中"><a href="#将Secret导出到环境变量中" class="headerlink" title="将Secret导出到环境变量中"></a>将Secret导出到环境变量中</h5><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">wordpress-deployment</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  replicas:</span> <span class="number">2</span></span><br><span class="line"><span class="attr">  strategy:</span></span><br><span class="line"><span class="attr">      type:</span> <span class="string">RollingUpdate</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">wordpress</span></span><br><span class="line"><span class="attr">        visualize:</span> <span class="string">"true"</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">      - name:</span> <span class="string">"wordpress"</span></span><br><span class="line"><span class="attr">        image:</span> <span class="string">"wordpress"</span></span><br><span class="line"><span class="attr">        ports:</span></span><br><span class="line"><span class="attr">        - containerPort:</span> <span class="number">80</span></span><br><span class="line"><span class="attr">        env:</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">WORDPRESS_DB_USER</span></span><br><span class="line"><span class="attr">          valueFrom:</span></span><br><span class="line"><span class="attr">            secretKeyRef:</span></span><br><span class="line"><span class="attr">              name:</span> <span class="string">mysecret</span></span><br><span class="line"><span class="attr">              key:</span> <span class="string">username</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">WORDPRESS_DB_PASSWORD</span></span><br><span class="line"><span class="attr">          valueFrom:</span></span><br><span class="line"><span class="attr">            secretKeyRef:</span></span><br><span class="line"><span class="attr">              name:</span> <span class="string">mysecret</span></span><br><span class="line"><span class="attr">              key:</span> <span class="string">password</span></span><br></pre></td></tr></table></figure>
 <h3 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h3><p>在一个Kubernetes集群中可以使用namespace创建多个“虚拟集群”，这些namespace之间可以完全隔离，也可以通过某种方式，让一个namespace中的service可以访问到其他的namespace中的服务，我们<a href="https://jimmysong.io/kubernetes-handbook/practice/install-kubernetes-on-centos.html" target="_blank" rel="noopener">在CentOS中部署kubernetes1.6集群</a>的时候就用到了好几个跨越namespace的服务，比如Traefik ingress和<code>kube-system</code>namespace下的service就可以为整个集群提供服务，这些都需要通过RBAC定义集群级别的角色来实现。</p>
 <h4 id="哪些情况下适合使用多个namespace"><a href="#哪些情况下适合使用多个namespace" class="headerlink" title="哪些情况下适合使用多个namespace"></a>哪些情况下适合使用多个namespace</h4><p>因为namespace可以提供独立的命名空间，因此可以实现部分的环境隔离。当你的项目和人员众多的时候可以考虑根据项目属性，例如生产、测试、开发划分不同的namespace。</p>
 <h5 id="Namespace使用"><a href="#Namespace使用" class="headerlink" title="Namespace使用"></a>Namespace使用</h5><p><strong>获取集群中有哪些namespace</strong></p>
@@ -1476,7 +1628,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#kubernetes-架构"><span class="toc-number">1.</span> <span class="toc-text">kubernetes 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#分层架构"><span class="toc-number">1.1.</span> <span class="toc-text">分层架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#架构设计优缺点"><span class="toc-number">1.2.</span> <span class="toc-text">架构设计优缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s提供的抽象"><span class="toc-number">2.</span> <span class="toc-text">k8s提供的抽象</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#kubernetes-中的对象"><span class="toc-number">2.0.1.</span> <span class="toc-text">kubernetes 中的对象</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象分类"><span class="toc-number">3.</span> <span class="toc-text">对象分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#业界各种安装方式对比"><span class="toc-number">4.</span> <span class="toc-text">业界各种安装方式对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#当pod创建时-k8s到底干了啥"><span class="toc-number">5.</span> <span class="toc-text">当pod创建时,k8s到底干了啥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kubectl-常见命令"><span class="toc-number">6.</span> <span class="toc-text">kubectl 常见命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl上下文和配置"><span class="toc-number">6.1.</span> <span class="toc-text">kubectl上下文和配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-创建对象"><span class="toc-number">6.2.</span> <span class="toc-text">kubectl 创建对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl显示和查找资源"><span class="toc-number">6.3.</span> <span class="toc-text">kubectl显示和查找资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl编辑资源"><span class="toc-number">6.4.</span> <span class="toc-text">kubectl编辑资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-Scale-资源"><span class="toc-number">6.5.</span> <span class="toc-text">kubectl Scale 资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-删除资源"><span class="toc-number">6.6.</span> <span class="toc-text">kubectl 删除资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl与运行中的-Pod-交互"><span class="toc-number">6.7.</span> <span class="toc-text">kubectl与运行中的 Pod 交互</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl与节点和集群交互"><span class="toc-number">6.8.</span> <span class="toc-text">kubectl与节点和集群交互</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s构建高可用集群"><span class="toc-number">7.</span> <span class="toc-text">k8s构建高可用集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s应用管理"><span class="toc-number">8.</span> <span class="toc-text">k8s应用管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pod详解"><span class="toc-number">8.1.</span> <span class="toc-text">pod详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod的设计动机"><span class="toc-number">8.2.</span> <span class="toc-text">pod的设计动机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod的非持久性"><span class="toc-number">8.3.</span> <span class="toc-text">pod的非持久性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#init容器"><span class="toc-number">8.4.</span> <span class="toc-text">init容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pod中容器镜像常见设置"><span class="toc-number">8.5.</span> <span class="toc-text">Pod中容器镜像常见设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pod-status-phase"><span class="toc-number">8.6.</span> <span class="toc-text">Pod.status.phase</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器探针-注意不是Pod探针"><span class="toc-number">8.7.</span> <span class="toc-text">容器探针(注意不是Pod探针)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器重启策略"><span class="toc-number">8.8.</span> <span class="toc-text">容器重启策略</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#以五分钟为上限的指数退避延迟-10秒，20秒，40秒…-重新启动，并在成功执行十分钟后重置。"><span class="toc-number">8.8.1.</span> <span class="toc-text">以五分钟为上限的指数退避延迟(10秒，20秒，40秒… )重新启动，并在成功执行十分钟后重置。</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod状态与容器状态的关系"><span class="toc-number">8.9.</span> <span class="toc-text">pod状态与容器状态的关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ReplicaSet-副本集"><span class="toc-number">8.10.</span> <span class="toc-text">ReplicaSet: 副本集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Deployment的行为和定义"><span class="toc-number">8.11.</span> <span class="toc-text">Deployment的行为和定义</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Deployment常见操作"><span class="toc-number">8.11.1.</span> <span class="toc-text">Deployment常见操作</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Services"><span class="toc-number">8.12.</span> <span class="toc-text">Services</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Services-→-Pod-→-Endpoints"><span class="toc-number">8.12.1.</span> <span class="toc-text">Services → Pod → Endpoints</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Service的发布类型"><span class="toc-number">8.13.</span> <span class="toc-text">Service的发布类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Services-→-无Selector"><span class="toc-number">8.14.</span> <span class="toc-text">Services → 无Selector</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Services-→-Headless-Services"><span class="toc-number">8.15.</span> <span class="toc-text">Services → Headless Services</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Services-→-Headless-Services-→-无Selector"><span class="toc-number">8.16.</span> <span class="toc-text">Services → Headless Services → 无Selector</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#服务发现-DNS"><span class="toc-number">8.17.</span> <span class="toc-text">服务发现:DNS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DaemonSet"><span class="toc-number">8.18.</span> <span class="toc-text">DaemonSet</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Job"><span class="toc-number">8.19.</span> <span class="toc-text">Job</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Job-Spec格式"><span class="toc-number">8.19.1.</span> <span class="toc-text">Job Spec格式</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CronJob"><span class="toc-number">8.20.</span> <span class="toc-text">CronJob</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#CronJob-Spec"><span class="toc-number">8.20.1.</span> <span class="toc-text">CronJob Spec</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Cron-Job-限制"><span class="toc-number">8.20.2.</span> <span class="toc-text">Cron Job 限制</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Volume"><span class="toc-number">9.</span> <span class="toc-text">Volume</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#背景"><span class="toc-number">9.1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#卷的类型"><span class="toc-number">9.2.</span> <span class="toc-text">卷的类型</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#区分emptyDir与hostPath"><span class="toc-number">9.2.1.</span> <span class="toc-text">区分emptyDir与hostPath</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Namespace"><span class="toc-number">10.</span> <span class="toc-text">Namespace</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#哪些情况下适合使用多个namespace"><span class="toc-number">10.1.</span> <span class="toc-text">哪些情况下适合使用多个namespace</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Namespace使用"><span class="toc-number">10.1.1.</span> <span class="toc-text">Namespace使用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#K8S调度机制"><span class="toc-number">11.</span> <span class="toc-text">K8S调度机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#预选"><span class="toc-number">11.1.</span> <span class="toc-text">预选</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#优选"><span class="toc-number">11.2.</span> <span class="toc-text">优选</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#亲和-反亲和"><span class="toc-number">11.3.</span> <span class="toc-text">亲和/反亲和</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#K8S网络"><span class="toc-number">12.</span> <span class="toc-text">K8S网络</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Docker的网络模型"><span class="toc-number">12.1.</span> <span class="toc-text">Docker的网络模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#K8S网络模型"><span class="toc-number">12.2.</span> <span class="toc-text">K8S网络模型</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#设计理念"><span class="toc-number">12.2.1.</span> <span class="toc-text">设计理念</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Pod-内部"><span class="toc-number">12.2.2.</span> <span class="toc-text">Pod 内部</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#不同节点pod"><span class="toc-number">12.2.3.</span> <span class="toc-text">不同节点pod</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器网络方案"><span class="toc-number">12.3.</span> <span class="toc-text">容器网络方案</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Flannel"><span class="toc-number">12.4.</span> <span class="toc-text">Flannel</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Calico"><span class="toc-number">12.5.</span> <span class="toc-text">Calico</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#calico特性"><span class="toc-number">12.5.1.</span> <span class="toc-text">calico特性</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#网络性能对比"><span class="toc-number">12.6.</span> <span class="toc-text">网络性能对比</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#网络方案总结"><span class="toc-number">12.7.</span> <span class="toc-text">网络方案总结</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CNI-vs-CNM"><span class="toc-number">12.8.</span> <span class="toc-text">CNI vs CNM</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#CNI"><span class="toc-number">12.8.1.</span> <span class="toc-text">CNI</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#CNI-ADD-DELETE"><span class="toc-number">12.8.2.</span> <span class="toc-text">CNI ADD/DELETE</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Server-KubeProxy"><span class="toc-number">12.9.</span> <span class="toc-text">Server: KubeProxy</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#VIP与Service代理"><span class="toc-number">12.9.1.</span> <span class="toc-text">VIP与Service代理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#iptables代理模式"><span class="toc-number">12.9.2.</span> <span class="toc-text">iptables代理模式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ipvs代理模式"><span class="toc-number">12.9.3.</span> <span class="toc-text">ipvs代理模式</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Kube-DNS"><span class="toc-number">12.10.</span> <span class="toc-text">Kube-DNS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Ingress"><span class="toc-number">12.11.</span> <span class="toc-text">Ingress</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#单Service-Ingress"><span class="toc-number">12.11.1.</span> <span class="toc-text">单Service Ingress</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#简单展开"><span class="toc-number">12.11.2.</span> <span class="toc-text">简单展开</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#kubernetes-架构"><span class="toc-number">1.</span> <span class="toc-text">kubernetes 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#分层架构"><span class="toc-number">1.1.</span> <span class="toc-text">分层架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#架构设计优缺点"><span class="toc-number">1.2.</span> <span class="toc-text">架构设计优缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s提供的抽象"><span class="toc-number">2.</span> <span class="toc-text">k8s提供的抽象</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#kubernetes-中的对象"><span class="toc-number">2.0.1.</span> <span class="toc-text">kubernetes 中的对象</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象分类"><span class="toc-number">3.</span> <span class="toc-text">对象分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#业界各种安装方式对比"><span class="toc-number">4.</span> <span class="toc-text">业界各种安装方式对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#当pod创建时-k8s到底干了啥"><span class="toc-number">5.</span> <span class="toc-text">当pod创建时,k8s到底干了啥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kubectl-常见命令"><span class="toc-number">6.</span> <span class="toc-text">kubectl 常见命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl上下文和配置"><span class="toc-number">6.1.</span> <span class="toc-text">kubectl上下文和配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-创建对象"><span class="toc-number">6.2.</span> <span class="toc-text">kubectl 创建对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl显示和查找资源"><span class="toc-number">6.3.</span> <span class="toc-text">kubectl显示和查找资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl编辑资源"><span class="toc-number">6.4.</span> <span class="toc-text">kubectl编辑资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-Scale-资源"><span class="toc-number">6.5.</span> <span class="toc-text">kubectl Scale 资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl-删除资源"><span class="toc-number">6.6.</span> <span class="toc-text">kubectl 删除资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl与运行中的-Pod-交互"><span class="toc-number">6.7.</span> <span class="toc-text">kubectl与运行中的 Pod 交互</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kubectl与节点和集群交互"><span class="toc-number">6.8.</span> <span class="toc-text">kubectl与节点和集群交互</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s构建高可用集群"><span class="toc-number">7.</span> <span class="toc-text">k8s构建高可用集群</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#k8s应用管理"><span class="toc-number">8.</span> <span class="toc-text">k8s应用管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pod详解"><span class="toc-number">8.1.</span> <span class="toc-text">pod详解</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod的设计动机"><span class="toc-number">8.2.</span> <span class="toc-text">pod的设计动机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod的非持久性"><span class="toc-number">8.3.</span> <span class="toc-text">pod的非持久性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#init容器"><span class="toc-number">8.4.</span> <span class="toc-text">init容器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pod中容器镜像常见设置"><span class="toc-number">8.5.</span> <span class="toc-text">Pod中容器镜像常见设置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Pod-status-phase"><span class="toc-number">8.6.</span> <span class="toc-text">Pod.status.phase</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器探针-注意不是Pod探针"><span class="toc-number">8.7.</span> <span class="toc-text">容器探针(注意不是Pod探针)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器重启策略"><span class="toc-number">8.8.</span> <span class="toc-text">容器重启策略</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#以五分钟为上限的指数退避延迟-10秒，20秒，40秒…-重新启动，并在成功执行十分钟后重置。"><span class="toc-number">8.8.1.</span> <span class="toc-text">以五分钟为上限的指数退避延迟(10秒，20秒，40秒… )重新启动，并在成功执行十分钟后重置。</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pod状态与容器状态的关系"><span class="toc-number">8.9.</span> <span class="toc-text">pod状态与容器状态的关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ReplicaSet-副本集"><span class="toc-number">8.10.</span> <span class="toc-text">ReplicaSet: 副本集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Deployment的行为和定义"><span class="toc-number">8.11.</span> <span class="toc-text">Deployment的行为和定义</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Deployment常见操作"><span class="toc-number">8.11.1.</span> <span class="toc-text">Deployment常见操作</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Services"><span class="toc-number">8.12.</span> <span class="toc-text">Services</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Services-→-Pod-→-Endpoints"><span class="toc-number">8.12.1.</span> <span class="toc-text">Services → Pod → Endpoints</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Service的发布类型"><span class="toc-number">8.13.</span> <span class="toc-text">Service的发布类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Services-→-无Selector"><span class="toc-number">8.14.</span> <span class="toc-text">Services → 无Selector</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Services-→-Headless-Services"><span class="toc-number">8.15.</span> <span class="toc-text">Services → Headless Services</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Services-→-Headless-Services-→-无Selector"><span class="toc-number">8.16.</span> <span class="toc-text">Services → Headless Services → 无Selector</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#服务发现-DNS"><span class="toc-number">8.17.</span> <span class="toc-text">服务发现:DNS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DaemonSet"><span class="toc-number">8.18.</span> <span class="toc-text">DaemonSet</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Job"><span class="toc-number">8.19.</span> <span class="toc-text">Job</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Job-Spec格式"><span class="toc-number">8.19.1.</span> <span class="toc-text">Job Spec格式</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CronJob"><span class="toc-number">8.20.</span> <span class="toc-text">CronJob</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#CronJob-Spec"><span class="toc-number">8.20.1.</span> <span class="toc-text">CronJob Spec</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Cron-Job-限制"><span class="toc-number">8.20.2.</span> <span class="toc-text">Cron Job 限制</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Volume"><span class="toc-number">9.</span> <span class="toc-text">Volume</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#背景"><span class="toc-number">9.1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#卷的类型"><span class="toc-number">9.2.</span> <span class="toc-text">卷的类型</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#区分emptyDir与hostPath"><span class="toc-number">9.2.1.</span> <span class="toc-text">区分emptyDir与hostPath</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ConfigMap-k8s的应用配置解决方案"><span class="toc-number">9.3.</span> <span class="toc-text">ConfigMap - k8s的应用配置解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#概览"><span class="toc-number">9.3.1.</span> <span class="toc-text">概览</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Secret"><span class="toc-number">9.4.</span> <span class="toc-text">Secret</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Opaque-Secret"><span class="toc-number">9.4.1.</span> <span class="toc-text">Opaque Secret</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#secrets-yml"><span class="toc-number">9.4.2.</span> <span class="toc-text">secrets.yml</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#将Secret挂载到Volume中"><span class="toc-number">9.4.3.</span> <span class="toc-text">将Secret挂载到Volume中</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#将Secret导出到环境变量中"><span class="toc-number">9.4.4.</span> <span class="toc-text">将Secret导出到环境变量中</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Namespace"><span class="toc-number">10.</span> <span class="toc-text">Namespace</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#哪些情况下适合使用多个namespace"><span class="toc-number">10.1.</span> <span class="toc-text">哪些情况下适合使用多个namespace</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Namespace使用"><span class="toc-number">10.1.1.</span> <span class="toc-text">Namespace使用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#K8S调度机制"><span class="toc-number">11.</span> <span class="toc-text">K8S调度机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#预选"><span class="toc-number">11.1.</span> <span class="toc-text">预选</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#优选"><span class="toc-number">11.2.</span> <span class="toc-text">优选</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#亲和-反亲和"><span class="toc-number">11.3.</span> <span class="toc-text">亲和/反亲和</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#K8S网络"><span class="toc-number">12.</span> <span class="toc-text">K8S网络</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Docker的网络模型"><span class="toc-number">12.1.</span> <span class="toc-text">Docker的网络模型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#K8S网络模型"><span class="toc-number">12.2.</span> <span class="toc-text">K8S网络模型</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#设计理念"><span class="toc-number">12.2.1.</span> <span class="toc-text">设计理念</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Pod-内部"><span class="toc-number">12.2.2.</span> <span class="toc-text">Pod 内部</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#不同节点pod"><span class="toc-number">12.2.3.</span> <span class="toc-text">不同节点pod</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#容器网络方案"><span class="toc-number">12.3.</span> <span class="toc-text">容器网络方案</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Flannel"><span class="toc-number">12.4.</span> <span class="toc-text">Flannel</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Calico"><span class="toc-number">12.5.</span> <span class="toc-text">Calico</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#calico特性"><span class="toc-number">12.5.1.</span> <span class="toc-text">calico特性</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#网络性能对比"><span class="toc-number">12.6.</span> <span class="toc-text">网络性能对比</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#网络方案总结"><span class="toc-number">12.7.</span> <span class="toc-text">网络方案总结</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CNI-vs-CNM"><span class="toc-number">12.8.</span> <span class="toc-text">CNI vs CNM</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#CNI"><span class="toc-number">12.8.1.</span> <span class="toc-text">CNI</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#CNI-ADD-DELETE"><span class="toc-number">12.8.2.</span> <span class="toc-text">CNI ADD/DELETE</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Server-KubeProxy"><span class="toc-number">12.9.</span> <span class="toc-text">Server: KubeProxy</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#VIP与Service代理"><span class="toc-number">12.9.1.</span> <span class="toc-text">VIP与Service代理</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#iptables代理模式"><span class="toc-number">12.9.2.</span> <span class="toc-text">iptables代理模式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ipvs代理模式"><span class="toc-number">12.9.3.</span> <span class="toc-text">ipvs代理模式</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Kube-DNS"><span class="toc-number">12.10.</span> <span class="toc-text">Kube-DNS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Ingress"><span class="toc-number">12.11.</span> <span class="toc-text">Ingress</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#单Service-Ingress"><span class="toc-number">12.11.1.</span> <span class="toc-text">单Service Ingress</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#简单展开"><span class="toc-number">12.11.2.</span> <span class="toc-text">简单展开</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
