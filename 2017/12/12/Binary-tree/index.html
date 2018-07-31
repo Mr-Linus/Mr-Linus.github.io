@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">2,893</span> / Reading time: <span class="post-count">13 min</span></span>
+                        <span>Word count: <span class="post-count">2,875</span> / Reading time: <span class="post-count">12 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -513,8 +513,7 @@ height:50vh;
 <li>B树的所有节点的平衡因子都为0</li>
 </ul>
 <h4 id="B树的高度（磁盘存取次数）"><a href="#B树的高度（磁盘存取次数）" class="headerlink" title="B树的高度（磁盘存取次数）"></a>B树的高度（磁盘存取次数）</h4><p>B树的大部分操作所需的存盘次数跟B树的高度成正比<br>对于关键字个数为n的B树，叶子节点即查找不成功的节点为n+1<br>因此</p>
-<p>$log<em>{m}(n+1) \leq h \leq log</em>{ \left \lceil m/2  \right \rceil}(n+1)/2+1$</p>
-<blockquote>
+<script type="math/tex; mode=display">log_{m}(n+1) \leq h \leq log_{ \left \lceil m/2  \right \rceil}(n+1)/2+1</script><blockquote>
 <p>这里感谢<a href="https://geekchen.top/" target="_blank" rel="noopener">单身小帅哥SuperChen</a>的修正~</p>
 </blockquote>
 <h4 id="B树的插入与删除"><a href="#B树的插入与删除" class="headerlink" title="B树的插入与删除"></a>B树的插入与删除</h4><p>插入先定位插入位置，如果节点不满则插入，如果节点已满，则分裂节点，插入。<br>删除分三个情况：</p>
