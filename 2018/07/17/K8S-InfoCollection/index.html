@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">13,471</span> / Reading time: <span class="post-count">53 min</span></span>
+                        <span>Word count: <span class="post-count">13,884</span> / Reading time: <span class="post-count">55 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -1001,7 +1001,12 @@ height:50vh;
 <li>回滚:</li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl rollout undo deployment/nginx-deployment</span><br></pre></td></tr></table></figure>
-<h4 id="Services"><a href="#Services" class="headerlink" title="Services"></a>Services</h4><p><img src="/images/service.png" alt="service"></p>
+<h4 id="Services"><a href="#Services" class="headerlink" title="Services"></a>Services</h4><p>Kubernetes <a href="https://kubernetes.io/docs/user-guide/pods" target="_blank" rel="noopener"><code>Pod</code></a> 是有生命周期的，它们可以被创建，也可以被销毁，然而一旦被销毁生命就永远结束。 通过 <a href="https://kubernetes.io/docs/user-guide/replication-controller" target="_blank" rel="noopener"><code>ReplicationController</code></a> 能够动态地创建和销毁 <code>Pod</code>（例如，需要进行扩缩容，或者执行 <a href="https://kubernetes.io/docs/user-guide/kubectl/v1.7/#rolling-update" target="_blank" rel="noopener">滚动升级</a>）。 每个 <code>Pod</code> 都会获取它自己的 IP 地址，即使这些 IP 地址不总是稳定可依赖的。 这会导致一个问题：在 Kubernetes 集群中，如果一组 <code>Pod</code>（称为 backend）为其它 <code>Pod</code> （称为 frontend）提供服务，那么那些 frontend 该如何发现，并连接到这组 <code>Pod</code> 中的哪些 backend 呢？</p>
+<p>关于 <code>Service</code></p>
+<p>Kubernetes <code>Service</code> 定义了这样一种抽象：一个 <code>Pod</code> 的逻辑分组，一种可以访问它们的策略 —— 通常称为微服务。 这一组 <code>Pod</code> 能够被 <code>Service</code> 访问到，通常是通过 <a href="https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors" target="_blank" rel="noopener"><code>Label Selector</code></a>（查看下面了解，为什么可能需要没有 selector 的 <code>Service</code>）实现的。</p>
+<p>举个例子，考虑一个图片处理 backend，它运行了3个副本。这些副本是可互换的 —— frontend 不需要关心它们调用了哪个 backend 副本。 然而组成这一组 backend 程序的 <code>Pod</code> 实际上可能会发生变化，frontend 客户端不应该也没必要知道，而且也不需要跟踪这一组 backend 的状态。 <code>Service</code> 定义的抽象能够解耦这种关联。</p>
+<p>对 Kubernetes 集群中的应用，Kubernetes 提供了简单的 <code>Endpoints</code> API，只要 <code>Service</code> 中的一组 <code>Pod</code> 发生变更，应用程序就会被更新。 对非 Kubernetes 集群中的应用，Kubernetes 提供了基于 VIP 的网桥的方式访问 <code>Service</code>，再由 <code>Service</code> 重定向到 backend <code>Pod</code>。</p>
+<p><img src="/images/service.png" alt="service"></p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">my-service</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">MyApp</span></span><br><span class="line"><span class="attr">  ports:</span></span><br><span class="line"><span class="attr">  - protocol:</span> <span class="string">TCP</span></span><br><span class="line"><span class="attr">    port:</span> <span class="number">80</span></span><br><span class="line"><span class="attr">    targetPort:</span> <span class="number">9376</span></span><br></pre></td></tr></table></figure>
 <p>应用流程:后端匹配→代理→发布→服务发现→客户端 </p>
 <h5 id="Services-→-Pod-→-Endpoints"><a href="#Services-→-Pod-→-Endpoints" class="headerlink" title="Services → Pod → Endpoints"></a>Services → Pod → Endpoints</h5><p><img src="/images/spe.png" alt="spe"></p>
@@ -1858,6 +1863,8 @@ top:50vh;
     
     
     
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 10
@@ -1938,9 +1945,9 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
-    
         <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
+    
+        <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
     
         <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
     
