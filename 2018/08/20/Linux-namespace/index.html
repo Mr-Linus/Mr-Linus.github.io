@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">1,966</span> / Reading time: <span class="post-count">9 min</span></span>
+                        <span>Word count: <span class="post-count">2,597</span> / Reading time: <span class="post-count">12 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -502,7 +502,24 @@ height:50vh;
 <p><img src="/images/p4.jpg" alt="p4"></p>
 </li>
 </ul>
-<p><strong>持续更新</strong></p>
+<h4 id="Kernel-接口"><a href="#Kernel-接口" class="headerlink" title="Kernel 接口"></a>Kernel 接口</h4><p>Cgroups 中的 hierarchy 是一种树状的组织结构，Kernel为了使Cgroup配置更加直观，是通过一个虚拟树状文件系统配置Cgroups的，通过层级的目录虚拟出cgroup树。</p>
+<p>下面演示如何操作cgroups。</p>
+<p>1.首先创建并挂载一个hierarchy （cgroup树）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir cgroup-test <span class="comment">#创建一个 hierarchy 挂载点</span></span><br><span class="line">$ sudo mount -t cgroup -o none,name=cgroup-test cgroup-test ./cgroup-test <span class="comment"># 挂载 hierarchy</span></span><br><span class="line">$ ls ./cgroup-test <span class="comment">#查看cgroup生成文件</span></span><br><span class="line">cgroup.clone_children  cgroup.event_control  cgroup.procs  cgroup.sane_behavior  notify_on_release  release_agent  tasks</span><br></pre></td></tr></table></figure>
+<ul>
+<li>cgroup.clone_children cpuset的subsystem会读取这个配置文件，改文件值为1（默认0），子cgroup会继承父cgroup的cpuset的配置。</li>
+<li>cgroup.procs 是树中当前cgroup中的进程组ID。</li>
+<li>notify_on_release 与 release_agent 一起使用，前者用于标识当这个cgroup最后一个进程退出后是否执行了后者，后者是一个路径，通常用作进程退出后自动清理不在使用的cgroup。</li>
+<li>tasks 标注 该cgroup下面的进程ID，如果把一个进程ID写到tasks文件中，便会把相应的进程加入到这个cgroup中。</li>
+</ul>
+<p>2.接着刚刚创建好的hierarchy上的cgroup根节点中扩展出两个子cgroup。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> cgroup-test</span><br><span class="line">$ sudo mkdir cgroup-1</span><br><span class="line">$ sudo mkdir cgroup-2</span><br><span class="line">tree</span><br><span class="line">.</span><br><span class="line">|-- cgroup-1</span><br><span class="line">|   |-- cgroup.clone_children</span><br><span class="line">|   |-- cgroup.event_control</span><br><span class="line">|   |-- cgroup.procs</span><br><span class="line">|   |-- notify_on_release</span><br><span class="line">|   `-- tasks</span><br><span class="line">|-- cgroup-2</span><br><span class="line">|   |-- cgroup.clone_children</span><br><span class="line">|   |-- cgroup.event_control</span><br><span class="line">|   |-- cgroup.procs</span><br><span class="line">|   |-- notify_on_release</span><br><span class="line">|   `-- tasks</span><br><span class="line">|-- cgroup.clone_children</span><br><span class="line">|-- cgroup.event_control</span><br><span class="line">|-- cgroup.procs</span><br><span class="line">|-- cgroup.sane_behavior</span><br><span class="line">|-- notify_on_release</span><br><span class="line">|-- release_agent</span><br><span class="line">`-- tasks</span><br><span class="line"></span><br><span class="line">2 directories, 17 files</span><br></pre></td></tr></table></figure>
+<p>可以看出在一个cgroup的目录下创建文件夹时，kernel会把这个文件夹记为这个cgroup的子cgroup，他们会继承cgroup的属性。</p>
+<p>3.在cgroup中添加移动进程</p>
+<p>我们刚刚说过，一个进程在一个Cgroups的hierarchy 中，只能在一个cgroup节点存在，系统所有进程都会默认在根节点存在，可以将进程移动到其他cgroup节点，只需要将进程ID写到移动到的cgroup节点的tasks文件即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> cgroup-1</span><br><span class="line">$ sudo sh -c <span class="string">"echo $$"</span>&gt;&gt; tasks</span><br><span class="line">$ cat /proc/$$/cgroup</span><br><span class="line">12:name=cgroup-test:/cgroup-1</span><br><span class="line">11:hugetlb:/user/500.user/17.session</span><br><span class="line">10:perf_event:/user/500.user/17.session</span><br><span class="line">9:blkio:/user/500.user/17.session</span><br><span class="line">8:freezer:/user/500.user/17.session</span><br><span class="line">7:devices:/user/500.user/17.session</span><br><span class="line">6:memory:/user/500.user/17.session</span><br><span class="line">5:cpuacct:/user/500.user/17.session</span><br><span class="line">4:cpu:/user/500.user/17.session</span><br><span class="line">3:cpuset:/</span><br><span class="line">2:name=systemd:/user/500.user/17.session</span><br></pre></td></tr></table></figure>
+<p>发现进程已经被加入到cgroup-test:/cgroup-1中了。</p>
+<p>Docker中，引擎通过为每个container 创建 cgroup，并通过cgroup 去配置资源限制和资源监控。</p>
 
     </article>
     <!-- license  -->
@@ -639,7 +656,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#浅谈-Linux-内核中的-Namespace-与-Cgroups"><span class="toc-number">1.</span> <span class="toc-text">浅谈 Linux 内核中的 Namespace 与 Cgroups</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Namespace"><span class="toc-number">1.1.</span> <span class="toc-text">Namespace</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#UTS-Namespace"><span class="toc-number">1.1.1.</span> <span class="toc-text">UTS Namespace</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#IPC-Namespace"><span class="toc-number">1.1.2.</span> <span class="toc-text">IPC Namespace</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PID-Namespace"><span class="toc-number">1.1.3.</span> <span class="toc-text">PID Namespace</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Mount-Namespace"><span class="toc-number">1.1.4.</span> <span class="toc-text">Mount Namespace</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#User-Namespace"><span class="toc-number">1.1.5.</span> <span class="toc-text">User Namespace</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Network-Namespace"><span class="toc-number">1.1.6.</span> <span class="toc-text">Network Namespace</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#"><span class="toc-number">1.2.</span> <span class="toc-text"> </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cgroups"><span class="toc-number">1.3.</span> <span class="toc-text">Cgroups</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Cgroups-三大组件"><span class="toc-number">1.3.1.</span> <span class="toc-text">Cgroups 三大组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三大组件相互关系"><span class="toc-number">1.3.2.</span> <span class="toc-text">三大组件相互关系</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#浅谈-Linux-内核中的-Namespace-与-Cgroups"><span class="toc-number">1.</span> <span class="toc-text">浅谈 Linux 内核中的 Namespace 与 Cgroups</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Namespace"><span class="toc-number">1.1.</span> <span class="toc-text">Namespace</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#UTS-Namespace"><span class="toc-number">1.1.1.</span> <span class="toc-text">UTS Namespace</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#IPC-Namespace"><span class="toc-number">1.1.2.</span> <span class="toc-text">IPC Namespace</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PID-Namespace"><span class="toc-number">1.1.3.</span> <span class="toc-text">PID Namespace</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Mount-Namespace"><span class="toc-number">1.1.4.</span> <span class="toc-text">Mount Namespace</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#User-Namespace"><span class="toc-number">1.1.5.</span> <span class="toc-text">User Namespace</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Network-Namespace"><span class="toc-number">1.1.6.</span> <span class="toc-text">Network Namespace</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#"><span class="toc-number">1.2.</span> <span class="toc-text"> </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cgroups"><span class="toc-number">1.3.</span> <span class="toc-text">Cgroups</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Cgroups-三大组件"><span class="toc-number">1.3.1.</span> <span class="toc-text">Cgroups 三大组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三大组件相互关系"><span class="toc-number">1.3.2.</span> <span class="toc-text">三大组件相互关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Kernel-接口"><span class="toc-number">1.3.3.</span> <span class="toc-text">Kernel 接口</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -652,16 +669,6 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
