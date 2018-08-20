@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">1,962</span> / Reading time: <span class="post-count">9 min</span></span>
+                        <span>Word count: <span class="post-count">1,966</span> / Reading time: <span class="post-count">9 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -397,10 +397,9 @@ height:50vh;
             <main class="main post-page">
     <article class="article-entry">
         <h2 id="浅谈-Linux-内核中的-Namespace-与-Cgroups"><a href="#浅谈-Linux-内核中的-Namespace-与-Cgroups" class="headerlink" title="浅谈 Linux 内核中的 Namespace 与 Cgroups"></a>浅谈 Linux 内核中的 Namespace 与 Cgroups</h2><p>我是在学习 Docker 的时候接触的这两个概念，这两个内核功能也贯穿整个 Docker 容器的运作。那么我们下面简单的谈一谈这两个概念。本章使用自己开发的<a href="https://github.com/Mr-Linus/donkey" target="_blank" rel="noopener">donkey runtime</a> 与 docker 同步做对比。</p>
-<h3 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h3><pre><code>Namespace 也叫命名空间，是 Linux kernel 的一个功能，以下简称NS，他可以隔离一系列的系统资源，比如 PID、UserID、Network等。在 Docker 中，NS 更多的用于做系统的隔离，比如让不同的用户只能访问自己的服务，让每个容器在自己的 root 的环境下运行自己的程序，使用NS，可以做到 UID 级别的隔离，也就是说以 UID 为 n 的用户，虚拟出来的 NS，可以在自己的 NS 里面拥有 root 权限。但是在真实的物理机器上他还是那个 UID为 n 的用户，并没有 宿主机的 root 权限，这样就解决了用户隔离的问题。
-
-除了 User Namespace，PID也是可以被虚拟的，NS 建立系统的不同视图，从用户角度来看，他拥有自己的 init 进程 （PID == 1）,而在外部只是一个普通的进程（PID == N）。
-</code></pre><p>举例说明：</p>
+<h3 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h3><p>Namespace 也叫命名空间，是 Linux kernel 的一个功能，以下简称NS，他可以隔离一系列的系统资源，比如 PID、UserID、Network等。在 Docker 中，NS 更多的用于做系统的隔离，比如让不同的用户只能访问自己的服务，让每个容器在自己的 root 的环境下运行自己的程序，使用NS，可以做到 UID 级别的隔离，也就是说以 UID 为 n 的用户，虚拟出来的 NS，可以在自己的 NS 里面拥有 root 权限。但是在真实的物理机器上他还是那个 UID为 n 的用户，并没有 宿主机的 root 权限，这样就解决了用户隔离的问题。</p>
+<p>除了 User Namespace，PID也是可以被虚拟的，NS 建立系统的不同视图，从用户角度来看，他拥有自己的 init 进程 （PID == 1）,而在外部只是一个普通的进程（PID == N）。</p>
+<p>举例说明：</p>
 <p><img src="/images/example_pid.jpg" alt="example_PID"></p>
 <p>子Namespace A、B 都有自己 PID 为 1 的 init 进程，而它在父 NS 看来只是普通的进程，子NS的进程映射到父 NS 进程上，父 NS 可以知道每个子 NS 的运行状态，而子 NS 之间是隔离的，子 NS 中并不知道 父 NS 中有哪些进程，从上面的关系图可以看出，进程 2334 在父 NS 中的PID为 2334，而在子 NS 中的 PID 为 1。也就是说用户从 NS A中看，它就像 init 进程一样，是自己的初始化进程，而在整个宿主机中，NS A只不过是由PID 2334初始化出来的一个隔离空间而已，同理 PID 2593 也是如此。</p>
 <p>当前 Linux 一共实现了 6 种不同类型的 Namespace。</p>
@@ -503,6 +502,7 @@ height:50vh;
 <p><img src="/images/p4.jpg" alt="p4"></p>
 </li>
 </ul>
+<p><strong>持续更新</strong></p>
 
     </article>
     <!-- license  -->
@@ -652,6 +652,16 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
