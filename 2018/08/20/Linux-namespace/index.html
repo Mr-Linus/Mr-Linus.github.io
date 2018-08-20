@@ -15,7 +15,7 @@
     <meta name="description" content="It's Funky's NoteBook">
     <meta name="Cache-Control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>Search of Data Structure · Funky&#39;s NoteBook</title>
+    <title>Views about Namespace &amp; Cgroups of Linux Kernel · Funky&#39;s NoteBook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -210,7 +210,7 @@
                 <a href="/" >Funky&#39;s NoteBook</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">Search of Data Structure</a>
+                <a href="#" class="post-name">Views about Namespace & Cgroups of Linux Kernel</a>
             </div>
     </div>
     
@@ -242,7 +242,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            Search of Data Structure
+            Views about Namespace & Cgroups of Linux Kernel
             <!-- 404 -->
             
         </h1>
@@ -261,18 +261,18 @@ height:50vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Data Structure">Data Structure</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">1,810</span> / Reading time: <span class="post-count">7 min</span></span>
+                        <span>Word count: <span class="post-count">1,885</span> / Reading time: <span class="post-count">9 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2017/10/28</span>
+                    <span class="post-intro-time">2018/08/20</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -396,111 +396,120 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h2 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h2><h3 id="查找方法"><a href="#查找方法" class="headerlink" title="查找方法"></a>查找方法</h3><ul>
-<li>顺序查找</li>
-<li>折半查找</li>
-<li>分块查找</li>
+        <h2 id="浅谈-Linux-内核中的-Namespace-与-Cgroups"><a href="#浅谈-Linux-内核中的-Namespace-与-Cgroups" class="headerlink" title="浅谈 Linux 内核中的 Namespace 与 Cgroups"></a>浅谈 Linux 内核中的 Namespace 与 Cgroups</h2><p>我是在学习 Docker 的时候接触的这两个概念，这两个内核功能也贯穿整个 Docker 容器的运作。那么我们下面简单的谈一谈这两个概念。本章使用自己开发的<a href="https://github.com/Mr-Linus/donkey" target="_blank" rel="noopener">donkey runtime</a> 与 docker 同步做对比。</p>
+<h3 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h3><pre><code>Namespace 也叫命名空间，是 Linux kernel 的一个功能，以下简称NS，他可以隔离一系列的系统资源，比如 PID、UserID、Network等。在 Docker 中，NS 更多的用于做系统的隔离，比如让不同的用户只能访问自己的服务，让每个容器在自己的 root 的环境下运行自己的程序，使用NS，可以做到 UID 级别的隔离，也就是说以 UID 为 n 的用户，虚拟出来的 NS，可以在自己的 NS 里面拥有 root 权限。但是在真实的物理机器上他还是那个 UID为 n 的用户，并没有 宿主机的 root 权限，这样就解决了用户隔离的问题。
+
+除了 User Namespace，PID也是可以被虚拟的，NS 建立系统的不同视图，从用户角度来看，他拥有自己的 init 进程 （PID == 1）,而在外部只是一个普通的进程（PID == N）。
+</code></pre><p>举例说明：</p>
+<p><img src="/images/example_pid.jpg" alt="example_PID"></p>
+<p>子Namespace A、B 都有自己 PID 为 1 的 init 进程，而它在父 NS 看来只是普通的进程，子NS的进程映射到父 NS 进程上，父 NS 可以知道每个子 NS 的运行状态，而子 NS 之间是隔离的，子 NS 中并不知道 父 NS 中有哪些进程，从上面的关系图可以看出，进程 2334 在父 NS 中的PID为 2334，而在子 NS 中的 PID 为 1。也就是说用户从 NS A中看，它就像 init 进程一样，是自己的初始化进程，而在整个宿主机中，NS A只不过是由PID 2334初始化出来的一个隔离空间而已，同理 PID 2593 也是如此。</p>
+<p>当前 Linux 一共实现了 6 种不同类型的 Namespace。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Namespace 类型</th>
+<th style="text-align:center">系统调用参数</th>
+<th style="text-align:center">内核版本</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">Mount Namespace</td>
+<td style="text-align:center">CLONE_NEWNS</td>
+<td style="text-align:center">2.4.19</td>
+</tr>
+<tr>
+<td style="text-align:center">UTS Namespace</td>
+<td style="text-align:center">CLONE_NEWUTS</td>
+<td style="text-align:center">2.6.19</td>
+</tr>
+<tr>
+<td style="text-align:center">IPC Namespace</td>
+<td style="text-align:center">CLONE_NEWIPC</td>
+<td style="text-align:center">2.6.19</td>
+</tr>
+<tr>
+<td style="text-align:center">PID Namespace</td>
+<td style="text-align:center">CLONE_NEWPID</td>
+<td style="text-align:center">2.6.24</td>
+</tr>
+<tr>
+<td style="text-align:center">Network Namespace</td>
+<td style="text-align:center">CLONE_NEWNET</td>
+<td style="text-align:center">2.6.29</td>
+</tr>
+<tr>
+<td style="text-align:center">User Namespace</td>
+<td style="text-align:center">CLONE_NEWUSER</td>
+<td style="text-align:center">3.8</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>NS 的 API 常用的三个系统调用有：</p>
+<ul>
+<li>clone() 创建新进程</li>
+<li>unshare() 将进程移出某个 NS</li>
+<li>setns() 将进程加入某个 NS</li>
 </ul>
-<h3 id="平均查找长度-ASL（Average-Search-Length-）"><a href="#平均查找长度-ASL（Average-Search-Length-）" class="headerlink" title="平均查找长度 ASL（Average Search Length  ）"></a>平均查找长度 ASL（Average Search Length  ）</h3><p>所有查找过程中进行关键字比较次数的平均值<br>数学定义为：$ASL=\sum _{i=1}^n P_i C_i$</p>
+<p>下面就对这几个NS做简单的介绍。</p>
+<h4 id="UTS-Namespace"><a href="#UTS-Namespace" class="headerlink" title="UTS Namespace"></a>UTS Namespace</h4><p>它主要用来隔离 nodename 与 domainname 两个系统标识。在 UTS NS 中，每个NS 允许有自己的 hostname。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ hostname</span><br><span class="line">funky-mac</span><br><span class="line">$ docker run -ti --hostname ubuntu123 ubuntu /bin/sh</span><br><span class="line"><span class="comment"># hostname</span></span><br><span class="line">ubuntu123</span><br><span class="line">$ donkey run -ti --name hello busybox sh <span class="comment">#内部修改hostname 外部不受影响</span></span><br><span class="line">/ <span class="comment"># hostname hello</span></span><br><span class="line">/ <span class="comment"># hostname</span></span><br><span class="line">hello</span><br><span class="line">$ hostname</span><br><span class="line">funky-mac</span><br></pre></td></tr></table></figure>
+<h4 id="IPC-Namespace"><a href="#IPC-Namespace" class="headerlink" title="IPC Namespace"></a>IPC Namespace</h4><p>它用于隔离 System V IPC 和 POSIX message queues。每一个 IPC NS都有自己的 System V IPC 和 POSIX message queues。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ ipcs -q</span><br><span class="line">IPC status from &lt;running system&gt; as of Mon Aug 20 19:00:05 CST 2018</span><br><span class="line">T     ID     KEY        MODE       OWNER    GROUP</span><br><span class="line">Message Queues:</span><br><span class="line"></span><br><span class="line">$ docker run -ti ubuntu bash</span><br><span class="line">root@443da4f613ba:/<span class="comment"># ipcs -q</span></span><br><span class="line"></span><br><span class="line">------ Message Queues --------</span><br><span class="line">key        msqid      owner      perms      used-bytes   messages</span><br><span class="line">root@443da4f613ba:/<span class="comment"># ipcmk -Q</span></span><br><span class="line">Message queue id: 0</span><br><span class="line"></span><br><span class="line">$ donkey run -ti --name hello busybox sh</span><br><span class="line">/ <span class="comment"># ipcs -q</span></span><br><span class="line"></span><br><span class="line">------ Message Queues --------</span><br><span class="line">key        msqid      owner      perms      used-bytes   messages</span><br></pre></td></tr></table></figure>
+<h4 id="PID-Namespace"><a href="#PID-Namespace" class="headerlink" title="PID Namespace"></a>PID Namespace</h4><p>刚刚已经详细讨论了下，他主要用于隔离进程 ID。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> $$</span><br><span class="line">48123</span><br><span class="line">$ donkey run -ti --name hello busybox sh</span><br><span class="line"><span class="built_in">echo</span> $$</span><br><span class="line">1</span><br><span class="line">$ docker run -ti ubuntu bash</span><br><span class="line">root@428cf6604a90:/<span class="comment"># ps</span></span><br><span class="line">  PID TTY          TIME CMD</span><br><span class="line">    1 pts/0    00:00:00 bash</span><br><span class="line">   12 pts/0    00:00:00 ps</span><br><span class="line">root@428cf6604a90:/<span class="comment"># echo $$</span></span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+<h4 id="Mount-Namespace"><a href="#Mount-Namespace" class="headerlink" title="Mount Namespace"></a>Mount Namespace</h4><p>用于隔离各个进程看到的挂载点视图。在不同的 NS 中，看到的文件系统层次是不一样的。在Mount NS中使用mount 与 umount 只会影响当前的 NS，对全局文件系统没有影响。你肯定会想到 chroot，它可以将一个目录变成根节点，Mount NS 不仅仅可以实现中国功能，而且可以更加灵活与安全。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">$ df</span><br><span class="line">Filesystem      Size   Used  Avail Capacity iused               ifree %iused  Mounted on</span><br><span class="line">/dev/disk1s1   932Gi  152Gi  774Gi    17% 1275908 9223372036853499899    0%   /</span><br><span class="line">devfs          193Ki  193Ki    0Bi   100%     666                   0  100%   /dev</span><br><span class="line">/dev/disk1s4   932Gi  5.5Gi  774Gi     1%       5 9223372036854775802    0%   /private/var/vm</span><br><span class="line">map -hosts       0Bi    0Bi    0Bi   100%       0                   0  100%   /net</span><br><span class="line">map auto_home    0Bi    0Bi    0Bi   100%       0                   0  100%   /home</span><br><span class="line">/dev/disk1s3   932Gi  495Mi  774Gi     1%      16 9223372036854775791    0%   /Volumes/Recovery</span><br><span class="line">$ docker run -ti ubuntu bash</span><br><span class="line">root@428cf6604a90:/<span class="comment"># df -Th</span></span><br><span class="line">Filesystem     Type     Size  Used Avail Use% Mounted on</span><br><span class="line">overlay        overlay   59G  3.5G   52G   7% /</span><br><span class="line">tmpfs          tmpfs     64M     0   64M   0% /dev</span><br><span class="line">tmpfs          tmpfs   1000M     0 1000M   0% /sys/fs/cgroup</span><br><span class="line">/dev/sda1      ext4      59G  3.5G   52G   7% /etc/hosts</span><br><span class="line">shm            tmpfs     64M     0   64M   0% /dev/shm</span><br><span class="line">tmpfs          tmpfs   1000M     0 1000M   0% /proc/acpi</span><br><span class="line">tmpfs          tmpfs   1000M     0 1000M   0% /sys/firmware</span><br><span class="line">$ donkey run -ti --name hello busybox sh</span><br><span class="line">/ <span class="comment"># df -Th</span></span><br><span class="line">Filesystem           Type            Size      Used Available Use% Mounted on</span><br><span class="line">none                 aufs           39.3G      2.6G     35.1G   7% /</span><br><span class="line">tmpfs                tmpfs         244.9M         0    244.9M   0% /dev</span><br></pre></td></tr></table></figure>
+<h4 id="User-Namespace"><a href="#User-Namespace" class="headerlink" title="User Namespace"></a>User Namespace</h4><p>User NS 主要用于隔离用户的用户组ID，一个进程的 User ID 个 Group IP 在 User NS 内外可以不同。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ id</span><br><span class="line">uid=501(funky) gid=20(staff)</span><br><span class="line"></span><br><span class="line">$ docker run -ti ubuntu bash</span><br><span class="line">root@752b77b90707:/<span class="comment"># id</span></span><br><span class="line">uid=0(root) gid=0(root) groups=0(root)</span><br><span class="line"></span><br><span class="line">$ donkey run -ti --name hello busybox sh</span><br><span class="line">/ <span class="comment"># id</span></span><br><span class="line">uid=0(root) gid=0(root) groups=0(root)</span><br></pre></td></tr></table></figure>
+<h4 id="Network-Namespace"><a href="#Network-Namespace" class="headerlink" title="Network Namespace"></a>Network Namespace</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$ ifconfig</span><br><span class="line">lo0: flags=8049&lt;UP,LOOPBACK,RUNNING,MULTICAST&gt; mtu 16384</span><br><span class="line">	options=1203&lt;RXCSUM,TXCSUM,TXSTATUS,SW_TIMESTAMP&gt;</span><br><span class="line">	inet 127.0.0.1 netmask 0xff000000</span><br><span class="line">	inet6 ::1 prefixlen 128</span><br><span class="line">	inet6 fe80::1%lo0 prefixlen 64 scopeid 0x1</span><br><span class="line">	nd6 options=201&lt;PERFORMNUD,DAD&gt;</span><br><span class="line">gif0: flags=8010&lt;POINTOPOINT,MULTICAST&gt; mtu 1280</span><br><span class="line">stf0: flags=0&lt;&gt; mtu 1280</span><br><span class="line">XHC20: flags=0&lt;&gt; mtu 0</span><br><span class="line">XHC1: flags=0&lt;&gt; mtu 0</span><br><span class="line">XHC0: flags=0&lt;&gt; mtu 0</span><br><span class="line">en1: flags=8963&lt;UP,BROADCAST,SMART,RUNNING,PROMISC,SIMPLEX,MULTICAST&gt; mtu 1500</span><br><span class="line">	options=60&lt;TSO4,TSO6&gt;</span><br><span class="line">	ether ca:00:XX</span><br><span class="line">	media: autoselect &lt;full-duplex&gt;</span><br><span class="line">	status: inactive</span><br><span class="line">	</span><br><span class="line"></span><br><span class="line">$ donkey run -ti --name hello busybox sh</span><br><span class="line">/ <span class="comment"># ifconfig</span></span><br><span class="line">/ <span class="comment"># ip addr #不存在设备，隔离</span></span><br><span class="line">1: lo: &lt;LOOPBACK&gt; mtu 65536 qdisc noop</span><br><span class="line">    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00</span><br></pre></td></tr></table></figure>
+<h3 id=""><a href="#" class="headerlink" title=" "></a> </h3><h3 id="Cgroups"><a href="#Cgroups" class="headerlink" title="Cgroups"></a>Cgroups</h3><p>Linux Cgroups 即 Linux Control Groups，它提供了一组进程以及将来子进程的资源限制、控制和统计能力，这些资源包括CPU、内存、存储等，通过Cgroups，可以方便限制某个进程占用的资源，并且实时监控和统计信息。</p>
+<h4 id="Cgroups-三大组件"><a href="#Cgroups-三大组件" class="headerlink" title="Cgroups 三大组件"></a>Cgroups 三大组件</h4><ul>
+<li><p>cgroup  是对进程分组管理的一种机制，一个cgroup包含一组进程，并可以在整个cgroup上增加各种参数配置，将一组进程和一组subsystem的系统参数关联起来。</p>
 <blockquote>
-<p>n是查找长度，$P_i$是查找第i个元素的概率，$C_i$是找到第i个元素所需进行比较次数</p>
+<p>这里请注意区分cgroup 与 cgroups</p>
 </blockquote>
-<h3 id="顺序查找"><a href="#顺序查找" class="headerlink" title="顺序查找"></a>顺序查找</h3><p>适用于无序的表，挨个查找<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    ElemType *elem; <span class="comment">//元素存储空间基址</span></span><br><span class="line">    <span class="keyword">int</span> TableLen;<span class="comment">//表长</span></span><br><span class="line">&#125;SSTable;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Search_Seq</span><span class="params">(SSTable ST,ElemType key)</span></span>&#123;</span><br><span class="line">    ST.elem[<span class="number">0</span>]=key; <span class="comment">//哨兵</span></span><br><span class="line">    <span class="keyword">for</span>(i=ST.TableLen;ST.elem[i]!=key;--i); <span class="comment">//从后往前找到i为0时退出for循环</span></span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>平均查找长度：</p>
-<script type="math/tex; mode=display">ASL_{success}=\sum _{i=1}^n P_i(n-i-1)=\frac{n+1}{2}</script><script type="math/tex; mode=display">ASL_{failure}=\sum _{j=1}^n q_j(l_j-1)=\frac{n}{2}+\frac{n}{n+1}</script><h3 id="折半查找"><a href="#折半查找" class="headerlink" title="折半查找"></a>折半查找</h3><p>折半查找其实就是把查找表分成两半，然后在这两半里面继续分…<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">BinarySearch</span><span class="params">(SeqList L;ElemType key)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> low=<span class="number">0</span>,high=L.TableLen<span class="number">-1</span>,mid; </span><br><span class="line">    <span class="keyword">while</span>(low&lt;high)&#123;</span><br><span class="line">        mid=(low+high)/<span class="number">2</span>; <span class="comment">//取中间位置</span></span><br><span class="line">        <span class="keyword">if</span>(L.elem[mid]==key)&#123;<span class="keyword">return</span> mid;&#125; <span class="comment">//查找成功则返回所在位置</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(L.elem[mid]&gt;key)&#123;high=mid<span class="number">-1</span>;&#125; <span class="comment">//从前半部分查找</span></span><br><span class="line">        <span class="keyword">else</span> &#123;low=mid+<span class="number">1</span>;&#125; <span class="comment">//从后半部分查找</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>折半查找的过程可以用二叉树来描述，这个二叉树叫判定树，用折半查找到给定值的比较次数不会超过数的高度,即$\left \lceil log_2 (n+1) \right \rceil$</p>
-<p>平均查找长度：<br>$ASL_{success}=log_2 (n+1)-1$</p>
-<h3 id="分块查找"><a href="#分块查找" class="headerlink" title="分块查找"></a>分块查找</h3><p>分块查找又称索引查找，吸取了折半查找和顺序查找的优点，块内元素可以无序，但是块之间是有序的。<br>示意图：</p>
-<p>索引表</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th>24</th>
-<th>54</th>
-<th style="text-align:center">78</th>
-<th style="text-align:left">88</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>7</td>
-<td style="text-align:center">10</td>
-<td style="text-align:left">13</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>查找表：</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th>24*</th>
-<th>21*</th>
-<th>6*</th>
-<th>11*</th>
-<th>8*</th>
-<th>22*</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>平均查找长度：<br>$ASL=L_I+L_S$</p>
+</li>
+<li><p>subsystem 是一组资源控制块，一般包含以下几项。</p>
+<ul>
+<li>blkio 设置块设备IO访问控制</li>
+<li>cpu 设置cpu调度策略</li>
+<li>devices 控制设备在cgroup中的访问</li>
+<li>memory 用于控制内存占用</li>
+</ul>
 <blockquote>
-<p>$L_I$ 和 $L_S$分别为索引查找和块内查找的平均查找长度</p>
+<p>Linux 系统可以通过命令<code>lssubsys -a</code>查看更多支持的 subsystem</p>
 </blockquote>
-<p>①若干将长度为n的产值表均匀分b块，每块s个记录，在等概率的情况下块内使用<code>顺序查找</code>那么平均查找长度为：$ASL=L_I+L_S=\frac{b+1}{2}+\frac{s+1}{2}$<br>②此时若$s=\sqrt{n}$,则平均查找长度取最小值：$\sqrt{n}+1$;若对索引表采用折半查找时，则平均查找长度为：$ASL=L_I+L_S=\left \lceil log_2(b+1)+\frac{s+1}{2} \right \rceil$</p>
-<h3 id="B树-amp-B-树"><a href="#B树-amp-B-树" class="headerlink" title="B树 &amp; B+树"></a>B树 &amp; B+树</h3><p>B树，又称多路平衡查找树,B树中所有节点的孩子节点数的最大值称为<code>B数的阶</code>，通常用m表示。一颗m阶的树或为<code>空树</code>，或为满足如下特性的树:<br>1、树中每个节点至多有m颗子树（即至多含有m-1个关键字）。<br>2、若根节点不是终端节点，则至少有两颗子树（至少一个关键字）。<br>3、除根节点外的所有非叶子节点至少有$\left \lceil m/2 \right \rceil$颗子树（即至少含有$\left \lceil m/2 \right \rceil-1$个关键字）。<br>4、所有的叶节点都出现在同一层次上，并且不带信息（实际这些节点并不存在，指向这些节点的指针为空）。</p>
-<blockquote>
-<p>B树是所有节点的平衡因子均<code>等于0</code>的多路查找树</p>
-</blockquote>
-<h4 id="B树的高度（磁盘存储次数）"><a href="#B树的高度（磁盘存储次数）" class="headerlink" title="B树的高度（磁盘存储次数）"></a>B树的高度（磁盘存储次数）</h4><p>首先应该明确B树的高度不包括最后的不带任何信息的叶子节点那一层。</p>
-<p>如果$n\geq 1$，则对任意一颗包含n个关键字、高度为h、阶数为m的B树：<br>有一棵树的高度：$h\geq log_m(n+1)$</p>
-<p>如果让每个节点中的关键字个数达到最少则高度为：$h\leq log_{\left \lceil m/2 \right \rceil}(((n+1)/2)+1)$</p>
-<blockquote>
-<p>B树的大部分操作所需的磁盘存取次数与B树的高度成正比</p>
-</blockquote>
-<h3 id="散列-Hash-表"><a href="#散列-Hash-表" class="headerlink" title="散列(Hash)表"></a>散列(Hash)表</h3><p>散列函数：一个把查找表中的关键字映射成该关键字对应的地址的函数，记为Hash(key)=Addr。<br>散列函数块内会把两个或两个以上的不同关键字映射到同一个地址，这种情况称“冲突”,这些发生碰撞的不同关键字称为“同义词”。</p>
-<p> <code>散列表</code> 是根据关键字而直接进行访问的数据结构。</p>
-<h4 id="散列函数的构造遵循规则"><a href="#散列函数的构造遵循规则" class="headerlink" title="散列函数的构造遵循规则"></a>散列函数的构造遵循规则</h4><p> 1.均匀分布,少冲突</p>
-<p> 2.计算简单,查找快</p>
-<h5 id="1-直接地址法"><a href="#1-直接地址法" class="headerlink" title="1.直接地址法"></a>1.直接地址法</h5><p>散列函数： H(key)=a*key+b</p>
-<blockquote>
-<p>特点: 计算简单，不会产生冲突，适合连续存储的情况，但如果关键字分布不连续，空位较多，将造成存储空间浪费。</p>
-<h5 id="2-除留余数法"><a href="#2-除留余数法" class="headerlink" title="2.除留余数法"></a>2.除留余数法</h5><p>散列函数：H(key)=key%p<br>特点：简单、常用，使用关键是选好p，尽量减少冲突</p>
-<h5 id="3-数字分析法"><a href="#3-数字分析法" class="headerlink" title="3.数字分析法"></a>3.数字分析法</h5><p>设关键字是r进制数，而r个数码在各个位置上出现的频率不一定相同，在某些位上经常出现，则应选取数码分布较为均匀的若干位作为散列地址。</p>
-<h5 id="4-平方取中法"><a href="#4-平方取中法" class="headerlink" title="4.平方取中法"></a>4.平方取中法</h5><p>顾名思义，取关键字的平方值的中间几位作为散列地址:$10^{k-1} \leq n \leq 10^k $(其中n为集合中元素个数)</p>
-<h5 id="5-折叠法"><a href="#5-折叠法" class="headerlink" title="5.折叠法"></a>5.折叠法</h5><p>将关键字分割成位数相同的几部分（最后一部分可以短一点），然后取这几部分的叠加作为散列地址。</p>
-</blockquote>
-<h4 id="处理冲突的方法"><a href="#处理冲突的方法" class="headerlink" title="处理冲突的方法"></a>处理冲突的方法</h4><h5 id="1-开地址法（闭散列法）"><a href="#1-开地址法（闭散列法）" class="headerlink" title="1.开地址法（闭散列法）"></a>1.开地址法（闭散列法）</h5><p>数学递推公式<br>$H_i=((H(key)+d_i)\%m)$<br>式中,$i=1,2,3,…,k(k \geq m-1 )$;m表示散列表表长；$d_i$为增量序列。</p>
-<h6 id="1）-线性探测法"><a href="#1）-线性探测法" class="headerlink" title="1） 线性探测法"></a>1） 线性探测法</h6><p>不多说，冲突就往后挪，挪到有位置，停止</p>
-<h6 id="2）-平方探测法"><a href="#2）-平方探测法" class="headerlink" title="2） 平方探测法"></a>2） 平方探测法</h6><p>当 $d_i = 1^2,-1^2,2^2,-2^2,…,k^2,-k^2,$其中$k \leq m/2 $，m必须是一个可以表示成4k+3的质数，又称二次探测法</p>
-<h6 id="3-再散列法"><a href="#3-再散列法" class="headerlink" title="3)再散列法"></a>3)再散列法</h6><p>当 $d_i=Hash_2(Key)$, 如果第一个散列函数Hash(key)得到的地址发生冲突时，利用第二个散列函数计算该关键字的地址增量。再散列法经过m-1次探测会遍历表中的所有的位置，回到$H_0$位置。</p>
-<h6 id="4-伪随机序列法（简答题）"><a href="#4-伪随机序列法（简答题）" class="headerlink" title="4)伪随机序列法（简答题）"></a>4)伪随机序列法（简答题）</h6><p>当$d_i$=伪随机序列，称为伪随机序列法。</p>
-<blockquote>
-<p>注意在开放地址的情形下，不能随便物理删除所有元素，因为若删除元素将会截断其他具有相同散列地址元素的查找地址。所以若想删除一个元素时，给它做一个删除标记，进行逻辑删除。但副作用是，执行多次删除后，散列表表面上看起来很满，实际上有许多位置没用利用，因此需要定期维护散列表，要把删除标记的元素物理删除。</p>
-<h5 id="2-拉链法"><a href="#2-拉链法" class="headerlink" title="2.拉链法"></a>2.拉链法</h5><p>假设散列地址为i的同义词链表的头指针存放在散列表的第i个单元中，因而查找、插入、删除都在同义词链中进行。</p>
-<h3 id="散列查找及性能分析"><a href="#散列查找及性能分析" class="headerlink" title="散列查找及性能分析"></a>散列查找及性能分析</h3><p>散列表的查找过程与构造散列表的过程基本一致。<br>装填因子：散列表的装填因子一般记为$\alpha$,定义为一个表的装满程度，即：<br>$\alpha =\frac{n}{m}$ 其中n为表中记录数，m为散列表长度。</p>
-</blockquote>
+</li>
+<li><p>hierarchy 的功能是把一组cgroup串联成一个树状结构，这样的树便是一个 hierarchy ，通过树状结构Cgroups可以做到继承。比如，系统通过cgroup1限制CPU，有个服务还需要同时限速内存，那么可以创建cgroup2继承于cgroup1并限制内存。同时cgroup2的限制只在cgroup2内部，cgroup1中的服务并不受cgroup2限制内存的影响。</p>
+</li>
+</ul>
+<h4 id="三大组件相互关系"><a href="#三大组件相互关系" class="headerlink" title="三大组件相互关系"></a>三大组件相互关系</h4><ul>
+<li><p>系统创建新的 hierarchy 后，系统中所有进程都会加入这个 hierarchy 的cgroup根节点，这个根节点是 hierarchy 默认创建。</p>
+<p><img src="/images/p1.jpg" alt="p1"></p>
+</li>
+<li><p>一个 subsystem 只能附加在 一个 hierarchy 上面。</p>
+</li>
+<li><p>一个 hierarchy 附加多个 subsystem。</p>
+<p><img src="/images/p2.jpg" alt="p2"></p>
+</li>
+<li><p>一个进程可以作为多个 cgroup 的成员，但这些cgroup必须在不同的 hierarchy 中。</p>
+<p><img src="/images/p3.jpg" alt="p3"></p>
+</li>
+<li><p>一个进程 fork出子进程时，子进程与父进程是在一个cgroup中的，也可以根据需要移动到其他cgroup里。</p>
+<p><img src="/images/p4" alt="p4"></p>
+</li>
+</ul>
 
     </article>
     <!-- license  -->
     
         <div class="license-wrapper">
             <p>原文作者: <a href="http://note.geekfan.top">Linus Lee</a>
-            <p>原文链接: <a href="http://note.geekfan.top/2017/10/28/search/">http://note.geekfan.top/2017/10/28/search/</a>
-            <p>发表日期: <a href="http://note.geekfan.top/2017/10/28/search/">October 28th 2017, 10:40:50 pm</a>
+            <p>原文链接: <a href="http://note.geekfan.top/2018/08/20/Linux-namespace/">http://note.geekfan.top/2018/08/20/Linux-namespace/</a>
+            <p>发表日期: <a href="http://note.geekfan.top/2018/08/20/Linux-namespace/">August 20th 2018, 5:47:00 pm</a>
             <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -508,17 +517,12 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2017/12/12/Graph-traversal/" title= Graph traversal  of Data Structure >
-                    <div class="nextTitle">Graph traversal  of Data Structure</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2017/10/24/struct/" title= Concept of Data Structure >
-                    <div class="prevTitle">Concept of Data Structure</div>
+                <a href= "/2018/07/17/K8S-InfoCollection/" title= Kubernetes Information Collection >
+                    <div class="prevTitle">Kubernetes Information Collection</div>
                 </a>
             
         </li>
@@ -634,7 +638,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#查找"><span class="toc-number">1.</span> <span class="toc-text">查找</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#查找方法"><span class="toc-number">1.1.</span> <span class="toc-text">查找方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#平均查找长度-ASL（Average-Search-Length-）"><span class="toc-number">1.2.</span> <span class="toc-text">平均查找长度 ASL（Average Search Length  ）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#顺序查找"><span class="toc-number">1.3.</span> <span class="toc-text">顺序查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#折半查找"><span class="toc-number">1.4.</span> <span class="toc-text">折半查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分块查找"><span class="toc-number">1.5.</span> <span class="toc-text">分块查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#B树-amp-B-树"><span class="toc-number">1.6.</span> <span class="toc-text">B树 &amp; B+树</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#B树的高度（磁盘存储次数）"><span class="toc-number">1.6.1.</span> <span class="toc-text">B树的高度（磁盘存储次数）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#散列-Hash-表"><span class="toc-number">1.7.</span> <span class="toc-text">散列(Hash)表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#散列函数的构造遵循规则"><span class="toc-number">1.7.1.</span> <span class="toc-text">散列函数的构造遵循规则</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-直接地址法"><span class="toc-number">1.7.1.1.</span> <span class="toc-text">1.直接地址法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-除留余数法"><span class="toc-number">1.7.1.2.</span> <span class="toc-text">2.除留余数法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-数字分析法"><span class="toc-number">1.7.1.3.</span> <span class="toc-text">3.数字分析法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-平方取中法"><span class="toc-number">1.7.1.4.</span> <span class="toc-text">4.平方取中法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-折叠法"><span class="toc-number">1.7.1.5.</span> <span class="toc-text">5.折叠法</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#处理冲突的方法"><span class="toc-number">1.7.2.</span> <span class="toc-text">处理冲突的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-开地址法（闭散列法）"><span class="toc-number">1.7.2.1.</span> <span class="toc-text">1.开地址法（闭散列法）</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1）-线性探测法"><span class="toc-number">1.7.2.1.1.</span> <span class="toc-text">1） 线性探测法</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2）-平方探测法"><span class="toc-number">1.7.2.1.2.</span> <span class="toc-text">2） 平方探测法</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-再散列法"><span class="toc-number">1.7.2.1.3.</span> <span class="toc-text">3)再散列法</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#4-伪随机序列法（简答题）"><span class="toc-number">1.7.2.1.4.</span> <span class="toc-text">4)伪随机序列法（简答题）</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-拉链法"><span class="toc-number">1.7.2.2.</span> <span class="toc-text">2.拉链法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#散列查找及性能分析"><span class="toc-number">1.8.</span> <span class="toc-text">散列查找及性能分析</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#浅谈-Linux-内核中的-Namespace-与-Cgroups"><span class="toc-number">1.</span> <span class="toc-text">浅谈 Linux 内核中的 Namespace 与 Cgroups</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Namespace"><span class="toc-number">1.1.</span> <span class="toc-text">Namespace</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#UTS-Namespace"><span class="toc-number">1.1.1.</span> <span class="toc-text">UTS Namespace</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#IPC-Namespace"><span class="toc-number">1.1.2.</span> <span class="toc-text">IPC Namespace</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PID-Namespace"><span class="toc-number">1.1.3.</span> <span class="toc-text">PID Namespace</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Mount-Namespace"><span class="toc-number">1.1.4.</span> <span class="toc-text">Mount Namespace</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#User-Namespace"><span class="toc-number">1.1.5.</span> <span class="toc-text">User Namespace</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Network-Namespace"><span class="toc-number">1.1.6.</span> <span class="toc-text">Network Namespace</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#"><span class="toc-number">1.2.</span> <span class="toc-text"> </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cgroups"><span class="toc-number">1.3.</span> <span class="toc-text">Cgroups</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Cgroups-三大组件"><span class="toc-number">1.3.1.</span> <span class="toc-text">Cgroups 三大组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三大组件相互关系"><span class="toc-number">1.3.2.</span> <span class="toc-text">三大组件相互关系</span></a></li></ol></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>

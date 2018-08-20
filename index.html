@@ -354,6 +354,36 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2018/08/20/Linux-namespace/" >
+            
+                <span>Views about Namespace &amp; Cgroups of Linux Kernel</span>
+        </a>
+        <div class="abstract-content">
+            浅谈 Linux 内核中的 Namespace 与 Cgroups我是在学习 Docker 的时候接触的这两个概念，这两个内核功能也贯穿整个 Docker 容器的运作。那么我们下面简单的谈一谈这两个概念。本章使用自己开发的donkey runtime 与 docker 同步做对比。
+NamespaceNamespace 也叫命名空间，是 Linux kernel 的一个功能，以下简称NS，他可以隔离一系列的系统资源，比如 PID、UserID、Network等。在 Docker 中，NS 更多的用于做系统的隔离，比如让不同的用户只能访问自己的服务，让每个容器在自己的 root 的环境下运...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/08/20</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2018/07/17/K8S-InfoCollection/" >
             
                 <span>Kubernetes Information Collection</span>
@@ -735,43 +765,11 @@ L[i]
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/10/20/Docker-Primer/" >
-            
-                <span>Docker-Primer</span>
-        </a>
-        <div class="abstract-content">
-            一、 Docker简介Docker 是一个开源项目。
-可以把它理解为是一种新兴的超轻量级虚拟化技术。
-传统虚拟化技术需要模拟计算机的一整套硬件出来，而且还要有自己的一套操作系统。
-而 Docker 却不需要，它只需要与主机共享同一个内核，并充分利用 Linux 上内核的“环境隔离方案”来实现轻量级的虚拟化。
-它在一些特定场景下与传统虚拟化技术相比，效率大幅提高，而资源开销却大幅降低。
-Docker 的迁移也是十分方便的，基本上只需要把整个 Docker 目录搬过去即可。
-Docker 使用 服务器-客户端 架构。
-如果想在 Docker 上运行 exe 软件的话，那不用看下去了，左转找 ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/20</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
+    
+    <nav class="page-nav">
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">NEXT &#62;</a>
+    </nav>
     
 </main>
             <!-- profile -->
@@ -1042,10 +1040,9 @@ Docker 使用 服务器-客户端 架构。
     
     
     
-    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 10
+        Total : 11
         </div>
         <!-- search  -->
         
@@ -1058,6 +1055,11 @@ Docker 使用 服务器-客户端 架构。
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/Linux-namespace/" >Views about Namespace & Cgroups of Linux Kernel</a>
+        </li>
     
     
         <li class="archive-post-item">
