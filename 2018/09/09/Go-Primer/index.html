@@ -6,7 +6,7 @@
 
 
 <head>
-    <meta charset="utf-8">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
     <meta name="author" content="Linus Lee">
     <meta name="renderer" content="webkit">
@@ -15,7 +15,7 @@
     <meta name="description" content="It's Funky's NoteBook">
     <meta name="Cache-Control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>Funky&#39;s NoteBook</title>
+    <title>Go Primer · Funky&#39;s NoteBook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -70,6 +70,8 @@
 
     <link rel="preload" href= /css/style.css?v=201807017_1502 as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link rel="stylesheet" href= /css/mobile.css?v=20180709 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
@@ -189,17 +191,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
     <!-- 百度统计  -->
     
-    <!-- 谷歌统计  -->
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
     
 </head>
 
     
+        <body class="post-body">
     
-<header class="header">
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Funky&#39;s NoteBook</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Go Primer</a>
+            </div>
+    </div>
     
     <a class="home-link" href=/>Funky's NoteBook</a>
 </header>
@@ -213,24 +226,74 @@
 
 
 
+height:50vh;
+
 >
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            Go Primer
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Go">Go</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">1,272</span> / Reading time: <span class="post-count">5 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/09/09</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -331,214 +394,95 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/10/28/search/" >
-            
-                <span>Search of Data Structure</span>
-        </a>
-        <div class="abstract-content">
-            查找查找方法
-顺序查找
-折半查找
-分块查找
+            <main class="main post-page">
+    <article class="article-entry">
+        <h3 id="GOPATH-与工作区"><a href="#GOPATH-与工作区" class="headerlink" title="GOPATH 与工作区"></a>GOPATH 与工作区</h3><p>环境变量 GOPATH 的值可以是一个目录的路径，也可以包含多个目录路径，每个目录都代表 Go 语言的一个工作区（workspace）。这些工作区用于放置 Go 语言的源码文件（source file），以及安装（install）后的归档文件（archive file，也就是以“.a”为扩展名的文件）和可执行文件（executable file）。</p>
+<p>与许多编程语言一样，Go 语言的源码是以代码包为基本组织单位的。在文件系统中，这些代码包其实是与目录一一对应的。目录可以有子目录，所以代码包也可以有子包。</p>
+<p>一个代码包中可以包含任意个以.go 为扩展名的源码文件，这些源码文件都需要被声明为属于同一个代码包。代码包的名称一般会与这些源码文件所在的目录同名。如果不同名，那么在构建、安装的过程中会以代码包名称为准。</p>
+<p>每个代码包都会有导入路径。代码包的导入路径是其他代码在使用该包中的程序实体时需要引入的路径。在实际使用程序实体之前，我们必须先导入其所在的代码包。具体的方式就是 <code>import</code>该代码包的导入路径。就像这样：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">"github.com/example/example</span></span><br></pre></td></tr></table></figure>
+<p>在工作区中，一个代码包的导入路径实际上就是从 src 子目录，到该包的实际存储位置的相对路径。</p>
+<p>所以说，Go 语言源码的组织方式就是以环境变量 GOPATH、工作区、src 目录和代码包为主线的。一般情况下，Go 语言的源码文件都需要被存放在环境变量 GOPATH 包含的某个工作区（目录）中的 src 目录下的某个代码包（目录）中。</p>
+<h3 id="命令源码文件"><a href="#命令源码文件" class="headerlink" title="命令源码文件"></a>命令源码文件</h3><p>我们已经知道环境变量 GOPATH 指向一个或多个工作区，每个工作区都有以代码包为基础组织形式的源码文件。</p>
+<p>源码文件分为三种：命令源码文件、库源码文件和测试源码文件，他们有着不同的用途和编写规则。</p>
+<p>如果一个源码文件声明属于 main 包，并且包含一个无参数声明且无结果声明的 main 函数，那么就是命令源码文件，如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main </span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Println(<span class="string">"Hello,World!"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你把这个代码存为 demo1.go 文件，那么运行 go run demo1.go 命令后就会在输出中看见Hello，World！</p>
+<p>当需要模块化编程时，我们往往会将代码拆分成多个文件，甚至拆分到不同的代码包中。但无论怎样，对于一个独立的程序来说，命令源码文件永远只会也只能有一个。如果有与命令源码文件同包的源码文件，那么他们也应该声明属于 main 包。</p>
+<p>我们先来看一段代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="comment">// 填入代码 [1]</span></span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">var</span> name <span class="keyword">string</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">init</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// 填入代码 [2]</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// 填入代码 [3]</span></span><br><span class="line">    fmt.Printf(<span class="string">"Hello,%s!\n"</span>,name)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序的功能是：根据运行程序时给定的参数问候某人</p>
+<p>如果要在代码中使用某个包中的程序实体，那么应该先导入这个包，因此【1】处 应该为 “flag”</p>
+<blockquote>
+<p>注意：</p>
+<p>这里应该在代码包中导入路径的前后加上英文半角的引号</p>
+</blockquote>
+<p>其次人名肯定是字符串点的，因此【2】处应该为 flag 包的 StringVar 函数的代码。就像这样：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag.StringVar(&amp;name,<span class="string">"name"</span>,<span class="string">"everyone"</span>,<span class="string">"The greeting object."</span>)</span><br></pre></td></tr></table></figure>
+<p>该函数接受4个参数，第一个参数用于存储该命令参数值的地址，具体到这里就是在前面声明的变量 name 的地址了，由表达式 &amp;name 表示。第二个参数是为了指定该命令参数的名称 name。第3个参数是为了指定在未追加该命令参数时的默认值，这里是 everyone。第四个参数即是该命令参数的剪短说明，这在打印命令说明时会用到。</p>
+<p>还有一个与flag.StringVar函数类似的函数，flag.String 这两个的区别是后者会直接返回一个分配好的用于存储命令参数值的地址。如果使用它的话，我们就需要把</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name <span class="keyword">string</span></span><br></pre></td></tr></table></figure>
+<p>改为</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name = flag.String(<span class="string">"name"</span>,<span class="string">"everyone"</span>,<span class="string">"The greeting object."</span>)</span><br></pre></td></tr></table></figure>
+<p>最后一个空，【4】为 flag.Parse()，它用于真正解析命令参数，并把它们的值赋予给相应的变量。</p>
+<p>对该函数调用必须在所有命令参数存储载体的声明（这里是对变量 name 的声明）和设置（这里是对flag.StringVar调用）之后，并且在读取任何命令参数值之前进行。</p>
+<p>那么该文件可以这样去运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go run demo2.go -name=<span class="string">"test"</span></span><br></pre></td></tr></table></figure>
 
-平均查找长度 ASL（Average Search Length  ）所有查找过程中进行关键字比较次数的平均值数学定义为：$ASL=\sum _{i=1}^n P_i C_i$
-
-n是查找长度，$P_i$是查找第i个元素的概率，$C_i$是找到第i个元素所需进行比较次数
-
-顺序查找适用于无序的表，挨个查找123456789typedef struct &#123;    ElemType *elem; //元素存储空间基址    int TableLen;//表长&#125;SSTable;int Search_Seq(SSTable ST,...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/28</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Data Structure">Data Structure</a>
-    
-</div>
-            
-        </div>
     </article>
+    <!-- license  -->
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/10/24/struct/" >
-            
-                <span>Concept of Data Structure</span>
-        </a>
-        <div class="abstract-content">
-            数据结构相关概念及定义数据结构框架
-数据结构
-逻辑结构
-线性结构
-线性表、栈、队列
-
-
-非线性结构
-树、图、集合   
-
-
-
-
-存储结构（存储结构）
-顺序存储、链式存储、索引存储、散列存储
-
-
-数据的运算
-
-
-
-什么是算法
-算法 是对特定问题求解步骤的一种描述,它是指令的有限序列,其中每一条指令都表示一个或多个操作
-
-算法的5个重要特性
-有穷性 一个算法必须总是在执行有穷步之后结束,且每一步都可在有穷时间内完成
-确定性 算法中每一条指令必须有确切的含义,读者理解时不会产生二义性,并且在任何条件下,算法只有-唯一的一条执行路径
-可行性 一个算法是能行的,即算法描述的操作都是可以通过已经实现...
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://note.geekfan.top">Linus Lee</a>
+            <p>原文链接: <a href="http://note.geekfan.top/2018/09/09/Go-Primer/">http://note.geekfan.top/2018/09/09/Go-Primer/</a>
+            <p>发表日期: <a href="http://note.geekfan.top/2018/09/09/Go-Primer/">September 9th 2018, 8:23:22 pm</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/24</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Data Structure">Data Structure</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/10/23/sort/" >
-            
-                <span>Sort of Data Structure</span>
-        </a>
-        <div class="abstract-content">
-            排序算法这里讨论的排序算法都是内排序算法
-排序分为：
-
-插入排序
-直接插入排序
-折半插入排序 
-Shell排序
-
-
-交换排序
-冒泡排序
-快速排序
-
-
-选择排序
-简单选择排序
-堆排序
-
-
-归并排序
-基数排序
-
-插入排序插入排序是一种简单直观的排序方法,其基本思想在于每次将一个待排序的记录,按其关键字大小插入到前面已经排好序的子序列中,直到全部记录完成.
-
-由插入排序的思想可以引伸出三个重要排序算法: 直接插入排序 / 折半插入排序 / 希尔排序
-
-直接插入排序在排序过程中序列的状态如下:
-
-
-
-
-有序序列L[1…i-1]
-L[i]
-无序序列L[i+1…n]
-
-
-
-
-前
-中
-后
-
-
-
-
-也就...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/23</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Data Structure">Data Structure</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/10/20/Docker-Primer/" >
-            
-                <span>Docker-Primer</span>
-        </a>
-        <div class="abstract-content">
-            一、 Docker简介Docker 是一个开源项目。
-可以把它理解为是一种新兴的超轻量级虚拟化技术。
-传统虚拟化技术需要模拟计算机的一整套硬件出来，而且还要有自己的一套操作系统。
-而 Docker 却不需要，它只需要与主机共享同一个内核，并充分利用 Linux 上内核的“环境隔离方案”来实现轻量级的虚拟化。
-它在一些特定场景下与传统虚拟化技术相比，效率大幅提高，而资源开销却大幅降低。
-Docker 的迁移也是十分方便的，基本上只需要把整个 Docker 目录搬过去即可。
-Docker 使用 服务器-客户端 架构。
-如果想在 Docker 上运行 exe 软件的话，那不用看下去了，左转找 ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/20</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/08/24/contribute-to-opensource/" title= How to contribute to open source projects >
+                    <div class="prevTitle">How to contribute to open source projects</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zMjU0Ni85MTA3>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
     
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
 </main>
             <!-- profile -->
             
@@ -604,6 +548,24 @@ Docker 使用 服务器-客户端 架构。
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#GOPATH-与工作区"><span class="toc-number">1.</span> <span class="toc-text">GOPATH 与工作区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令源码文件"><span class="toc-number">2.</span> <span class="toc-text">命令源码文件</span></a></li></ol>
+    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -924,6 +886,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -939,7 +903,7 @@ jsonContent:
             all[i].SourceElement().parentNode.className += ' has-jax';
     });
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
 </body>
