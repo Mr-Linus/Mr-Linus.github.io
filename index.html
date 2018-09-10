@@ -359,9 +359,12 @@ height:50vh;
                 <span>Go Primer</span>
         </a>
         <div class="abstract-content">
-            GOPATH 与工作区环境变量 GOPATH 的值可以是一个目录的路径，也可以包含多个目录路径，每个目录都代表 Go 语言的一个工作区（workspace）。这些工作区用于放置 Go 语言的源码文件（source file），以及安装（install）后的归档文件（archive file，也就是以“.a”为扩展名的文件）和可执行文件（executable file）。
-与许多编程语言一样，Go 语言的源码是以代码包为基本组织单位的。在文件系统中，这些代码包其实是与目录一一对应的。目录可以有子目录，所以代码包也可以有子包。
-一个代码包中可以包含任意个以.go 为扩展名的源码文件，这些源码...
+            包每个 Go 程序都是由包构成的。
+程序从 main 包开始运行。
+本程序通过导入路径 &quot;fmt&quot; 和 &quot;math/rand&quot; 来使用这两个包。
+按照约定，包名与导入路径的最后一个元素一致。例如，&quot;math/rand&quot; 包中的源码均以 package rand 语句开始。
+注意： 此程序的运行环境是固定的，因此 rand.Intn 总是会返回相同的数字。 （要得到不同的数字，需为生成器提供不同的种子数，参见rand.Seed。 练习场中的时间为常量，因此你需要用其它的值作为种子数。）
+12345678910package mai...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -1001,6 +1004,12 @@ n是查找长度，$P_i$是查找第i个元素的概率，$C_i$是找到第i个�
     
     
     
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 13
@@ -1098,13 +1107,13 @@ n是查找长度，$P_i$是查找第i个元素的概率，$C_i$是找到第i个�
     
         <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
     
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
-    
         <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
     
         <span class="sidebar-tag-name" data-tags="open-source"><span class="iconfont-archer">&#xe606;</span>open-source</span>
     
         <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
