@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">1,272</span> / Reading time: <span class="post-count">5 min</span></span>
+                        <span>Word count: <span class="post-count">2,064</span> / Reading time: <span class="post-count">8 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -428,6 +428,45 @@ height:50vh;
 <p>对该函数调用必须在所有命令参数存储载体的声明（这里是对变量 name 的声明）和设置（这里是对flag.StringVar调用）之后，并且在读取任何命令参数值之前进行。</p>
 <p>那么该文件可以这样去运行</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go run demo2.go -name=<span class="string">"test"</span></span><br></pre></td></tr></table></figure>
+<p>如果想看见参数说明，我们可以这样做：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go run demo2.go --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Usage of /<span class="keyword">var</span>/folders/g4/zsgs8_zd01d6nty4cxgxh15r0000gn/T/<span class="keyword">go</span>-build484354577/b001/exe/<span class="keyword">go</span>:</span><br><span class="line">  -name <span class="keyword">string</span></span><br><span class="line">        The greeting object. (<span class="keyword">default</span> <span class="string">"everyone"</span>)</span><br><span class="line">exit status <span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p><code>/var/folders/g4/zsgs8_zd01d6nty4cxgxh15r0000gn/T/go-build484354577/b001/exe/go</code> 此行为 <code>go run</code>命令源码文件时临时生成的可执行文件的完整路径。</p>
+<p>我们先构建这个命令的源码文件在运行可执行文件，我们可以这样去做：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">go build demo2.go</span><br><span class="line">./demo2 --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+<h3 id="怎样自定义源码文件的参数使用说明"><a href="#怎样自定义源码文件的参数使用说明" class="headerlink" title="怎样自定义源码文件的参数使用说明"></a>怎样自定义源码文件的参数使用说明</h3><p>我们可以在 main 函数体的开始处加入如下代码。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">flag.Usage = <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Fprintf(os.Stderr, <span class="string">"Usage of %s:\n"</span>, <span class="string">"question"</span>)</span><br><span class="line">	flag.PrintDefaults()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Usage of question:</span><br><span class="line">  -name string</span><br><span class="line">        The greeting object. (default <span class="string">"everyone"</span>)</span><br><span class="line"><span class="built_in">exit</span> status 2</span><br></pre></td></tr></table></figure>
+<p>我们在调用flag包中的函数（比如StringVar、Parse）的时候，实际上是在调用flag.CommandLine变量的对应方法。</p>
+<p>flag.CommandLine相当于默认情况下的命令参数容器。所以通过对flag.CommandLine 重新赋值，我们可以更深层次的定制当前命令源码文件的参数使用说明。</p>
+<p>你可以这么做，在main函数体中的那条对flag.Usage变量的赋值语句注释掉，然后在init函数体的开始处添加如下代码：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">flag.CommandLine = flag.NewFlagSet(<span class="string">""</span>,flag.ExitOnError)</span><br><span class="line">flag.CommandLine.Usage = <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	fmt.Fprintf(os.Stderr,<span class="string">"Usage of %s:\n"</span>, <span class="string">"question"</span>)</span><br><span class="line">	flag.PrintDefaults()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方法输出和上次输出一致，不过后面的地址更加灵活，比如我们把flag.CommandLine赋值的那条语句改为：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flag.CommandLine = flag.NewFlagSet(<span class="string">""</span>,flag.PanicOnError)</span><br></pre></td></tr></table></figure>
+<p>后，我们在运行 go run demo3.go —help 命令会产生另一个结果。其中 ExitOnError 与 PanicOnError 都是预定义在flag包中的常量。</p>
+<ul>
+<li>ExitOnError 告诉命令参数容器，当命令后跟help或者参数设置不正确的时候打印命令参数使用说明，以状态码2结束，其中状态码2代表用户错误的使用了命令。</li>
+</ul>
+<p>PanicOnError 与之的区别为最后跑出崩溃（panic）。上述两种情况都会在我们调用flag.Parse函数时被触发。</p>
+<p>下面再下一步，我们索性不用flag.CommandLine 变量，转而使用自己创建一个私有的命令参数容器。我们在函数外再添加一个变量声明：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> cmdLine = flag.NewFlagSet(<span class="string">"question"</span>,flag.ExitOnError)</span><br></pre></td></tr></table></figure>
+<p>os.Args[1:]指的就是我们给定的那些命令参数。这样做就完全脱离了flag.CommandLine。</p>
+<p>命令源码文件支持的参数:</p>
+<ul>
+<li>int(int|int64|uint|uint64),</li>
+<li>float(float|float64)</li>
+<li>string,</li>
+<li>bool,</li>
+<li>duration(时间),</li>
+<li>var(自定义)</li>
+</ul>
+<blockquote>
+<p>更多flag包的使用方法：<a href="https://golang.google.cn/pkg/flag/" target="_blank" rel="noopener">https://golang.google.cn/pkg/flag/</a></p>
+</blockquote>
+<h3 id="库源码文件"><a href="#库源码文件" class="headerlink" title="库源码文件"></a>库源码文件</h3><p>库源码文件不能被直接运行，它仅用于存放程序实体。只要遵从 Go 语言规范，这些程序实体就可以被其他代码使用。</p>
+<p>这些“其他代码”可以与被使用的程序实体在同一个源码文件内，也可以在其他源码文件，甚至其他代码包中。</p>
+<p>程序实体是什么？在 Go 语言中，它是变量、常量、函数、结构体和接口的统称。</p>
 
     </article>
     <!-- license  -->
@@ -564,7 +603,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#GOPATH-与工作区"><span class="toc-number">1.</span> <span class="toc-text">GOPATH 与工作区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令源码文件"><span class="toc-number">2.</span> <span class="toc-text">命令源码文件</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#GOPATH-与工作区"><span class="toc-number">1.</span> <span class="toc-text">GOPATH 与工作区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令源码文件"><span class="toc-number">2.</span> <span class="toc-text">命令源码文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#怎样自定义源码文件的参数使用说明"><span class="toc-number">3.</span> <span class="toc-text">怎样自定义源码文件的参数使用说明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#库源码文件"><span class="toc-number">4.</span> <span class="toc-text">库源码文件</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -577,6 +616,14 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -809,9 +856,9 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
-    
         <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
     
