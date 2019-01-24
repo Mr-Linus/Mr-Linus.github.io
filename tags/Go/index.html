@@ -341,7 +341,7 @@
     <article class="index-post">
         <a class="abstract-title" href = "/2019/01/23/Go-Core-TypeSystem/" >
             
-                <span>Go Core Dev</span>
+                <span>Go Core Dev Type-System</span>
         </a>
         <div class="abstract-content">
             类型系统命名类型 &amp; 未命名类型1234567891011121314151617181920package mainimport "fmt"type Person struct &#123;    name string    age int&#125;func main() &#123;    // 使用 struct 字面量声明的是未命名类型    a := struct &#123;        name string        age int    &#125;&#123;"andes", 18&#125;    fmt.Printf("%T\n", a)    ...
@@ -742,7 +742,7 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/23</span><a class="archive-post-title" href= "/2019/01/23/Go-Core-TypeSystem/" >Go Core Dev</a>
+            <span class="archive-post-date">01/23</span><a class="archive-post-title" href= "/2019/01/23/Go-Core-TypeSystem/" >Go Core Dev Type-System</a>
         </li>
     
     
@@ -921,7 +921,24 @@ jsonContent:
     </div>
     <!-- async load share.js -->
      
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+
+</body>
 </html>
 
 
