@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Linus Lee">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Linus Lee">
+    <meta name="keywords" content="Funky's NoteBook | Linus Lee">
+    <meta name="description" content="It's Funky's NoteBook">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>Go Core Dev · Funky&#39;s NoteBook</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=201807017_1502 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180709 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/gun.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Funky&#39;s NoteBook</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Go Core Dev</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Funky's NoteBook</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Go Core Dev
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Go">Go</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">4,299</span> / Reading time: <span class="post-count">20 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/01/15</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="类型系统"><a href="#类型系统" class="headerlink" title="类型系统"></a>类型系统</h2><h3 id="命名类型-amp-未命名类型"><a href="#命名类型-amp-未命名类型" class="headerlink" title="命名类型 &amp; 未命名类型"></a>命名类型 &amp; 未命名类型</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span> &#123;</span><br><span class="line">    name <span class="keyword">string</span></span><br><span class="line">    age <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="comment">// 使用 struct 字面量声明的是未命名类型</span></span><br><span class="line">    a := <span class="keyword">struct</span> &#123;</span><br><span class="line">        name <span class="keyword">string</span></span><br><span class="line">        age <span class="keyword">int</span></span><br><span class="line">    &#125;&#123;<span class="string">"andes"</span>, <span class="number">18</span>&#125;</span><br><span class="line">    fmt.Printf(<span class="string">"%T\n"</span>, a)</span><br><span class="line">    fmt.Printf(<span class="string">"%v\n"</span>, a)</span><br><span class="line">    </span><br><span class="line">    b := Person&#123;<span class="string">"Tom"</span>, <span class="number">21</span>&#125;</span><br><span class="line">    fmt.Printf(<span class="string">"%T\n"</span>, a)</span><br><span class="line">    fmt.Printf(<span class="string">"%v\n"</span>, a)</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="底层类型"><a href="#底层类型" class="headerlink" title="底层类型"></a>底层类型</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> T1 <span class="keyword">string</span></span><br><span class="line"><span class="keyword">type</span> T2 T1</span><br><span class="line"><span class="keyword">type</span> T3 []<span class="keyword">string</span></span><br><span class="line"><span class="keyword">type</span> T4 T3</span><br><span class="line"><span class="keyword">type</span> T5 []T1</span><br><span class="line"><span class="keyword">type</span> T6 T5</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>其中，T1、T2 底层类型都是 string, T3、T4 底层类型都是[]string,T6 和 T5 的底层类型都是[]T1。特别注意是，这里T6、T5 和T3、T4的底层类型不一样，一个是[]T1，一个是[]string。</p>
+</blockquote>
+<h4 id="类型相同和类型赋值"><a href="#类型相同和类型赋值" class="headerlink" title="类型相同和类型赋值"></a>类型相同和类型赋值</h4><p>Go 1.9 引入了类型别名语法 <code>type T1 = T2</code> ,T1 的类型完全和 T2 一样。引入别名主要有如下原因：</p>
+<ul>
+<li>未来解决新旧包的迁移兼容问题，比如 context 包先前并不在标准库里面，后面迁移到了标准库。</li>
+<li>Go 的按包进行隔离的机制不太精细，有时我们需要将大包划分为几个小包进行开发，但是需要在大包里面保留全部的类型给使用者。</li>
+<li>解决新旧类型的迁移问题，新类型先是旧类型的别名，后续的软件都基于类型编程，在合适的时间将新类型升级为旧类型不兼容，常用于软件的柔性升级。</li>
+</ul>
+<h5 id="类型可直接赋值"><a href="#类型可直接赋值" class="headerlink" title="类型可直接赋值"></a>类型可直接赋值</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// a 为 T1 的变量，或者 a 本身就是一个字面常量或 nil</span></span><br><span class="line"><span class="comment">// 如果如下语句可以执行，则称之为类型 T1 可以赋值类类型 T2</span></span><br><span class="line"><span class="keyword">var</span> b T2 = a</span><br></pre></td></tr></table></figure>
+<p>赋值需满足：</p>
+<ul>
+<li>T1、T2类型相同</li>
+<li>T1和 T2具有相同的底层类型，并且T1、T2里面至少有一个是未命名类型</li>
+<li>T2 是接口类型，T1是具体类型，T1的方法集是T2方法集的超集</li>
+<li>T1、T2都是通道类型，他们拥有相同的元素类型，并且T1和T2中至少有一个是未命名类型</li>
+<li>a 是预声明标识符 nil，T2可以是pointer、function、slice、map、channel、interface类型中的一个</li>
+<li>a 是一个字面量值，可以用来标识类型 T 的值</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main </span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">    <span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Map <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m Map)</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> _, key := <span class="keyword">range</span> m &#123;</span><br><span class="line">        fmt.Println(key)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> iMap Map</span><br><span class="line"></span><br><span class="line"><span class="comment">// 只要底层类型是 slice、map 等支持 range 类型的字面量，新类型仍然可以使用 range 迭代</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m iMap)</span> <span class="title">Print</span> <span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> _, key := <span class="keyword">range</span> m &#123;</span><br><span class="line">        fmt.Println(key)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> slice []<span class="keyword">int</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s slice)</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> _, v := <span class="keyword">range</span> s &#123;</span><br><span class="line">        fmt.Println(v)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    mp := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span>, <span class="number">10</span>)</span><br><span class="line">    mp[<span class="string">"hi"</span>] = <span class="string">"tata"</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// mp ma 底层类型相同 mp 为没未命名类型</span></span><br><span class="line">    <span class="keyword">var</span> ma Map = mp</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// im 与 ma 虽然有相同的底层类型 map[string]string, 但它们中没有一个是未命名类型</span></span><br><span class="line">    <span class="comment">// 不能赋值， 如下语句不能通过编译</span></span><br><span class="line">    ma.Print()</span><br><span class="line">    im.Print()</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// Map 实现了 Print() 所以可以赋值给接口类型变量</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> i <span class="keyword">interface</span> &#123;</span><br><span class="line">        Print()</span><br><span class="line">    &#125; = ma</span><br><span class="line">    </span><br><span class="line">    i.Print()</span><br><span class="line">    </span><br><span class="line">    s1 := []<span class="keyword">int</span>[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">    <span class="keyword">var</span> s2 slice </span><br><span class="line">    s2 = s1</span><br><span class="line">    s2.Print()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="类型强制转换"><a href="#类型强制转换" class="headerlink" title="类型强制转换"></a>类型强制转换</h4><ul>
+<li>x 可以直接赋值给 T 类型变量</li>
+<li>x 的类型和 T 具有相同的底层类型</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"fmt"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Map <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m Map)</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> -, key := <span class="keyword">range</span> m &#123;</span><br><span class="line">        fmt.Println(key)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> iMap Map</span><br><span class="line"></span><br><span class="line"><span class="comment">// 只要底层类型是slice、map等支持 range 的类型字面量，新类型仍然可以使用 range 迭代</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m iMap)</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> _, key := <span class="keyword">range</span> m &#123;</span><br><span class="line">        fmt.Println(key)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    mp := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span>, <span class="number">10</span>)</span><br><span class="line">    mp[<span class="string">"hi"</span>] = <span class="string">"tata"</span></span><br><span class="line">    <span class="comment">// mp 与 ma 有相同的底层类型 map[string]string，并且 mp 是未命名类型</span></span><br><span class="line">    <span class="keyword">var</span> ma Map = mp</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// im 与 ma 虽然有相同的底层类型，但是二者中没有一个是字面量类型，不能直接赋值</span></span><br><span class="line">    <span class="comment">// 可以通过类型转换</span></span><br><span class="line">    <span class="comment">// var im iMap = ma</span></span><br><span class="line">    <span class="keyword">var</span> im iMap = (iMap) (ma)</span><br><span class="line">    </span><br><span class="line">    ma.Print()</span><br><span class="line">    im.Print()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>x 的类型、T 都是未命名指针类型，并且指针指向相同底层类型</li>
+<li>x、T 都是整值、或者都是浮点型</li>
+<li>x 的类型和 T 都是复数类型</li>
+<li>x 是整数值或 []byte 类型的值，T 是 string 类型</li>
+<li>x 是一个字符串，T 是 []byte 或 []rune</li>
+</ul>
+<p>字符串和字节切片之间的转换最常见，示例如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">s := <span class="string">"hello,world"</span></span><br><span class="line"><span class="keyword">var</span> a []<span class="keyword">byte</span></span><br><span class="line">a = []<span class="keyword">byte</span>(s)</span><br><span class="line"><span class="keyword">var</span> b <span class="keyword">string</span></span><br><span class="line">b = <span class="keyword">string</span>(a)</span><br><span class="line"><span class="keyword">var</span> c []<span class="keyword">rune</span></span><br><span class="line">c = []<span class="keyword">rune</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：</p>
+<ul>
+<li>数值类型和 string 类型之间相互转换可能造成值部分丢失</li>
+<li>Go 语言没有语言机制支持指针和 interger 之间的直接转换</li>
+</ul>
+</blockquote>
+<h3 id="类型方法"><a href="#类型方法" class="headerlink" title="类型方法"></a>类型方法</h3><h4 id="自定义类型"><a href="#自定义类型" class="headerlink" title="自定义类型"></a>自定义类型</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> INT <span class="keyword">int</span> <span class="comment">// INT 是一个使用预声明类型声明的自定义类型</span></span><br><span class="line"><span class="keyword">type</span> Map <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span> <span class="comment">// Map 是一个使用类型字面量声明的自定义类型</span></span><br><span class="line"><span class="keyword">type</span> myMap Map <span class="comment">// myMap 是一个自定义类型 Map 声明的自定义类型</span></span><br><span class="line"><span class="comment">// INT、Map、myMap 都是命名类型</span></span><br></pre></td></tr></table></figure>
+<h4 id="自定义-struct-类型"><a href="#自定义-struct-类型" class="headerlink" title="自定义 struct 类型"></a>自定义 struct 类型</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用 type 自定义的结构类型属于命名类型</span></span><br><span class="line"><span class="keyword">struct</span> Xname <span class="keyword">struct</span> &#123;</span><br><span class="line">    Field1 type1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// errorString 是一个自定义结构类型，也是命名类型</span></span><br><span class="line"><span class="keyword">type</span> errorString <span class="keyword">struct</span> &#123;</span><br><span class="line">    s <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 结构字面量属于未命名类型</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> &#123;</span><br><span class="line">    Field1 type1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// struct &#123;&#125; 是未命名类型空结构</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> s = <span class="keyword">struct</span> &#123;&#125; &#123;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="struct-初始化"><a href="#struct-初始化" class="headerlink" title="struct 初始化"></a>struct 初始化</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span> &#123;</span><br><span class="line">    name <span class="keyword">string</span> </span><br><span class="line">    age <span class="keyword">int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="推荐写法-指定字段名初始化"><a href="#推荐写法-指定字段名初始化" class="headerlink" title="推荐写法(指定字段名初始化)"></a>推荐写法(指定字段名初始化)</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">a := Person&#123; name: <span class="string">"andes"</span>, age:<span class="number">18</span> &#125;</span><br><span class="line"></span><br><span class="line">b := Person&#123; </span><br><span class="line">    name: <span class="string">"andes"</span>, </span><br><span class="line">    age:<span class="number">18</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">c b := Person&#123; </span><br><span class="line">    name: <span class="string">"andes"</span>, </span><br><span class="line">    age:<span class="number">18</span>&#125; <span class="comment">//这里不需要逗号</span></span><br></pre></td></tr></table></figure>
+<h5 id="使用构造函数进行初始化"><a href="#使用构造函数进行初始化" class="headerlink" title="使用构造函数进行初始化"></a>使用构造函数进行初始化</h5><p>推荐方法，当结构发生变化时，构造函数可以屏蔽细节。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">New</span><span class="params">(text <span class="keyword">string</span>)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> &amp; errorString&#123;text&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> errorString <span class="keyword">struct</span> &#123;</span><br><span class="line">    s <span class="keyword">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="结构字段的特点"><a href="#结构字段的特点" class="headerlink" title="结构字段的特点"></a>结构字段的特点</h5><p>结构的字段可以是任意类型，结构字段的类型名必须唯一， struct 字段类型可以是普通类型也可以是指针。另外结构支持内嵌自身的指针。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Element <span class="keyword">struct</span> &#123;</span><br><span class="line">    next, prev *Element</span><br><span class="line">    list *List</span><br><span class="line">    Value <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="匿名字段"><a href="#匿名字段" class="headerlink" title="匿名字段"></a>匿名字段</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> File <span class="keyword">struct</span> &#123;</span><br><span class="line">    *file <span class="comment">// os specific</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="自定义接口类型"><a href="#自定义接口类型" class="headerlink" title="自定义接口类型"></a>自定义接口类型</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> i <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line"><span class="keyword">type</span> Reader <span class="keyword">interface</span> &#123;</span><br><span class="line">    Read(p []<span class="keyword">byte</span>) (n <span class="keyword">int</span>, err error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 类型方法接受者是值类型</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t TypeName)</span> <span class="title">MethodName</span> <span class="params">(ParamList)</span> <span class="params">(Return List)</span></span> &#123;</span><br><span class="line">    <span class="comment">// method body</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 类型方法接收者是指针</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *TypeName)</span> <span class="title">MethodName</span> <span class="params">(ParamList)</span> <span class="params">(Return List)</span></span> &#123;</span><br><span class="line">    <span class="comment">// method body</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 改写成为常规函数</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TypeName_MethodName</span><span class="params">(t TypeName, otherParamList)</span> <span class="params">(Return List)</span></span> &#123;</span><br><span class="line">    <span class="comment">// method body</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TypeName_MethodName</span><span class="params">(t *TypeName, otherParamList)</span> <span class="params">(Return List)</span></span> &#123;</span><br><span class="line">    <span class="comment">// method body</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Example</span></span><br><span class="line"><span class="keyword">type</span> SliceInt []<span class="keyword">int</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s SliceInt)</span> <span class="title">Sum</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    sum := <span class="number">0</span> </span><br><span class="line">    <span class="keyword">for</span> _, i := <span class="keyword">range</span> s &#123;</span><br><span class="line">        sum += i</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 等价于</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SliceInt_Sum</span><span class="params">(s SliceInt)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    sum := <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> _, i := <span class="keyword">range</span> s &#123;</span><br><span class="line">        sum += i</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> sum</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> s SliceInt = []<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;</span><br><span class="line">s.Sum()</span><br><span class="line">SliceInt_Sum(s)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>类型方法有如下特点：</p>
+<ul>
+<li>可以为命名类型增加方法（除了接口），非命名类型不能自定义方法。</li>
+<li>为类型增加方法有一个限制，方法定义必须和类型定义在同一个包中。</li>
+<li>方法的命名空间的可见性和变量一样，大写开头的方法可以在包外被访问，否则只能在保内可见。</li>
+<li>使用 type 定义的自定义类型是一个新类型，新类型不能调用原有类型方法，但是底层类型支持的运算可以被新类型继承。</li>
+</ul>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Map <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m Map)</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> _, key := <span class="keyword">range</span> m &#123;</span><br><span class="line">        fmt.Println(key)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> MyInt <span class="keyword">int</span> </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> a MyInt = <span class="number">10</span></span><br><span class="line">    <span class="keyword">var</span> b MyInt = <span class="number">10</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// int 类型支持加减乘除运算，新类型同样可用</span></span><br><span class="line">    c := a + b</span><br><span class="line">    d := a * b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h3><h4 id="一般调用"><a href="#一般调用" class="headerlink" title="一般调用"></a>一般调用</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> T <span class="keyword">struct</span> &#123;</span><br><span class="line">    a <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t T)</span> <span class="title">Get</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> t.a</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *T)</span> <span class="title">Set</span><span class="params">(i <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">    t.a = i</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> t = &amp;T&#123;&#125;</span><br><span class="line"><span class="comment">// 普通方法调用</span></span><br><span class="line">t.Set(<span class="number">2</span>)</span><br><span class="line">t.Get()</span><br></pre></td></tr></table></figure>
+<h4 id="方法值"><a href="#方法值" class="headerlink" title="方法值"></a>方法值</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> T <span class="keyword">struct</span> &#123;</span><br><span class="line">    a <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t T)</span> <span class="title">Get</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> t.a</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *T)</span> <span class="title">Set</span><span class="params">(i <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">    t.a = i</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *T)</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"%p, %v, %d \n"</span>, t, t, t.a)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> t = &amp;T&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// method value</span></span><br><span class="line"></span><br><span class="line">f := t.Set</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法值调用</span></span><br><span class="line"></span><br><span class="line">f(<span class="number">2</span>)</span><br><span class="line">t.Print()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法值调用</span></span><br><span class="line">f(<span class="number">3</span>)</span><br><span class="line">t.Print()</span><br></pre></td></tr></table></figure>
+<h4 id="方法表达式"><a href="#方法表达式" class="headerlink" title="方法表达式"></a>方法表达式</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> T <span class="keyword">struct</span> &#123;</span><br><span class="line">    a <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t T)</span> <span class="title">Get</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> t.a</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *T)</span> <span class="title">Set</span><span class="params">(i <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">    t.a = i</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(t *T)</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"%p, %v, %d \n"</span>, t, t, t.a)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>表达式 T.Get() (<em>T).Set 被称之为方法表达式，方法表达式也可以被看做函数名，只不过这个函数的首个参数是接收者的实例活指针。 T.Get 的函数签名是 func(t T) int,  (\</em>T).Set 的签名是 func(t *T, i int)。 注意这里是T.Get不能写成 (*T).Get，同理 (*T).Set不能写成 T.Set。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如下方法表达式调用都是等价的</span></span><br><span class="line">t := T &#123;a:<span class="number">1</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 普通方法调用</span></span><br><span class="line">t.Get(t)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法表达式调用</span></span><br><span class="line">(T).Get(t)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法表达式调用</span></span><br><span class="line"></span><br><span class="line">f1 := T.Get</span><br><span class="line">f1(t)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法表达式调用</span></span><br><span class="line">f2 := (T).Get</span><br><span class="line">f2(t)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如下方法表达式调用等价</span></span><br><span class="line">(*T).Set(&amp;t, <span class="number">1</span>)</span><br><span class="line">f3 := (*T).Set</span><br><span class="line">f(&amp;t, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="方法集"><a href="#方法集" class="headerlink" title="方法集"></a>方法集</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"><span class="keyword">type</span> Int <span class="keyword">int</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(a Int)</span> <span class="title">Max</span><span class="params">(b Int)</span> <span class="title">Int</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> a &gt;= b &#123;</span><br><span class="line">        <span class="keyword">return</span> a </span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> b</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(i *Int)</span> <span class="title">Set</span><span class="params">(a Int)</span></span> &#123;</span><br><span class="line">    *i = a</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(i Int)</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"value = %d\n"</span>, i)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">var</span> a Int = <span class="number">10</span></span><br><span class="line">    <span class="keyword">var</span> b Int = <span class="number">20</span></span><br><span class="line">    </span><br><span class="line">    c := a.Max(b)</span><br><span class="line">    c.Print()</span><br><span class="line">    (&amp;c).Print()</span><br><span class="line">    </span><br><span class="line">    a.Set(<span class="number">10</span>) <span class="comment">// 编译器自动转换为 (&amp;a).Set(10)</span></span><br><span class="line">    a.Print()</span><br><span class="line">    </span><br><span class="line">    (&amp;a).Set(<span class="number">30</span>)</span><br><span class="line">    a.Print()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="值调用和表达式调用的方法集"><a href="#值调用和表达式调用的方法集" class="headerlink" title="值调用和表达式调用的方法集"></a>值调用和表达式调用的方法集</h4><ul>
+<li>通过类型字面量显式进行调用</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Date <span class="keyword">struct</span> &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(Data)</span> <span class="title">TestValue</span><span class="params">()</span></span> &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(*Data)</span> <span class="title">TestPointer</span> <span class="params">()</span></span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 显式调用，无论值调用还是表达式调用，</span></span><br><span class="line"><span class="comment">// 编辑器都不会进行方法集的自动转换，编译器会严格校验方法集</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// *Data 方法集是 TestPointer 和 TestValue</span></span><br><span class="line"><span class="comment">// Date 方法集为 TestValue</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 显示调用</span></span><br><span class="line">(*Data) (&amp;<span class="keyword">struct</span> &#123;&#125; &#123;&#125;).TestPointer()</span><br><span class="line">(*Data) (&amp;<span class="keyword">struct</span> &#123;&#125; &#123;&#125;).TestValue</span><br><span class="line"><span class="comment">// 方法值</span></span><br><span class="line">(Data) (<span class="keyword">struct</span> &#123;&#125; &#123;&#125;).TestValue ()</span><br><span class="line"><span class="comment">// 方法表达式</span></span><br><span class="line">Data.TestValue(<span class="keyword">struct</span> &#123;&#125; &#123;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 失败调用示例</span></span><br><span class="line"><span class="comment">//Data.TestPointer(struct &#123;&#125; &#123;&#125;)</span></span><br><span class="line"><span class="comment">// (Data) (struct &#123;&#125; &#123;&#125;).TestPointer()</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过类型变量进行值调用和表达式调用</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Data <span class="keyword">struct</span> &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(Data)</span> <span class="title">TestValue</span><span class="params">()</span></span> &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(*Data)</span> <span class="title">TestPointer</span> <span class="params">()</span></span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> a Data = <span class="keyword">struct</span> &#123;&#125;&#123;&#125;</span><br><span class="line"><span class="comment">// 表达式调用编辑器不会进行自动转换</span></span><br><span class="line">Data.TestValue(a)</span><br><span class="line"><span class="comment">// Data.TestValue(&amp;a)</span></span><br><span class="line">(*Data).TestPointer(&amp;a)</span><br><span class="line"><span class="comment">// (Data).TestPointer(&amp;a) //error</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 值调用编辑器会自动进行转换</span></span><br><span class="line">f := a.TestValue</span><br><span class="line">f()</span><br><span class="line"></span><br><span class="line">y := (&amp;a).TestValue <span class="comment">// 编辑器会自动转换为 a.TestValue</span></span><br><span class="line">y()</span><br><span class="line"></span><br><span class="line">g := a.TestPointer</span><br><span class="line">g()</span><br><span class="line"></span><br><span class="line">x := (&amp;a).TestPointer</span><br><span class="line">x()</span><br></pre></td></tr></table></figure>
+<h3 id="组合和方法集"><a href="#组合和方法集" class="headerlink" title="组合和方法集"></a>组合和方法集</h3><h4 id="组合"><a href="#组合" class="headerlink" title="组合"></a>组合</h4><ul>
+<li>内嵌字段的初始化和访问</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">type</span> X <span class="keyword">struct</span> &#123;</span><br><span class="line">    a <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> Y <span class="keyword">struct</span> &#123;</span><br><span class="line">    X</span><br><span class="line">    b <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Z <span class="keyword">struct</span> &#123;</span><br><span class="line">    Y</span><br><span class="line">    c <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    x := X&#123;a: <span class="number">1</span>&#125;</span><br><span class="line">    y := Y&#123;</span><br><span class="line">        X: x,</span><br><span class="line">        b: <span class="number">2</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    z := Z&#123;</span><br><span class="line">        Y: y,</span><br><span class="line">        c: <span class="number">3</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// z.a,z.Y.a,z.Y.X.a 三者等价</span></span><br><span class="line">    <span class="built_in">println</span>(z.a, z.Y.a, z.Y.X.a) <span class="comment">// 1 1 1 </span></span><br><span class="line">    z = Z&#123;&#125;</span><br><span class="line">    z.a = <span class="number">2</span></span><br><span class="line">    <span class="built_in">println</span>(z.a, z.Y.a, z.Y.X.a) <span class="comment">// 2 2 2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>嵌套层次可以有相同字段，但是最好避免，以免出现歧义</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">type</span> X <span class="keyword">struct</span> &#123;</span><br><span class="line">    a <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> Y <span class="keyword">struct</span> &#123;</span><br><span class="line">    X</span><br><span class="line">    a <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Z <span class="keyword">struct</span> &#123;</span><br><span class="line">    Y</span><br><span class="line">    a <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    x := X&#123;a: <span class="number">1</span>&#125;</span><br><span class="line">    y := Y&#123;</span><br><span class="line">        X: x,</span><br><span class="line">        a: <span class="number">2</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    z := Z&#123;</span><br><span class="line">        Y: y,</span><br><span class="line">        a: <span class="number">3</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// z.a,z.Y.a,z.Y.X.a 三者等价</span></span><br><span class="line">    <span class="built_in">println</span>(z.a, z.Y.a, z.Y.X.a) <span class="comment">// 3 2 1 </span></span><br><span class="line">    z = Z&#123;&#125;</span><br><span class="line">    z.a = <span class="number">4</span></span><br><span class="line">    z.Y.a = <span class="number">5</span></span><br><span class="line">    z.Y.X.a = <span class="number">6</span></span><br><span class="line">    <span class="built_in">println</span>(z.a, z.Y.a, z.Y.X.a) <span class="comment">// 4 5 6</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="内嵌字段的方法调用"><a href="#内嵌字段的方法调用" class="headerlink" title="内嵌字段的方法调用"></a>内嵌字段的方法调用</h5><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> <span class="string">"fmt"</span></span><br><span class="line"><span class="keyword">type</span> X <span class="keyword">struct</span> &#123;</span><br><span class="line">    a <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> Y <span class="keyword">struct</span> &#123;</span><br><span class="line">    X</span><br><span class="line">    b <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> Z <span class="keyword">struct</span> &#123;</span><br><span class="line">    Y</span><br><span class="line">    c <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(x X)</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"In = X, a = %d\n"</span>, x.a)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(x X)</span> <span class="title">XPrint</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"In = X, a = %d\n"</span>, x.a)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(y Y)</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"In = Y, b = %d\n"</span>, y.b)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(z Z)</span> <span class="title">Print</span><span class="params">()</span></span> &#123;</span><br><span class="line">    fmt.Printf(<span class="string">"In = Z, c = %d\n"</span>, z.c)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 显示的完全路径调用内嵌字段方法</span></span><br><span class="line">    z.Y.Print()</span><br><span class="line">    z.Y.X.Print()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    x := X&#123;a: <span class="number">1</span>&#125;</span><br><span class="line">    y := Y&#123;</span><br><span class="line">        X: x,</span><br><span class="line">        b: <span class="number">2</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    z := Z&#123;</span><br><span class="line">        Y: y,</span><br><span class="line">        c: <span class="number">3</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 从外向内查找，首先找到 Z 的 Print方法</span></span><br><span class="line">    z.Print()</span><br><span class="line">    <span class="comment">// 从外向内查找，首先找到 X 的 XPrint方法</span></span><br><span class="line">    z.XPrint()</span><br><span class="line">    z.Y.XPrint()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>不推荐在多层的 struct 类型中内嵌多个同名的字段；但是并不反对 struct 定义和内嵌字段同名方法的用法，因为这提供了一种一种编程技术，使得 struct 能够重写内嵌字段的方法，提供面向对象编程中子类覆盖父类的同名方法的功能。</p>
+</blockquote>
+<h4 id="组合的方法集"><a href="#组合的方法集" class="headerlink" title="组合的方法集"></a>组合的方法集</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">type</span> X <span class="keyword">struct</span> &#123;</span><br><span class="line">    a <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> Y <span class="keyword">struct</span> &#123;</span><br><span class="line">    X</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">type</span> Z <span class="keyword">struct</span> &#123;</span><br><span class="line">    *X</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(x X)</span> <span class="title">Get</span><span class="params">()</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> x.a</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(x *X)</span> <span class="title">Set</span><span class="params">(i <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">    x.a = i</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    x := X&#123;a: <span class="number">1</span>&#125;</span><br><span class="line">    y := Y&#123;</span><br><span class="line">        X: x,</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">println</span>(y.Get()) <span class="comment">//1</span></span><br><span class="line">    <span class="comment">//此处编译器做了自动转换</span></span><br><span class="line">    y.Set(<span class="number">2</span>)</span><br><span class="line">    <span class="built_in">println</span>(y.Get())</span><br><span class="line">    <span class="comment">// 为了不让编译器做自动转换。使用方法表达式调用方式</span></span><br><span class="line">    <span class="comment">// Y内嵌字段 X 所以 type Y 的方法集是Get，Type *Y的方法集是Set Get</span></span><br><span class="line">    (*Y).Set(&amp;y, <span class="number">3</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// type Y 的方法集合并没有 Set 方法，所以下一句编译不能通过</span></span><br><span class="line">    <span class="comment">//Y.Set(y, 3)</span></span><br><span class="line">    <span class="built_in">println</span>(y.Get()) <span class="comment">//3</span></span><br><span class="line">    z := Z&#123;</span><br><span class="line">        X: &amp;x,</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 按照嵌套字段的方法集的规则</span></span><br><span class="line">    <span class="comment">// Z 内嵌字段 *X，所以 type Z 和 type *Z 方法集都包含类型 X 定义的方法 Get 和 Set</span></span><br><span class="line">    <span class="comment">// 为了不让编译器做自动转换，仍然使用方法表达式调用方式</span></span><br><span class="line">    Z.Set(z, <span class="number">4</span>)</span><br><span class="line">    <span class="built_in">println</span>(z.Get()) <span class="comment">// 4 </span></span><br><span class="line">    (*Z).Set(&amp;z, <span class="number">5</span>)</span><br><span class="line">    <span class="built_in">println</span>(z.Get()) <span class="comment">// 5</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>编译器的自动转换仅适用于直接通过类型实例调用方法时才有效，类型实例传递给接口时，编辑器不会进行自动转换，而是会进行严格的方法集校验。</p>
+</blockquote>
+<h3 id="函数类型"><a href="#函数类型" class="headerlink" title="函数类型"></a>函数类型</h3><ul>
+<li>函数命名类型</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> NewFuncType FuncLiteral</span><br><span class="line"><span class="keyword">type</span> NewFuncType OldFuncType</span><br></pre></td></tr></table></figure>
+<ul>
+<li>函数声明</li>
+</ul>
+<p>Go 语言函数不需要声明，可以直接调用，但是Go调用汇编语言编写的函数还是要使用函数声明语句</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 函数声明=函数名+函数签名</span></span><br><span class="line"><span class="comment">// 函数签名</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(InputTypeList)</span> <span class="title">OutputTypeList</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">// 函数声明</span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="title">FuncName</span> <span class="params">(InputTypeList)</span> <span class="title">OutputTypeList</span></span></span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 有名函数定义，函数名是add</span></span><br><span class="line"><span class="comment">// add 类型是函数字面量类型 func (int, int) int</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">add</span><span class="params">(a, b <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数声明语句，用于Go代码调用汇编代码</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>)</span> <span class="title">int</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">// <span class="title">add</span> 函数的签名，实际上就是 <span class="title">add</span> 的字面量类型</span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>)</span> <span class="title">int</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">// 匿名函数不能独立存在，常作为函数参数、返回值或者赋值给某个变量</span></span><br><span class="line"><span class="function">// 匿名函数可以直接显式初始化</span></span><br><span class="line"><span class="function">// 匿名函数的类型也是函数字面量类型 <span class="title">func</span> <span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>)</span> <span class="title">int</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="params">(a, b <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">    <span class="keyword">return</span> a + b</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 新定义函数类型 ADD</span></span><br><span class="line"><span class="comment">// ADD 底层类型是函数字面量类型 func (int, int) int</span></span><br><span class="line"><span class="keyword">type</span> ADD <span class="function"><span class="keyword">func</span> <span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>)</span> <span class="title">int</span></span></span><br><span class="line"><span class="function">// <span class="title">add</span> 和 <span class="title">ADD</span> 的类型相同，并且 <span class="title">add</span> 是字面量类型</span></span><br><span class="line"><span class="function">// 所以 <span class="title">add</span> 可直接赋值给 <span class="title">ADD</span> 类型的变量 <span class="title">g</span></span></span><br><span class="line"><span class="function"><span class="title">var</span> <span class="title">g</span> <span class="title">ADD</span> = <span class="title">add</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    f := <span class="function"><span class="keyword">func</span> <span class="params">(a, b <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123;</span><br><span class="line">        <span class="keyword">return</span> a + b</span><br><span class="line">    &#125;</span><br><span class="line">    g(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    f(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// f 和 add 函数签名相同</span></span><br><span class="line">    fmt.Printf(<span class="string">"%T\n"</span>, f) <span class="comment">// func (int, int) int</span></span><br><span class="line">    fmt.Printf(<span class="string">"%T\n"</span>, add)  <span class="comment">// func (int, int) int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>HTTP 标准库范例：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个有名函数类型 HanderFunc</span></span><br><span class="line"><span class="keyword">type</span> HandlerFunc <span class="function"><span class="keyword">func</span> <span class="params">(ResponseWriter, *Request)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">// 为有名函数类型添加方法</span></span><br><span class="line"><span class="function">// 这是一种包装器的编程技法</span></span><br><span class="line"><span class="function">// <span class="title">ServerHTTP</span> <span class="title">calls</span> <span class="title">f</span><span class="params">(w, r)</span></span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="params">(f HandlerFunc)</span> <span class="title">ServerHTTP</span><span class="params">(w ResponseWriter, r *Request)</span></span>&#123;</span><br><span class="line">    f(w, r)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数类型 HandlerFunc 实现了接口 Handler 的方法</span></span><br><span class="line"><span class="keyword">type</span> Handler <span class="keyword">interface</span> &#123;</span><br><span class="line">    ServerHTTP(ResponseWriter, *Request)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mux *ServeMux)</span> <span class="title">Handle</span><span class="params">(patterm <span class="keyword">string</span>, handler Handler)</span></span></span><br><span class="line"><span class="function">// 所以 <span class="title">HanderFunc</span> 类型的变量可以传递给 <span class="title">Handler</span> 接口变量</span></span><br><span class="line"><span class="function"><span class="title">func</span> <span class="params">(mux *ServeMux)</span> <span class="title">HandleFunc</span><span class="params">(patterm <span class="keyword">string</span>, handler <span class="keyword">func</span>(ResponseWriter, *Request)</span>)</span>&#123;</span><br><span class="line">    mux.Handle(pattern, HandlerFunc(handler))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://note.geekfan.top">Linus Lee</a>
+            <p>原文链接: <a href="http://note.geekfan.top/2019/01/15/Go-Core-TypeSystem/">http://note.geekfan.top/2019/01/15/Go-Core-TypeSystem/</a>
+            <p>发表日期: <a href="http://note.geekfan.top/2019/01/15/Go-Core-TypeSystem/">January 15th 2019, 8:23:22 pm</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2019/01/15/Go-Core-Function/" title= Go Core Dev Function >
+                    <div class="nextTitle">Go Core Dev Function</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/09/09/Go-Primer/" title= Go Primer >
+                    <div class="prevTitle">Go Primer</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zMjU0Ni85MTA3>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:708863861@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/mr-linus" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#类型系统"><span class="toc-number">1.</span> <span class="toc-text">类型系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命名类型-amp-未命名类型"><span class="toc-number">1.1.</span> <span class="toc-text">命名类型 &amp; 未命名类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#底层类型"><span class="toc-number">1.2.</span> <span class="toc-text">底层类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#类型相同和类型赋值"><span class="toc-number">1.2.1.</span> <span class="toc-text">类型相同和类型赋值</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#类型可直接赋值"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">类型可直接赋值</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#类型强制转换"><span class="toc-number">1.2.2.</span> <span class="toc-text">类型强制转换</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类型方法"><span class="toc-number">1.3.</span> <span class="toc-text">类型方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#自定义类型"><span class="toc-number">1.3.1.</span> <span class="toc-text">自定义类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#自定义-struct-类型"><span class="toc-number">1.3.2.</span> <span class="toc-text">自定义 struct 类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#struct-初始化"><span class="toc-number">1.3.3.</span> <span class="toc-text">struct 初始化</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#推荐写法-指定字段名初始化"><span class="toc-number">1.3.3.1.</span> <span class="toc-text">推荐写法(指定字段名初始化)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#使用构造函数进行初始化"><span class="toc-number">1.3.3.2.</span> <span class="toc-text">使用构造函数进行初始化</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#结构字段的特点"><span class="toc-number">1.3.3.3.</span> <span class="toc-text">结构字段的特点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#匿名字段"><span class="toc-number">1.3.3.4.</span> <span class="toc-text">匿名字段</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#自定义接口类型"><span class="toc-number">1.3.3.5.</span> <span class="toc-text">自定义接口类型</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方法"><span class="toc-number">1.3.4.</span> <span class="toc-text">方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#方法调用"><span class="toc-number">1.4.</span> <span class="toc-text">方法调用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#一般调用"><span class="toc-number">1.4.1.</span> <span class="toc-text">一般调用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方法值"><span class="toc-number">1.4.2.</span> <span class="toc-text">方法值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方法表达式"><span class="toc-number">1.4.3.</span> <span class="toc-text">方法表达式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方法集"><span class="toc-number">1.4.4.</span> <span class="toc-text">方法集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#值调用和表达式调用的方法集"><span class="toc-number">1.4.5.</span> <span class="toc-text">值调用和表达式调用的方法集</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#组合和方法集"><span class="toc-number">1.5.</span> <span class="toc-text">组合和方法集</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#组合"><span class="toc-number">1.5.1.</span> <span class="toc-text">组合</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#内嵌字段的方法调用"><span class="toc-number">1.5.1.1.</span> <span class="toc-text">内嵌字段的方法调用</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#组合的方法集"><span class="toc-number">1.5.2.</span> <span class="toc-text">组合的方法集</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#函数类型"><span class="toc-number">1.6.</span> <span class="toc-text">函数类型</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 16
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span><a class="archive-post-title" href= "/2019/01/15/Go-Core-Base/" >Go Core Dev Base</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span><a class="archive-post-title" href= "/2019/01/15/Go-Core-Function/" >Go Core Dev Function</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span><a class="archive-post-title" href= "/2019/01/15/Go-Core-TypeSystem/" >Go Core Dev</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2018/09/09/Go-Primer/" >Go Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/contribute-to-opensource/" >How to contribute to open source projects</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/Linux-namespace/" >Views about Namespace & Cgroups of Linux Kernel</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2018/07/17/K8S-InfoCollection/" >Kubernetes Information Collection</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2018/07/01/Scraping-Primer/" >Scraping-Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2018/06/21/Linux-Primer/" >Linux-Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/15</span><a class="archive-post-title" href= "/2018/06/15/Docker-faq/" >Docker-FAQ</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span><a class="archive-post-title" href= "/2017/12/12/Binary-tree/" >Binary tree  of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span><a class="archive-post-title" href= "/2017/12/12/Graph-traversal/" >Graph traversal  of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/search/" >Search of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2017/10/24/struct/" >Concept of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/sort/" >Sort of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2017/10/20/Docker-Primer/" >Docker-Primer</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
+    
+        <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
+    
+        <span class="sidebar-tag-name" data-tags="open-source"><span class="iconfont-archer">&#xe606;</span>open-source</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Linus Lee"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>
+
+

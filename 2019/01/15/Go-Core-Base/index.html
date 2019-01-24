@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Linus Lee">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Linus Lee">
+    <meta name="keywords" content="Funky's NoteBook | Linus Lee">
+    <meta name="description" content="It's Funky's NoteBook">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>Go Core Dev Base · Funky&#39;s NoteBook</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=201807017_1502 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180709 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/gun.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Funky&#39;s NoteBook</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Go Core Dev Base</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Funky's NoteBook</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Go Core Dev Base
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Go">Go</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">2,297</span> / Reading time: <span class="post-count">11 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/01/15</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><h3 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h3><p>预声明标识符 iota 用在常量声明中，其初始值为 0。一组多个常量同时声明时其值逐行增加，iota 可以看做是自增枚举变量，专门用来初始化常量。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 类似枚举的 iota</span></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	c0 = <span class="literal">iota</span> <span class="comment">// 0</span></span><br><span class="line">    c1 = <span class="literal">iota</span> <span class="comment">// 1</span></span><br><span class="line">    c3 = <span class="literal">iota</span> <span class="comment">// 2</span></span><br><span class="line">)</span><br><span class="line"><span class="comment">//简写</span></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	c0 = <span class="literal">iota</span> <span class="comment">// 0</span></span><br><span class="line">    c1 <span class="comment">// 1</span></span><br><span class="line">    c2 <span class="comment">// 2</span></span><br><span class="line">)</span><br><span class="line"><span class="comment">//注意 iota 逐行增加</span></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">	a == <span class="number">1</span> &lt;&lt; <span class="literal">iota</span> <span class="comment">// 1</span></span><br><span class="line">    b == <span class="number">1</span> &lt;&lt; <span class="literal">iota</span> <span class="comment">// 2</span></span><br><span class="line">    c == <span class="number">1</span> &lt;&lt; <span class="literal">iota</span> <span class="comment">// 3</span></span><br><span class="line">)</span><br><span class="line"><span class="comment">//算数运算</span></span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">    u = <span class="literal">iota</span> * <span class="number">42</span> <span class="comment">// 0 (untyped integer constant)</span></span><br><span class="line">    v = <span class="literal">iota</span> * <span class="number">42</span> <span class="comment">// 42.0 (float64 constant)</span></span><br><span class="line">    w = <span class="literal">iota</span> * <span class="number">42</span> <span class="comment">// 84 (untyped integer constant)</span></span><br><span class="line">)</span><br><span class="line"><span class="comment">// 分开的 const 语句，iota 没次都从 0 开始</span></span><br><span class="line"><span class="keyword">const</span> x = <span class="literal">iota</span> <span class="comment">// 0</span></span><br><span class="line"><span class="keyword">const</span> y = <span class="literal">iota</span> <span class="comment">// 0</span></span><br></pre></td></tr></table></figure>
+<h3 id="布尔类型"><a href="#布尔类型" class="headerlink" title="布尔类型"></a>布尔类型</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 赋值</span></span><br><span class="line">ok := <span class="literal">false</span></span><br><span class="line"><span class="comment">// bool 类型数据不能和整型数据转换</span></span><br><span class="line"><span class="keyword">var</span> a <span class="keyword">bool</span></span><br><span class="line">a = <span class="number">1</span> <span class="comment">// error 1 是整型变量</span></span><br><span class="line"><span class="comment">//循环控制</span></span><br><span class="line"><span class="keyword">for</span> ; <span class="literal">true</span>;&#123; <span class="comment">//等价于 C 语言 while(1)</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 声明 bool 变量不赋值则默认为false</span></span><br><span class="line"><span class="keyword">var</span> b <span class="keyword">bool</span> <span class="comment">// b false</span></span><br></pre></td></tr></table></figure>
+<h3 id="整型"><a href="#整型" class="headerlink" title="整型"></a>整型</h3><p>byte 是 uint8 的别名，不同类型的整型必须进行强制类型转换。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a <span class="keyword">int</span> = <span class="number">1</span></span><br><span class="line"><span class="keyword">var</span> b <span class="keyword">int32</span> = <span class="number">2</span></span><br><span class="line">b = a <span class="comment">//error</span></span><br><span class="line"><span class="keyword">var</span> a <span class="keyword">int</span> = (<span class="number">1</span>+<span class="number">2</span>)*<span class="number">3</span> <span class="comment">// 9</span></span><br><span class="line"><span class="keyword">var</span> b <span class="keyword">int</span> = <span class="number">1000</span> &gt;&gt; <span class="number">2</span> <span class="comment">// 250</span></span><br></pre></td></tr></table></figure>
+<h3 id="复数"><a href="#复数" class="headerlink" title="复数"></a>复数</h3><p>复数 complex64 其实是由两个 float32 浮点数表示，一个为实部、一个为虚部，</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> value1 <span class="keyword">complex64</span> = <span class="number">3.1</span> +<span class="number">5i</span></span><br><span class="line">value2 := <span class="number">3.1</span> +<span class="number">5i</span></span><br><span class="line"><span class="keyword">var</span> v = <span class="built_in">complex</span>(<span class="number">2.1</span>,<span class="number">3</span>)</span><br><span class="line">a = <span class="built_in">real</span>(v)</span><br><span class="line">b = image(v)</span><br></pre></td></tr></table></figure>
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="string">"hello,world"</span></span><br><span class="line"><span class="comment">// 通过索引访问其字节单元</span></span><br><span class="line">b := a[<span class="number">0</span>]</span><br><span class="line"><span class="comment">// 但是不能修改某个字节的值</span></span><br><span class="line">a[<span class="number">1</span>] = <span class="string">'a'</span> <span class="comment">// error</span></span><br><span class="line"><span class="comment">// 字符串转换成 []byte(a) 慎用 </span></span><br><span class="line"><span class="comment">// 当数据量较大时，每转换一次都需要复制重复内容</span></span><br><span class="line">b := []<span class="keyword">byte</span>(a)</span><br><span class="line"><span class="comment">// 字符串尾部不包含 NULL 字符</span></span><br><span class="line"><span class="comment">// 基于字符串创建的切片和源字符串指向相同的数组</span></span><br><span class="line"><span class="comment">// 但是一样不可以修改</span></span><br><span class="line">c := a[<span class="number">0</span>:<span class="number">4</span>]</span><br><span class="line">d := a[<span class="number">1</span>:]</span><br><span class="line"><span class="comment">// 字符串和切片的转换：字符串可以转换为字节数组，也可以转换为Unicode的字数组</span></span><br><span class="line">e := []<span class="keyword">byte</span>(a)</span><br><span class="line">f := []<span class="keyword">rune</span>(a)</span><br><span class="line"><span class="comment">// 拼接</span></span><br><span class="line">g = a + b</span><br><span class="line"><span class="comment">// 字符串长度获取</span></span><br><span class="line"><span class="built_in">len</span>(a)</span><br><span class="line"><span class="comment">// 遍历字节数组</span></span><br><span class="line"><span class="keyword">for</span> i:=<span class="number">0</span>;i&lt; <span class="built_in">len</span>(d);i++&#123;</span><br><span class="line">    fmt.Println(d[i])</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 遍历 rune 数组</span></span><br><span class="line"><span class="comment">// rune 为 int32 的别名</span></span><br><span class="line"><span class="keyword">for</span> i, v:= <span class="keyword">range</span> d&#123;</span><br><span class="line">    fmt.Println(i,v)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h3><ul>
+<li>数组创建</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> arr [<span class="number">2</span>]<span class="keyword">int</span> <span class="comment">// 一般很少使用</span></span><br><span class="line">a := [<span class="number">3</span>]<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125; <span class="comment">// 指定长度</span></span><br><span class="line">b := [...]<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125; <span class="comment">// 不指定长度</span></span><br><span class="line">c := [<span class="number">3</span>]<span class="keyword">int</span>&#123;<span class="number">1</span>:<span class="number">1</span>, <span class="number">2</span>:<span class="number">3</span>&#125; <span class="comment">//指定长度，通过索引初始化，没有被索引的元素设置默认值</span></span><br><span class="line">d := [...]<span class="keyword">int</span>&#123;<span class="number">1</span>:<span class="number">1</span>, <span class="number">2</span>:<span class="number">3</span>&#125; <span class="comment">//不指定长度通过索引初始化，数组长度由最后一个初始化索引值确定</span></span><br></pre></td></tr></table></figure>
+<p>相关操作：</p>
+<ul>
+<li>元素访问</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">a := [...]<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line">b := a[<span class="number">0</span>]</span><br><span class="line"><span class="keyword">for</span> i,v := <span class="keyword">range</span> a &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>数组长度</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">a := [...]<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>&#125;</span><br><span class="line">alength := <span class="built_in">len</span>(a)</span><br><span class="line"><span class="keyword">for</span> i := <span class="number">0</span>; i &lt; alength ; i++ &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h3><ul>
+<li>由数组创建</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = [...]<span class="keyword">int</span>&#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span> &#125;</span><br><span class="line">s1 := a[<span class="number">0</span>:<span class="number">4</span>] <span class="comment">// [0 1 2 3]</span></span><br><span class="line">s2 := b[:<span class="number">4</span>]  <span class="comment">// [0 1 2 3]</span></span><br><span class="line">s3 := c[<span class="number">2</span>:]  <span class="comment">// [2 3 4 5 6]</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>make 创建切片</li>
+</ul>
+<blockquote>
+<p>由 make 创建的切片各个元素被默认初始化成切片元素类型的零值。</p>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// len = 10 cap = 10 cap代指容量</span></span><br><span class="line">a := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">10</span>) <span class="comment">// [0 0 0 0 0 0 0 0 0 0]</span></span><br><span class="line"><span class="comment">// len = 10 cap = 15 </span></span><br><span class="line">b := <span class="built_in">make</span> ([]<span class="keyword">int</span>,<span class="number">10</span>,<span class="number">15</span>) <span class="comment">// [0 0 0 0 0 0 0 0 0 0]</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>切片支持的操作<ul>
+<li>len() 返回切片长度</li>
+<li>cap() 返回切片底层数组容量</li>
+<li>append() 对切片追加元素</li>
+<li>copy() 复制切片</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">a := [...]<span class="keyword">int</span> &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>&#125;</span><br><span class="line">b := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">2</span>, <span class="number">4</span>) <span class="comment">// [0 0]</span></span><br><span class="line">c := a[<span class="number">0</span>:<span class="number">3</span>] <span class="comment">// [1, 2, 3]</span></span><br><span class="line"><span class="built_in">len</span>(b) <span class="comment">// 2</span></span><br><span class="line"><span class="built_in">cap</span>(b) <span class="comment">// 4</span></span><br><span class="line"></span><br><span class="line">b = <span class="built_in">append</span>(b, <span class="number">1</span>) <span class="comment">// [0 0 1]</span></span><br><span class="line"><span class="built_in">len</span>(b) <span class="comment">// 3</span></span><br><span class="line"><span class="built_in">cap</span>(b) <span class="comment">// 4</span></span><br><span class="line"></span><br><span class="line">b = <span class="built_in">append</span>(b, c...) <span class="comment">// [0 0 1]+ [1, 2, 3] = [0 0 1 1 2 3]</span></span><br><span class="line"><span class="built_in">len</span>(b) <span class="comment">// 6</span></span><br><span class="line"><span class="built_in">cap</span>(b) <span class="comment">// 8 **底层数组发生扩展 原有cap(b)=4 扩展长度时，如果新的长度小于容量，不会更换底层数组，否则，go 会新申请一个底层数组，拷贝这边的值过去，把原来的数组丢掉。也就是说，容量的用途是：在数据拷贝和内存申请的消耗与内存占用之间提供一个权衡。</span></span><br><span class="line"></span><br><span class="line">d := <span class="built_in">make</span>([]<span class="keyword">int</span>, <span class="number">2</span>, <span class="number">3</span>) <span class="comment">// [0 0]</span></span><br><span class="line"><span class="built_in">copy</span>(d, c) <span class="comment">// [0 1] copy 只会复制 d 和 c 中长度最小的</span></span><br><span class="line"><span class="built_in">len</span>(d) <span class="comment">// 2</span></span><br><span class="line"><span class="built_in">cap</span>(d) <span class="comment">// 3</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>切片转换</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">str := <span class="string">"hello,world"</span></span><br><span class="line">a := []<span class="keyword">byte</span>(str) <span class="comment">// 转换为[]byte类型切片</span></span><br><span class="line">b := []<span class="keyword">rune</span>(str) <span class="comment">// 转换为[]rune类型切片</span></span><br></pre></td></tr></table></figure>
+<h3 id="字典（map）"><a href="#字典（map）" class="headerlink" title="字典（map）"></a>字典（map）</h3><p>定义类型： <code>map[k]T</code></p>
+<p>其中 k 为索引类型，可以是任意可以进行比较的类型；T是值类型</p>
+<ul>
+<li>map 创建</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ma := <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">int</span>&#123;<span class="string">"a"</span>: <span class="number">1</span>, <span class="string">"b"</span>: <span class="number">2</span>&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用内置 make 函数创建</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mp1 := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]<span class="keyword">string</span>, <span class="number">10</span>)</span><br><span class="line">mp1[<span class="number">1</span>] = <span class="string">"tom"</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>map 支持的操作</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mp := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]<span class="keyword">string</span>)</span><br><span class="line">mp[<span class="number">1</span>] = <span class="string">"tom"</span></span><br><span class="line">mp[<span class="number">1</span>] = <span class="string">"pony"</span></span><br><span class="line">mp[<span class="number">2</span>] = <span class="string">"jaky"</span></span><br><span class="line">mp[<span class="number">3</span>] = <span class="string">"andes"</span></span><br><span class="line"><span class="comment">// 删除内容</span></span><br><span class="line"><span class="built_in">delete</span>(mp, <span class="number">3</span>)</span><br><span class="line"><span class="comment">// 遍历</span></span><br><span class="line"><span class="keyword">for</span> k,v := <span class="keyword">range</span> mp&#123;</span><br><span class="line">    fmt.Println(<span class="string">"key="</span>, k, <span class="string">"value="</span>, v)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注意：</p>
+<ul>
+<li><p>Go 内置的 map 不是并发安全的，并发安全的 map 可以使用标准包 sync 中的 map。</p>
+</li>
+<li><p>不要直接修改 map value 内某个元素的值，如果想修改 map 的某个键值，则必须整体赋值。</p>
+</li>
+</ul>
+</blockquote>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> User <span class="keyword">struct</span> &#123;</span><br><span class="line">    name <span class="keyword">string</span></span><br><span class="line">    age <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line">ma := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">int</span>]User)</span><br><span class="line">andes := User &#123;</span><br><span class="line">    name: <span class="string">"anedes"</span>,</span><br><span class="line">    age: <span class="number">18</span>,</span><br><span class="line">&#125;</span><br><span class="line">ma[<span class="number">1</span>] = andes</span><br><span class="line"><span class="comment">// ma[1].age = 19 //Error 不能通过 map 引用直接修改</span></span><br><span class="line">andes.age = <span class="number">19</span></span><br><span class="line">ma[<span class="number">1</span>] = andes <span class="comment">// 必须整体替换</span></span><br></pre></td></tr></table></figure>
+<h3 id="Struct"><a href="#Struct" class="headerlink" title="Struct"></a>Struct</h3><ul>
+<li>struct 类型字面量声明：</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> &#123;</span><br><span class="line">    FeildName FeildType</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>自定义 struct 类型声明：</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> TypeName <span class="keyword">struct</span> &#123;</span><br><span class="line">    FeildName FeildType </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>struct 类型变量初始化：</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Person <span class="keyword">struct</span> &#123;</span><br><span class="line">    Name <span class="keyword">string</span></span><br><span class="line">    Age <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Student <span class="keyword">struct</span> &#123;</span><br><span class="line">    *Person</span><br><span class="line">    Number <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 不推荐该初始化方式，一旦struct增加字段，整个初始化语句会报错</span></span><br><span class="line">a := Person&#123;<span class="string">"Tom"</span>,<span class="number">21</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 推荐使用Feild名字初始化方式，没有指定字段则默认初始化为类型的零值</span></span><br><span class="line">p := &amp;Person &#123;</span><br><span class="line">    Name: <span class="string">"tata"</span>,</span><br><span class="line">    Age: <span class="number">12</span>,</span><br><span class="line">&#125;</span><br><span class="line">s : Student &#123;</span><br><span class="line">    Person: p,</span><br><span class="line">    Number: <span class="number">110</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="if-语句最佳实践"><a href="#if-语句最佳实践" class="headerlink" title="if 语句最佳实践"></a>if 语句最佳实践</h3><p>代码改写前：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> err, file := os.Open(<span class="string">"xxx"</span>); err == <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">defer</span> file.Close</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>改写后:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">err, file := os.Open(<span class="string">"xxxx"</span>)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">defer</span> file.Close()</span><br><span class="line"><span class="comment">//do something</span></span><br></pre></td></tr></table></figure>
+<h3 id="Switch-语句"><a href="#Switch-语句" class="headerlink" title="Switch 语句"></a>Switch 语句</h3><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> i := <span class="string">"y"</span>; i &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"y"</span>, <span class="string">"Y"</span>:</span><br><span class="line">    	fmt.Println(<span class="string">"yes"</span>)</span><br><span class="line">    	<span class="keyword">fallthrough</span> <span class="comment">// fallthrough 会跳过接下来的 case 条件表达式</span></span><br><span class="line">    				<span class="comment">// 直接执行下一个 case 语句</span></span><br><span class="line">    <span class="keyword">case</span> <span class="string">"n"</span>, <span class="string">"N"</span>:</span><br><span class="line">    	fmt.Println(<span class="string">"no"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">score := <span class="number">85</span></span><br><span class="line">grade := <span class="string">' '</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">switch</span> &#123;</span><br><span class="line">    <span class="keyword">case</span> score &gt;= <span class="number">90</span>:</span><br><span class="line">    	grade = <span class="string">'A'</span></span><br><span class="line">    <span class="keyword">case</span> score &gt;= <span class="number">80</span>:</span><br><span class="line">    	grade = <span class="string">'B'</span></span><br><span class="line">    <span class="keyword">case</span> score &gt;= <span class="number">70</span>:</span><br><span class="line">    	grade = <span class="string">'C'</span></span><br><span class="line">    <span class="keyword">case</span> score &gt;= <span class="number">60</span>:</span><br><span class="line">    	grade = <span class="string">'D'</span></span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">    	grade = <span class="string">'F'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fmt.Printf(<span class="string">"grade=%c\n"</span>, grade) <span class="comment">// grade=B</span></span><br></pre></td></tr></table></figure>
+<h3 id="for-语句"><a href="#for-语句" class="headerlink" title="for 语句"></a>for 语句</h3><ul>
+<li>类似 C 的 for：</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> init; condition; post &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>类似 C 的 while：</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> condition &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>类似 C 的死循环语句：</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>for 的其他用法：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 访问 map</span></span><br><span class="line"><span class="keyword">for</span> key, value := <span class="keyword">range</span> <span class="keyword">map</span> &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> key := <span class="keyword">range</span> <span class="keyword">map</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 访问 数组</span></span><br><span class="line"><span class="keyword">for</span> index, value := <span class="keyword">range</span> arry&#123;&#125;</span><br><span class="line"><span class="keyword">for</span> index := <span class="keyword">range</span> arry&#123;&#125;</span><br><span class="line"><span class="keyword">for</span> _,value := <span class="keyword">range</span> arry&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 访问 切片</span></span><br><span class="line"><span class="keyword">for</span> index, value := <span class="keyword">range</span> slice&#123;&#125;</span><br><span class="line"><span class="keyword">for</span> index :=  <span class="keyword">range</span> slice&#123;&#125;</span><br><span class="line"><span class="keyword">for</span> _,value := <span class="keyword">range</span> slice&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 访问 通道</span></span><br><span class="line"><span class="keyword">for</span> value := <span class="keyword">range</span> channel&#123;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="标签和跳转"><a href="#标签和跳转" class="headerlink" title="标签和跳转"></a>标签和跳转</h3><h4 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h4><p>标签用于 goto、break、continue 语句的跳转，标签的语法是：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Label:Statement</span><br></pre></td></tr></table></figure>
+<h4 id="goto"><a href="#goto" class="headerlink" title="goto"></a>goto</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">goto</span> Label</span><br></pre></td></tr></table></figure>
+<ul>
+<li>goto 语句只能在函数内部跳转</li>
+<li>goto 不能跳过内部变量声明语句，这些变量在 goto 语句的标签语句处又是可见的。</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">	<span class="keyword">goto</span> L <span class="comment">// BAD, 跳过 v:=3 这条语句是不允许的</span></span><br><span class="line">	v:=<span class="number">3</span></span><br><span class="line">L:</span><br></pre></td></tr></table></figure>
+<ul>
+<li>goto 语句只能跳到同级作用域或者上层作用域内，不能跳到内部作用域内。例如：</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> n%<span class="number">2</span> == <span class="number">1</span> &#123;</span><br><span class="line">    <span class="keyword">go</span> L1</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> n &gt; <span class="number">0</span> &#123;</span><br><span class="line">    f()</span><br><span class="line">    n--</span><br><span class="line">L1:</span><br><span class="line">	f()</span><br><span class="line">	n--</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="break"><a href="#break" class="headerlink" title="break"></a>break</h4><p>break 用于函数内 for、switch、select语句的执行，有2种使用格式：</p>
+<ul>
+<li>单独使用用于跳出break当前所在的语句</li>
+<li>和标签一起使用，用于跳出标签所标识的 for、switch、select语句的执行，可用于跳出多重循环，但标签和 break必须在同一个函数内。</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">L1:</span><br><span class="line"><span class="keyword">for</span> i := <span class="number">0</span>; ; i++ &#123;</span><br><span class="line">    <span class="keyword">for</span> j := <span class="number">0</span>; ; j++ &#123;</span><br><span class="line">        <span class="keyword">if</span> i &gt;= <span class="number">5</span> &#123;</span><br><span class="line">            <span class="comment">// 跳出 L1 标签所在的 for 循环</span></span><br><span class="line">            <span class="keyword">break</span> L1</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> j &gt; <span class="number">10</span> &#123;</span><br><span class="line">            <span class="comment">// 默认仅跳出离 break 最近的内层循环</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="continue"><a href="#continue" class="headerlink" title="continue"></a>continue</h4><p>用于跳出 for 循环本次迭代，跳到 for 循环的下一次迭代的 post 语句处执行，也有两种使用格式</p>
+<ul>
+<li><p>单独使用，用于跳出 continue 当前所在 for </p>
+</li>
+<li><p>和标签一起使用，用于跳出标签所标识的 for 语句的本次迭代，单标签和 continue 必须在同一个函数内。</p>
+</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">L1:</span><br><span class="line"><span class="keyword">for</span> i := <span class="number">0</span>; ; i++ &#123;</span><br><span class="line">    <span class="keyword">for</span> j := <span class="number">0</span>; ; j++ &#123;</span><br><span class="line">        <span class="keyword">if</span> i &gt;= <span class="number">5</span> &#123;</span><br><span class="line">            <span class="comment">// 跳到 L1 标签所在的 for 循环 i++ 处执行</span></span><br><span class="line">            <span class="keyword">continue</span> L1</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> j &gt; <span class="number">10</span> &#123;</span><br><span class="line">            <span class="comment">// 默认仅跳到离 break 最近的内层循环 j++ 处执行</span></span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://note.geekfan.top">Linus Lee</a>
+            <p>原文链接: <a href="http://note.geekfan.top/2019/01/15/Go-Core-Base/">http://note.geekfan.top/2019/01/15/Go-Core-Base/</a>
+            <p>发表日期: <a href="http://note.geekfan.top/2019/01/15/Go-Core-Base/">January 15th 2019, 8:23:22 pm</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2019/01/15/Go-Core-Function/" title= Go Core Dev Function >
+                    <div class="prevTitle">Go Core Dev Function</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zMjU0Ni85MTA3>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:708863861@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/mr-linus" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基础知识"><span class="toc-number">1.</span> <span class="toc-text">基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#常量"><span class="toc-number">1.1.</span> <span class="toc-text">常量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#布尔类型"><span class="toc-number">1.2.</span> <span class="toc-text">布尔类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#整型"><span class="toc-number">1.3.</span> <span class="toc-text">整型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复数"><span class="toc-number">1.4.</span> <span class="toc-text">复数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字符串"><span class="toc-number">1.5.</span> <span class="toc-text">字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数组"><span class="toc-number">1.6.</span> <span class="toc-text">数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#切片"><span class="toc-number">1.7.</span> <span class="toc-text">切片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#字典（map）"><span class="toc-number">1.8.</span> <span class="toc-text">字典（map）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Struct"><span class="toc-number">1.9.</span> <span class="toc-text">Struct</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#if-语句最佳实践"><span class="toc-number">1.10.</span> <span class="toc-text">if 语句最佳实践</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Switch-语句"><span class="toc-number">1.11.</span> <span class="toc-text">Switch 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#for-语句"><span class="toc-number">1.12.</span> <span class="toc-text">for 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#标签和跳转"><span class="toc-number">1.13.</span> <span class="toc-text">标签和跳转</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#标签"><span class="toc-number">1.13.1.</span> <span class="toc-text">标签</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#goto"><span class="toc-number">1.13.2.</span> <span class="toc-text">goto</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#break"><span class="toc-number">1.13.3.</span> <span class="toc-text">break</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#continue"><span class="toc-number">1.13.4.</span> <span class="toc-text">continue</span></a></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 16
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span><a class="archive-post-title" href= "/2019/01/15/Go-Core-Base/" >Go Core Dev Base</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span><a class="archive-post-title" href= "/2019/01/15/Go-Core-Function/" >Go Core Dev Function</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span><a class="archive-post-title" href= "/2019/01/15/Go-Core-TypeSystem/" >Go Core Dev</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2018/09/09/Go-Primer/" >Go Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/contribute-to-opensource/" >How to contribute to open source projects</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/Linux-namespace/" >Views about Namespace & Cgroups of Linux Kernel</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2018/07/17/K8S-InfoCollection/" >Kubernetes Information Collection</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2018/07/01/Scraping-Primer/" >Scraping-Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2018/06/21/Linux-Primer/" >Linux-Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/15</span><a class="archive-post-title" href= "/2018/06/15/Docker-faq/" >Docker-FAQ</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span><a class="archive-post-title" href= "/2017/12/12/Binary-tree/" >Binary tree  of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span><a class="archive-post-title" href= "/2017/12/12/Graph-traversal/" >Graph traversal  of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/search/" >Search of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2017/10/24/struct/" >Concept of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/sort/" >Sort of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2017/10/20/Docker-Primer/" >Docker-Primer</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
+    
+        <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
+    
+        <span class="sidebar-tag-name" data-tags="open-source"><span class="iconfont-archer">&#xe606;</span>open-source</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Linus Lee"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>
+
+

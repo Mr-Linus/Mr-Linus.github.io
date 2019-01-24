@@ -339,13 +339,86 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2019/01/15/Go-Core/" >
+        <a class="abstract-title" href = "/2019/01/15/Go-Core-Base/" >
             
-                <span>Go Core Dev</span>
+                <span>Go Core Dev Base</span>
         </a>
         <div class="abstract-content">
             基础知识常量预声明标识符 iota 用在常量声明中，其初始值为 0。一组多个常量同时声明时其值逐行增加，iota 可以看做是自增枚举变量，专门用来初始化常量。
 123456789101112131415161718192021222324252627// 类似枚举的 iotaconst (	c0 = iota // 0    c1 = iota // 1    c3 = iota // 2)//简写const (	c0 = iota // 0    c1 // 1    c2 // 2)//注意 iota 逐行增加const (	a == 1 &lt;&lt; iota // 1    ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/15</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Go">Go</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/01/15/Go-Core-Function/" >
+            
+                <span>Go Core Dev Function</span>
+        </a>
+        <div class="abstract-content">
+            函数
+声明格式
+
+123func funcName(param-list)(result-list)&#123;    function body&#125;
+
+特点
+
+可以无传入参数和返回值（默认返回0）
+
+123456789func A() &#123;    //do something&#125;func A() int &#123;	// do something    ...    return 1&#125;
+
+多个相邻的相同类型的参数可以使用简写模式
+
+123func add(a, b int) int &#123;    return a + b&#125;
+
+支持有名...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/15</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Go">Go</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/01/15/Go-Core-TypeSystem/" >
+            
+                <span>Go Core Dev</span>
+        </a>
+        <div class="abstract-content">
+            类型系统命名类型 &amp; 未命名类型1234567891011121314151617181920package mainimport "fmt"type Person struct &#123;    name string    age int&#125;func main() &#123;    // 使用 struct 字面量声明的是未命名类型    a := struct &#123;        name string        age int    &#125;&#123;"andes", 18&#125;    fmt.Printf("%T\n", a)    ...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -593,9 +666,31 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 14
+        Total : 16
         </div>
         <!-- search  -->
         
@@ -611,7 +706,17 @@
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">01/15</span><a class="archive-post-title" href= "/2019/01/15/Go-Core/" >Go Core Dev</a>
+            <span class="archive-post-date">01/15</span><a class="archive-post-title" href= "/2019/01/15/Go-Core-Base/" >Go Core Dev Base</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span><a class="archive-post-title" href= "/2019/01/15/Go-Core-Function/" >Go Core Dev Function</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span><a class="archive-post-title" href= "/2019/01/15/Go-Core-TypeSystem/" >Go Core Dev</a>
         </li>
     
     
@@ -702,15 +807,15 @@
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
-    
         <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
+    
+        <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
     
         <span class="sidebar-tag-name" data-tags="open-source"><span class="iconfont-archer">&#xe606;</span>open-source</span>
     
-        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
-    
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
