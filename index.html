@@ -354,18 +354,17 @@ height:50vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2019/01/15/Go-Core-Base/" >
+        <a class="abstract-title" href = "/2019/01/23/Go-Core-TypeSystem/" >
             
-                <span>Go Core Dev Base</span>
+                <span>Go Core Dev</span>
         </a>
         <div class="abstract-content">
-            基础知识常量预声明标识符 iota 用在常量声明中，其初始值为 0。一组多个常量同时声明时其值逐行增加，iota 可以看做是自增枚举变量，专门用来初始化常量。
-123456789101112131415161718192021222324252627// 类似枚举的 iotaconst (	c0 = iota // 0    c1 = iota // 1    c3 = iota // 2)//简写const (	c0 = iota // 0    c1 // 1    c2 // 2)//注意 iota 逐行增加const (	a == 1 &lt;&lt; iota // 1    ...
+            类型系统命名类型 &amp; 未命名类型1234567891011121314151617181920package mainimport "fmt"type Person struct &#123;    name string    age int&#125;func main() &#123;    // 使用 struct 字面量声明的是未命名类型    a := struct &#123;        name string        age int    &#125;&#123;"andes", 18&#125;    fmt.Printf("%T\n", a)    ...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/15</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/23</span>
             </div>
             <!-- tags  -->
             
@@ -384,7 +383,7 @@ height:50vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2019/01/15/Go-Core-Function/" >
+        <a class="abstract-title" href = "/2019/01/17/Go-Core-Function/" >
             
                 <span>Go Core Dev Function</span>
         </a>
@@ -409,7 +408,7 @@ height:50vh;
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/15</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/17</span>
             </div>
             <!-- tags  -->
             
@@ -428,12 +427,13 @@ height:50vh;
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2019/01/15/Go-Core-TypeSystem/" >
+        <a class="abstract-title" href = "/2019/01/15/Go-Core-Base/" >
             
-                <span>Go Core Dev</span>
+                <span>Go Core Dev Base</span>
         </a>
         <div class="abstract-content">
-            类型系统命名类型 &amp; 未命名类型1234567891011121314151617181920package mainimport "fmt"type Person struct &#123;    name string    age int&#125;func main() &#123;    // 使用 struct 字面量声明的是未命名类型    a := struct &#123;        name string        age int    &#125;&#123;"andes", 18&#125;    fmt.Printf("%T\n", a)    ...
+            基础知识常量预声明标识符 iota 用在常量声明中，其初始值为 0。一组多个常量同时声明时其值逐行增加，iota 可以看做是自增枚举变量，专门用来初始化常量。
+123456789101112131415161718192021222324252627// 类似枚举的 iotaconst (	c0 = iota // 0    c1 = iota // 1    c3 = iota // 2)//简写const (	c0 = iota // 0    c1 // 1    c2 // 2)//注意 iota 逐行增加const (	a == 1 &lt;&lt; iota // 1    ...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -1026,6 +1026,8 @@ Docker 引擎相关问题 (67)概念问题 (5)宿主如果和容器系统不同�
     
     
     
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 16
@@ -1044,17 +1046,17 @@ Docker 引擎相关问题 (67)概念问题 (5)宿主如果和容器系统不同�
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span><a class="archive-post-title" href= "/2019/01/23/Go-Core-TypeSystem/" >Go Core Dev</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/17</span><a class="archive-post-title" href= "/2019/01/17/Go-Core-Function/" >Go Core Dev Function</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">01/15</span><a class="archive-post-title" href= "/2019/01/15/Go-Core-Base/" >Go Core Dev Base</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/15</span><a class="archive-post-title" href= "/2019/01/15/Go-Core-Function/" >Go Core Dev Function</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">01/15</span><a class="archive-post-title" href= "/2019/01/15/Go-Core-TypeSystem/" >Go Core Dev</a>
         </li>
     
     
@@ -1147,9 +1149,9 @@ Docker 引擎相关问题 (67)概念问题 (5)宿主如果和容器系统不同�
     
         <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
     
-        <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
-    
         <span class="sidebar-tag-name" data-tags="open-source"><span class="iconfont-archer">&#xe606;</span>open-source</span>
+    
+        <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
@@ -1221,26 +1223,9 @@ jsonContent:
     <!-- CNZZ  -->
     
     </div>
-    <!-- async load share.js -->
+    <!-- async load share.js --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
      
-    <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
-
-
-</body>
+    </body>
 </html>
 
 
