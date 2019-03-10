@@ -361,10 +361,11 @@ height:50vh;
     <article class="index-post">
         <a class="abstract-title" href = "/2019/03/10/Install-K8S-with-kubeadm/" >
             
-                <span>Install K8S with kubeadm</span>
+                <span>Install a single master K8S cluster with kubeadm</span>
         </a>
         <div class="abstract-content">
-            Prestep: 使用kubdeadm安装K8S前
+            Prestep: 使用 kubdeadm 安装 K8S 前每个节点：
+
 关闭swap
 关闭selinux
 关闭防火墙
@@ -373,7 +374,7 @@ docker安装完毕
 让系统内核开启网络转发
 
 关闭 Swap（每个节点）12swapoff -a &amp;&gt;/dev/nullsed  -i '/\s\+swap\s\+/d' /etc/fstab  &amp;&gt;/dev/null
-关闭 Selinux（每个节点）1234567891011121314setenforce 0 cat &gt; /etc/selinux/config &l...
+关闭 Selinux（每个节点）1234567891011121314setenforce 0 cat &gt; /etc/selinux...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -1095,7 +1096,7 @@ Kubernete...
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/Install-K8S-with-kubeadm/" >Install K8S with kubeadm</a>
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/Install-K8S-with-kubeadm/" >Install a single master K8S cluster with kubeadm</a>
         </li>
     
     
@@ -1284,26 +1285,9 @@ jsonContent:
     <!-- CNZZ  -->
     
     </div>
-    <!-- async load share.js -->
+    <!-- async load share.js --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
      
-    <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
-
-
-</body>
+    </body>
 </html>
 
 
