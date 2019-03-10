@@ -346,6 +346,44 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2019/03/10/Install-K8S-with-kubeadm/" >
+            
+                <span>Install K8S with kubeadm</span>
+        </a>
+        <div class="abstract-content">
+            Prestep: 使用kubdeadm安装K8S前
+关闭swap
+关闭selinux
+关闭防火墙
+集群里的每个节点的/etc/hosts都要有所有节点ip和与其对应的hostname
+docker安装完毕 
+让系统内核开启网络转发
+
+关闭 Swap（每个节点）12swapoff -a &amp;&gt;/dev/nullsed  -i '/\s\+swap\s\+/d' /etc/fstab  &amp;&gt;/dev/null
+关闭 Selinux（每个节点）1234567891011121314setenforce 0 cat &gt; /etc/selinux/config &l...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/10</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "k8s,docker">k8s,docker</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2019/01/24/Go-Core-Interface/" >
             
                 <span>Go Core Dev Interface</span>
@@ -751,9 +789,26 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 17
+        Total : 18
         </div>
         <!-- search  -->
         
@@ -766,6 +821,11 @@
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/Install-K8S-with-kubeadm/" >Install K8S with kubeadm</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -882,6 +942,8 @@
         <span class="sidebar-tag-name" data-tags="open-source"><span class="iconfont-archer">&#xe606;</span>open-source</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="k8s,docker"><span class="iconfont-archer">&#xe606;</span>k8s,docker</span>
     
         <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
     

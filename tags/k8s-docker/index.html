@@ -338,59 +338,48 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main post-page">
-    <article class="article-entry">
-        <p>layout: 404<br>title: “[404]”<br>description: “May the Force be with you :&#41;”</p>
-
-    </article>
-    <!-- license  -->
+            <main class="main index-page">
     
-        <div class="license-wrapper">
-            <p>原文作者：<a href="http://note.geekfan.top">Linus Lee</a>
-            <p>原文链接：<a href="http://note.geekfan.top/404.html">http://note.geekfan.top/404.html</a>
-            <p>发表日期：<a href="http://note.geekfan.top/404.html">July 4th 2018, 11:55:15 pm</a>
-            <p>更新日期：<a href="http://note.geekfan.top/404.html">December 19th 2017, 4:48:20 pm</a>
-            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/03/10/Install-K8S-with-kubeadm/" >
+            
+                <span>Install K8S with kubeadm</span>
+        </a>
+        <div class="abstract-content">
+            Prestep: 使用kubdeadm安装K8S前
+关闭swap
+关闭selinux
+关闭防火墙
+集群里的每个节点的/etc/hosts都要有所有节点ip和与其对应的hostname
+docker安装完毕 
+让系统内核开启网络转发
+
+关闭 Swap（每个节点）12swapoff -a &amp;&gt;/dev/nullsed  -i '/\s\+swap\s\+/d' /etc/fstab  &amp;&gt;/dev/null
+关闭 Selinux（每个节点）1234567891011121314setenforce 0 cat &gt; /etc/selinux/config &l...
         </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/10</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "k8s,docker">k8s,docker</a>
+    
+</div>
+            
+        </div>
+    </article>
     
     <!-- paginator  -->
-    <ul class="post-paginator">
-        <li class="next">
-            
-        </li>
-        <li class="previous">
-            
-        </li>
-    </ul>
-    <!-- 评论插件 -->
-    <!-- 来必力City版安装代码 -->
-
-    <div id="lv-container" data-id="city" data-uid= MTAyMC8zMjU0Ni85MTA3>
-        <script type="text/javascript">
-            (function (d, s) {
-                var j, e = d.getElementsByTagName(s)[0];
-                if (typeof LivereTower === 'function') { return; }
-                j = d.createElement(s);
-                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
-                j.async = true;
-
-                e.parentNode.insertBefore(j, e);
-            })(document, 'script');
-        </script>
-        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
-    </div>
-
-<!-- City版安装代码已完成 -->
     
-    
-    <!-- partial('_partial/comment/changyan') -->
-    <!--PC版-->
-
-
-    
-    
-
-    <!-- 评论 -->
 </main>
             <!-- profile -->
             
