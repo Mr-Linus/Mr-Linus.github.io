@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Linus Lee">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Linus Lee">
+    
+    <meta name="keywords" content="Funky's NoteBook,Linus Lee">
+    
+    <meta name="description" content="It's Funky's NoteBook">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>Search of Data Structure · Funky&#39;s NoteBook</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/gun.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Funky&#39;s NoteBook</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Search of Data Structure</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Funky's NoteBook</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Search of Data Structure
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Data Structure">Data Structure</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">1,810</span>阅读时长: <span class="post-count reading-time">7 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2017/10/28</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h2><h3 id="查找方法"><a href="#查找方法" class="headerlink" title="查找方法"></a>查找方法</h3><ul>
+<li>顺序查找</li>
+<li>折半查找</li>
+<li>分块查找</li>
+</ul>
+<h3 id="平均查找长度-ASL（Average-Search-Length-）"><a href="#平均查找长度-ASL（Average-Search-Length-）" class="headerlink" title="平均查找长度 ASL（Average Search Length  ）"></a>平均查找长度 ASL（Average Search Length  ）</h3><p>所有查找过程中进行关键字比较次数的平均值<br>数学定义为：$ASL=\sum _{i=1}^n P_i C_i$</p>
+<blockquote>
+<p>n是查找长度，$P_i$是查找第i个元素的概率，$C_i$是找到第i个元素所需进行比较次数</p>
+</blockquote>
+<h3 id="顺序查找"><a href="#顺序查找" class="headerlink" title="顺序查找"></a>顺序查找</h3><p>适用于无序的表，挨个查找<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    ElemType *elem; <span class="comment">//元素存储空间基址</span></span><br><span class="line">    <span class="keyword">int</span> TableLen;<span class="comment">//表长</span></span><br><span class="line">&#125;SSTable;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">Search_Seq</span><span class="params">(SSTable ST,ElemType key)</span></span>&#123;</span><br><span class="line">    ST.elem[<span class="number">0</span>]=key; <span class="comment">//哨兵</span></span><br><span class="line">    <span class="keyword">for</span>(i=ST.TableLen;ST.elem[i]!=key;--i); <span class="comment">//从后往前找到i为0时退出for循环</span></span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>平均查找长度：</p>
+<script type="math/tex; mode=display">ASL_{success}=\sum _{i=1}^n P_i(n-i-1)=\frac{n+1}{2}</script><script type="math/tex; mode=display">ASL_{failure}=\sum _{j=1}^n q_j(l_j-1)=\frac{n}{2}+\frac{n}{n+1}</script><h3 id="折半查找"><a href="#折半查找" class="headerlink" title="折半查找"></a>折半查找</h3><p>折半查找其实就是把查找表分成两半，然后在这两半里面继续分…<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">BinarySearch</span><span class="params">(SeqList L;ElemType key)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> low=<span class="number">0</span>,high=L.TableLen<span class="number">-1</span>,mid; </span><br><span class="line">    <span class="keyword">while</span>(low&lt;high)&#123;</span><br><span class="line">        mid=(low+high)/<span class="number">2</span>; <span class="comment">//取中间位置</span></span><br><span class="line">        <span class="keyword">if</span>(L.elem[mid]==key)&#123;<span class="keyword">return</span> mid;&#125; <span class="comment">//查找成功则返回所在位置</span></span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span>(L.elem[mid]&gt;key)&#123;high=mid<span class="number">-1</span>;&#125; <span class="comment">//从前半部分查找</span></span><br><span class="line">        <span class="keyword">else</span> &#123;low=mid+<span class="number">1</span>;&#125; <span class="comment">//从后半部分查找</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>折半查找的过程可以用二叉树来描述，这个二叉树叫判定树，用折半查找到给定值的比较次数不会超过数的高度,即$\left \lceil log_2 (n+1) \right \rceil$</p>
+<p>平均查找长度：<br>$ASL_{success}=log_2 (n+1)-1$</p>
+<h3 id="分块查找"><a href="#分块查找" class="headerlink" title="分块查找"></a>分块查找</h3><p>分块查找又称索引查找，吸取了折半查找和顺序查找的优点，块内元素可以无序，但是块之间是有序的。<br>示意图：</p>
+<p>索引表</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>24</th>
+<th>54</th>
+<th style="text-align:center">78</th>
+<th style="text-align:left">88</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>7</td>
+<td style="text-align:center">10</td>
+<td style="text-align:left">13</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>查找表：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>24*</th>
+<th>21*</th>
+<th>6*</th>
+<th>11*</th>
+<th>8*</th>
+<th>22*</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>平均查找长度：<br>$ASL=L_I+L_S$</p>
+<blockquote>
+<p>$L_I$ 和 $L_S$分别为索引查找和块内查找的平均查找长度</p>
+</blockquote>
+<p>①若干将长度为n的产值表均匀分b块，每块s个记录，在等概率的情况下块内使用<code>顺序查找</code>那么平均查找长度为：$ASL=L_I+L_S=\frac{b+1}{2}+\frac{s+1}{2}$<br>②此时若$s=\sqrt{n}$,则平均查找长度取最小值：$\sqrt{n}+1$;若对索引表采用折半查找时，则平均查找长度为：$ASL=L_I+L_S=\left \lceil log_2(b+1)+\frac{s+1}{2} \right \rceil$</p>
+<h3 id="B树-amp-B-树"><a href="#B树-amp-B-树" class="headerlink" title="B树 &amp; B+树"></a>B树 &amp; B+树</h3><p>B树，又称多路平衡查找树,B树中所有节点的孩子节点数的最大值称为<code>B数的阶</code>，通常用m表示。一颗m阶的树或为<code>空树</code>，或为满足如下特性的树:<br>1、树中每个节点至多有m颗子树（即至多含有m-1个关键字）。<br>2、若根节点不是终端节点，则至少有两颗子树（至少一个关键字）。<br>3、除根节点外的所有非叶子节点至少有$\left \lceil m/2 \right \rceil$颗子树（即至少含有$\left \lceil m/2 \right \rceil-1$个关键字）。<br>4、所有的叶节点都出现在同一层次上，并且不带信息（实际这些节点并不存在，指向这些节点的指针为空）。</p>
+<blockquote>
+<p>B树是所有节点的平衡因子均<code>等于0</code>的多路查找树</p>
+</blockquote>
+<h4 id="B树的高度（磁盘存储次数）"><a href="#B树的高度（磁盘存储次数）" class="headerlink" title="B树的高度（磁盘存储次数）"></a>B树的高度（磁盘存储次数）</h4><p>首先应该明确B树的高度不包括最后的不带任何信息的叶子节点那一层。</p>
+<p>如果$n\geq 1$，则对任意一颗包含n个关键字、高度为h、阶数为m的B树：<br>有一棵树的高度：$h\geq log_m(n+1)$</p>
+<p>如果让每个节点中的关键字个数达到最少则高度为：$h\leq log_{\left \lceil m/2 \right \rceil}(((n+1)/2)+1)$</p>
+<blockquote>
+<p>B树的大部分操作所需的磁盘存取次数与B树的高度成正比</p>
+</blockquote>
+<h3 id="散列-Hash-表"><a href="#散列-Hash-表" class="headerlink" title="散列(Hash)表"></a>散列(Hash)表</h3><p>散列函数：一个把查找表中的关键字映射成该关键字对应的地址的函数，记为Hash(key)=Addr。<br>散列函数块内会把两个或两个以上的不同关键字映射到同一个地址，这种情况称“冲突”,这些发生碰撞的不同关键字称为“同义词”。</p>
+<p> <code>散列表</code> 是根据关键字而直接进行访问的数据结构。</p>
+<h4 id="散列函数的构造遵循规则"><a href="#散列函数的构造遵循规则" class="headerlink" title="散列函数的构造遵循规则"></a>散列函数的构造遵循规则</h4><p> 1.均匀分布,少冲突</p>
+<p> 2.计算简单,查找快</p>
+<h5 id="1-直接地址法"><a href="#1-直接地址法" class="headerlink" title="1.直接地址法"></a>1.直接地址法</h5><p>散列函数： H(key)=a*key+b</p>
+<blockquote>
+<p>特点: 计算简单，不会产生冲突，适合连续存储的情况，但如果关键字分布不连续，空位较多，将造成存储空间浪费。</p>
+<h5 id="2-除留余数法"><a href="#2-除留余数法" class="headerlink" title="2.除留余数法"></a>2.除留余数法</h5><p>散列函数：H(key)=key%p<br>特点：简单、常用，使用关键是选好p，尽量减少冲突</p>
+<h5 id="3-数字分析法"><a href="#3-数字分析法" class="headerlink" title="3.数字分析法"></a>3.数字分析法</h5><p>设关键字是r进制数，而r个数码在各个位置上出现的频率不一定相同，在某些位上经常出现，则应选取数码分布较为均匀的若干位作为散列地址。</p>
+<h5 id="4-平方取中法"><a href="#4-平方取中法" class="headerlink" title="4.平方取中法"></a>4.平方取中法</h5><p>顾名思义，取关键字的平方值的中间几位作为散列地址:$10^{k-1} \leq n \leq 10^k $(其中n为集合中元素个数)</p>
+<h5 id="5-折叠法"><a href="#5-折叠法" class="headerlink" title="5.折叠法"></a>5.折叠法</h5><p>将关键字分割成位数相同的几部分（最后一部分可以短一点），然后取这几部分的叠加作为散列地址。</p>
+</blockquote>
+<h4 id="处理冲突的方法"><a href="#处理冲突的方法" class="headerlink" title="处理冲突的方法"></a>处理冲突的方法</h4><h5 id="1-开地址法（闭散列法）"><a href="#1-开地址法（闭散列法）" class="headerlink" title="1.开地址法（闭散列法）"></a>1.开地址法（闭散列法）</h5><p>数学递推公式<br>$H_i=((H(key)+d_i)\%m)$<br>式中,$i=1,2,3,…,k(k \geq m-1 )$;m表示散列表表长；$d_i$为增量序列。</p>
+<h6 id="1）-线性探测法"><a href="#1）-线性探测法" class="headerlink" title="1） 线性探测法"></a>1） 线性探测法</h6><p>不多说，冲突就往后挪，挪到有位置，停止</p>
+<h6 id="2）-平方探测法"><a href="#2）-平方探测法" class="headerlink" title="2） 平方探测法"></a>2） 平方探测法</h6><p>当 $d_i = 1^2,-1^2,2^2,-2^2,…,k^2,-k^2,$其中$k \leq m/2 $，m必须是一个可以表示成4k+3的质数，又称二次探测法</p>
+<h6 id="3-再散列法"><a href="#3-再散列法" class="headerlink" title="3)再散列法"></a>3)再散列法</h6><p>当 $d_i=Hash_2(Key)$, 如果第一个散列函数Hash(key)得到的地址发生冲突时，利用第二个散列函数计算该关键字的地址增量。再散列法经过m-1次探测会遍历表中的所有的位置，回到$H_0$位置。</p>
+<h6 id="4-伪随机序列法（简答题）"><a href="#4-伪随机序列法（简答题）" class="headerlink" title="4)伪随机序列法（简答题）"></a>4)伪随机序列法（简答题）</h6><p>当$d_i$=伪随机序列，称为伪随机序列法。</p>
+<blockquote>
+<p>注意在开放地址的情形下，不能随便物理删除所有元素，因为若删除元素将会截断其他具有相同散列地址元素的查找地址。所以若想删除一个元素时，给它做一个删除标记，进行逻辑删除。但副作用是，执行多次删除后，散列表表面上看起来很满，实际上有许多位置没用利用，因此需要定期维护散列表，要把删除标记的元素物理删除。</p>
+<h5 id="2-拉链法"><a href="#2-拉链法" class="headerlink" title="2.拉链法"></a>2.拉链法</h5><p>假设散列地址为i的同义词链表的头指针存放在散列表的第i个单元中，因而查找、插入、删除都在同义词链中进行。</p>
+<h3 id="散列查找及性能分析"><a href="#散列查找及性能分析" class="headerlink" title="散列查找及性能分析"></a>散列查找及性能分析</h3><p>散列表的查找过程与构造散列表的过程基本一致。<br>装填因子：散列表的装填因子一般记为$\alpha$,定义为一个表的装满程度，即：<br>$\alpha =\frac{n}{m}$ 其中n为表中记录数，m为散列表长度。</p>
+</blockquote>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://note.geekfan.top">Linus Lee</a>
+            <p>原文链接：<a href="http://note.geekfan.top/2017/10/28/search/">http://note.geekfan.top/2017/10/28/search/</a>
+            <p>发表日期：<a href="http://note.geekfan.top/2017/10/28/search/">October 28th 2017, 10:40:50 pm</a>
+            <p>更新日期：<a href="http://note.geekfan.top/2017/10/28/search/">July 28th 2018, 12:37:06 am</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2017/12/12/Graph-traversal/" title= "Graph traversal  of Data Structure">
+                    <div class="nextTitle">Graph traversal  of Data Structure</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2017/10/24/struct/" title= "Concept of Data Structure">
+                    <div class="prevTitle">Concept of Data Structure</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zMjU0Ni85MTA3>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:708863861@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/mr-linus" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#查找"><span class="toc-number">1.</span> <span class="toc-text">查找</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#查找方法"><span class="toc-number">1.1.</span> <span class="toc-text">查找方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#平均查找长度-ASL（Average-Search-Length-）"><span class="toc-number">1.2.</span> <span class="toc-text">平均查找长度 ASL（Average Search Length  ）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#顺序查找"><span class="toc-number">1.3.</span> <span class="toc-text">顺序查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#折半查找"><span class="toc-number">1.4.</span> <span class="toc-text">折半查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分块查找"><span class="toc-number">1.5.</span> <span class="toc-text">分块查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#B树-amp-B-树"><span class="toc-number">1.6.</span> <span class="toc-text">B树 &amp; B+树</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#B树的高度（磁盘存储次数）"><span class="toc-number">1.6.1.</span> <span class="toc-text">B树的高度（磁盘存储次数）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#散列-Hash-表"><span class="toc-number">1.7.</span> <span class="toc-text">散列(Hash)表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#散列函数的构造遵循规则"><span class="toc-number">1.7.1.</span> <span class="toc-text">散列函数的构造遵循规则</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-直接地址法"><span class="toc-number">1.7.1.1.</span> <span class="toc-text">1.直接地址法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-除留余数法"><span class="toc-number">1.7.1.2.</span> <span class="toc-text">2.除留余数法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-数字分析法"><span class="toc-number">1.7.1.3.</span> <span class="toc-text">3.数字分析法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-平方取中法"><span class="toc-number">1.7.1.4.</span> <span class="toc-text">4.平方取中法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-折叠法"><span class="toc-number">1.7.1.5.</span> <span class="toc-text">5.折叠法</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#处理冲突的方法"><span class="toc-number">1.7.2.</span> <span class="toc-text">处理冲突的方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-开地址法（闭散列法）"><span class="toc-number">1.7.2.1.</span> <span class="toc-text">1.开地址法（闭散列法）</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1）-线性探测法"><span class="toc-number">1.7.2.1.1.</span> <span class="toc-text">1） 线性探测法</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#2）-平方探测法"><span class="toc-number">1.7.2.1.2.</span> <span class="toc-text">2） 平方探测法</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#3-再散列法"><span class="toc-number">1.7.2.1.3.</span> <span class="toc-text">3)再散列法</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#4-伪随机序列法（简答题）"><span class="toc-number">1.7.2.1.4.</span> <span class="toc-text">4)伪随机序列法（简答题）</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-拉链法"><span class="toc-number">1.7.2.2.</span> <span class="toc-text">2.拉链法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#散列查找及性能分析"><span class="toc-number">1.8.</span> <span class="toc-text">散列查找及性能分析</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 17
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span><a class="archive-post-title" href= "/2019/01/24/Go-Core-Interface/" >Go Core Dev Interface</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span><a class="archive-post-title" href= "/2019/01/23/Go-Core-TypeSystem/" >Go Core Dev Type-System</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/17</span><a class="archive-post-title" href= "/2019/01/17/Go-Core-Function/" >Go Core Dev Function</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span><a class="archive-post-title" href= "/2019/01/15/Go-Core-Base/" >Go Core Dev Base</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2018/09/09/Go-Primer/" >Go Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/contribute-to-opensource/" >How to contribute to open source projects</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/Linux-namespace/" >Views about Namespace & Cgroups of Linux Kernel</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2018/07/17/K8S-InfoCollection/" >Kubernetes Information Collection</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2018/07/01/Scraping-Primer/" >Scraping-Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2018/06/21/Linux-Primer/" >Linux-Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/15</span><a class="archive-post-title" href= "/2018/06/15/Docker-faq/" >Docker-FAQ</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span><a class="archive-post-title" href= "/2017/12/12/Binary-tree/" >Binary tree  of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span><a class="archive-post-title" href= "/2017/12/12/Graph-traversal/" >Graph traversal  of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/search/" >Search of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2017/10/24/struct/" >Concept of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/sort/" >Sort of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2017/10/20/Docker-Primer/" >Docker-Primer</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
+    
+        <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
+    
+        <span class="sidebar-tag-name" data-tags="open-source"><span class="iconfont-archer">&#xe606;</span>open-source</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Linus Lee"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>
+
+
