@@ -348,12 +348,12 @@
     <article class="index-post">
         <a class="abstract-title" href = "/2019/03/15/Install-K8S-dashboard/" >
             
-                <span>Install-K8S-dashboard</span>
+                <span>Install-K8S-dashboard-with-ingress</span>
         </a>
         <div class="abstract-content">
-            安装 kubernetes dashboard（仪表盘）Kubernetes Dashboard是Kubernetes集群的基于Web的通用UI。 它允许用户管理在群集中运行的应用程序并对其进行故障排除，以及管理群集本身。
+            安装 kubernetes dashboard（仪表盘）同时开启 ingressKubernetes Dashboard是Kubernetes集群的基于Web的通用UI。 它允许用户管理在群集中运行的应用程序并对其进行故障排除，以及管理群集本身。
 Step1: 为 dashboard 创建 service account我们创建一个命名空间在 kube-system 中， 名为 kubernetes-dashboard 的 Service Account:
-12345apiVersion: v1kind: ServiceAccountmetadata:  name: kubernetes-dashboard  ...
+12345apiVersion: v1kind: ServiceAccountmetadata:  name: kubernetes...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
@@ -851,8 +851,6 @@ docker安装完毕
     
     
     
-    
-    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 19
@@ -871,7 +869,7 @@ docker安装完毕
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2019/03/15/Install-K8S-dashboard/" >Install-K8S-dashboard</a>
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2019/03/15/Install-K8S-dashboard/" >Install-K8S-dashboard-with-ingress</a>
         </li>
     
     
