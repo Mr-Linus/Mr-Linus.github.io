@@ -434,7 +434,7 @@ height:50vh;
 <h3 id="Step6-为-dashboard-创建-ingress"><a href="#Step6-为-dashboard-创建-ingress" class="headerlink" title="Step6:  为 dashboard 创建 ingress"></a>Step6:  为 dashboard 创建 ingress</h3><h4 id="6-1-生成证书"><a href="#6-1-生成证书" class="headerlink" title="6.1 生成证书:"></a>6.1 生成证书:</h4><p>这里我推荐使用 <a href="https://freessl.cn/" target="_blank" rel="noopener">Free SSL</a> 提供的免费 TLS 证书，直接通过 DNS 解析获取证书，而且各种浏览器都是小绿锁。</p>
 <h4 id="6-2-上传证书到集群"><a href="#6-2-上传证书到集群" class="headerlink" title="6.2 上传证书到集群:"></a>6.2 上传证书到集群:</h4><p>在证书的文件夹里存在 <code>full_chain.pem</code>, <code>private.key</code> 两个文件，一个是公钥，一个是私钥</p>
 <h4 id="6-3-为创建-TLS-类型的-Secret"><a href="#6-3-为创建-TLS-类型的-Secret" class="headerlink" title="6.3 为创建 TLS  类型的 Secret:"></a>6.3 为创建 <code>TLS</code>  类型的 <code>Secret</code>:</h4><p>在终端中执行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> kubectl create secret -n kube-system tls dashboard-tls --key private.key --cert full_chain.pem</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl create secret -n kube-system tls dashboard-tls --key private.key --cert full_chain.pem</span></span><br></pre></td></tr></table></figure>
 <h4 id="6-4-创建-Ingress"><a href="#6-4-创建-Ingress" class="headerlink" title="6.4 创建 Ingress"></a>6.4 创建 Ingress</h4><ul>
 <li>开启 <code>TLS</code> 情况：</li>
 </ul>
@@ -446,16 +446,16 @@ height:50vh;
 </ul>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Ingress</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">dashboard-ingress</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">kube-system</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  rules:</span></span><br><span class="line"><span class="attr">  - host:</span> <span class="string">dashboard.example.top</span></span><br><span class="line"><span class="attr">    http:</span></span><br><span class="line"><span class="attr">      paths:</span></span><br><span class="line"><span class="attr">      - backend:</span></span><br><span class="line"><span class="attr">          serviceName:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="attr">          servicePort:</span> <span class="number">80</span></span><br></pre></td></tr></table></figure>
 <h4 id="Step7-查找-dashboard-登录-Token"><a href="#Step7-查找-dashboard-登录-Token" class="headerlink" title="Step7:  查找 dashboard 登录 Token"></a>Step7:  查找 dashboard 登录 Token</h4><p>在终端中输入：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> kubectl get secret -n kube-system | grep kubernetes-dashboard</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl get secret -n kube-system | grep kubernetes-dashboard</span></span><br></pre></td></tr></table></figure>
 <p>你会看见如下输出：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kubernetes-dashboard-certs                       Opaque                                0      34h</span><br><span class="line">kubernetes-dashboard-key-holder                  Opaque                                2      37h</span><br><span class="line">kubernetes-dashboard-token-xxxxxx                kubernetes.io/service-account-token   3      34h</span><br></pre></td></tr></table></figure>
 <p>获取 Token：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> kubectl -n kube-system describe secret kubernetes-dashboard-token-xxxxx</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl -n kube-system describe secret kubernetes-dashboard-token-xxxxx</span></span><br></pre></td></tr></table></figure>
 <p>你会看见如下输出：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Name:         kubernetes-dashboard-token-qnwp5</span><br><span class="line">Namespace:    kube-system</span><br><span class="line">Labels:       &lt;none&gt;</span><br><span class="line">Annotations:  kubernetes.io/service-account.name: kubernetes-dashboard</span><br><span class="line">              kubernetes.io/service-account.uid: c106fd9e-4614-11e9-81b0-525400ea5ba6</span><br><span class="line"></span><br><span class="line">Type:  kubernetes.io/service-account-token</span><br><span class="line"></span><br><span class="line">Data</span><br><span class="line">====</span><br><span class="line">namespace:  11 bytes</span><br><span class="line">token:      asdasdasdasdasdasdasdasd</span><br><span class="line">ca.crt:     1025 bytes</span><br></pre></td></tr></table></figure>
 <p>那么 <code>token</code> 对应的就是你登录 <code>dashboard</code> 需要的 <code>token</code> 。</p>
 <p>或者直接通过下面的命令实现token获取：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> kubectl -n kube-system describe secrets kubernetes-dashboard-token |awk -F'token:      '  'NR==13  &#123; print $2  &#125;'</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> kubectl -n kube-system describe secrets kubernetes-dashboard-token |awk -F<span class="string">'token:      '</span>  <span class="string">'NR==13  &#123; print $2  &#125;'</span></span></span><br></pre></td></tr></table></figure>
 <p>至此，<code>dashboard</code> 搭建完毕!</p>
 <blockquote>
 <p>本文代码地址：<a href="https://github.com/Mr-Linus/k8s-example/tree/master/dashboard" target="_blank" rel="noopener">https://github.com/Mr-Linus/k8s-example/tree/master/dashboard</a></p>
@@ -475,6 +475,11 @@ height:50vh;
     <!-- paginator  -->
     <ul class="post-paginator">
         <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2019/03/18/Install-Helm-with-k8s/" title= "Install-Helm-with-k8s">
+                    <div class="nextTitle">Install-Helm-with-k8s</div>
+                </a>
             
         </li>
         <li class="previous">
@@ -832,9 +837,26 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 19
+        Total : 20
         </div>
         <!-- search  -->
         
@@ -847,6 +869,11 @@ top:50vh;
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span><a class="archive-post-title" href= "/2019/03/18/Install-Helm-with-k8s/" >Install-Helm-with-k8s</a>
+        </li>
     
     
         <li class="archive-post-item">
