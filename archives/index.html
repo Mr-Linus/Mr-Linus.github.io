@@ -346,6 +346,40 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2019/03/25/Install-istio-with-helm/" >
+            
+                <span>Install-istio-with-helm</span>
+        </a>
+        <div class="abstract-content">
+            使用 Helm 安装 istio v1.1一、下载 Istio
+你可以通过以下官方提供的脚本安装最新版本的 istio，也可以通过设置ISTIO_VERSION对应的版本安装指定版本的 istio：
+
+1$ curl -L https://git.io/getLatestIstio | ISTIO_VERSION=1.1.0 sh -
+执行完毕您将看见如下输出：
+12345678910111213  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current                  ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/25</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "istio">istio</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2019/03/18/Install-Helm-with-k8s/" >
             
                 <span>Install-Helm-with-k8s</span>
@@ -644,40 +678,10 @@ docker安装完毕
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/08/20/Linux-namespace/" >
-            
-                <span>Views about Namespace &amp; Cgroups of Linux Kernel</span>
-        </a>
-        <div class="abstract-content">
-            浅谈 Linux 内核中的 Namespace 与 Cgroups我是在学习 Docker 的时候接触的这两个概念，这两个内核功能也贯穿整个 Docker 容器的运作。那么我们下面简单的谈一谈这两个概念。本章使用自己开发的donkey runtime 与 docker 同步做对比。
-NamespaceNamespace 也叫命名空间，是 Linux kernel 的一个功能，以下简称NS，他可以隔离一系列的系统资源，比如 PID、UserID、Network等。在 Docker 中，NS 更多的用于做系统的隔离，比如让不同的用户只能访问自己的服务，让每个容器在自己的 root 的环境下运...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/08/20</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/">NEXT &#62;</a>
+        <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/2/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -994,9 +998,26 @@ NamespaceNamespace 也叫命名空间，是 Linux kernel 的一个功能，以�
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 20
+        Total : 21
         </div>
         <!-- search  -->
         
@@ -1009,6 +1030,11 @@ NamespaceNamespace 也叫命名空间，是 Linux kernel 的一个功能，以�
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span><a class="archive-post-title" href= "/2019/03/25/Install-istio-with-helm/" >Install-istio-with-helm</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1142,6 +1168,8 @@ NamespaceNamespace 也叫命名空间，是 Linux kernel 的一个功能，以�
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="k8s"><span class="iconfont-archer">&#xe606;</span>k8s</span>
+    
+        <span class="sidebar-tag-name" data-tags="istio"><span class="iconfont-archer">&#xe606;</span>istio</span>
     
         <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
     
