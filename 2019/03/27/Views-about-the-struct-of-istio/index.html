@@ -22,7 +22,7 @@
     <meta name="description" content="It's Funky's NoteBook">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>Graph traversal  of Data Structure · Funky&#39;s NoteBook</title>
+    <title>Views about the struct of istio · Funky&#39;s NoteBook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -217,7 +217,7 @@
                 <a href="/" >Funky&#39;s NoteBook</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">Graph traversal  of Data Structure</a>
+                <a href="#" class="post-name">Views about the struct of istio</a>
             </div>
     </div>
     
@@ -247,7 +247,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            Graph traversal  of Data Structure
+            Views about the struct of istio
             <!-- 404 -->
             
         </h1>
@@ -266,18 +266,18 @@ height:50vh;
                 
                     <div class= post-intro-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Data Structure">Data Structure</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "istio">istio</a>
     
 </div>
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">794</span>阅读时长: <span class="post-count reading-time">4 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">2,981</span>阅读时长: <span class="post-count reading-time">10 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2017/12/12</span>
+                    <span class="post-intro-time">2019/03/27</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -401,42 +401,81 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h2 id="图的遍历"><a href="#图的遍历" class="headerlink" title="图的遍历"></a>图的遍历</h2><ul>
-<li>广度优先搜索 （Breath-First-Search,BFS）</li>
-<li>深度优先搜索 （Depth-First-Search,DFS）</li>
+        <h1 id="浅谈-Istio-架构"><a href="#浅谈-Istio-架构" class="headerlink" title="浅谈 Istio 架构"></a>浅谈 Istio 架构</h1><p>​    使用云平台可以为组织提供丰富的好处。然而，不可否认的是，采用云可能会给 DevOps 团队带来压力。开发人员必须使用微服务以满足应用的可移植性，同时运营商管理了极其庞大的混合和多云部署。</p>
+<p>​    在较高的层次上，Istio 有助于降低这些部署的复杂性，并减轻开发团队的压力。它是一个完全开源的服务网格，可以透明地分层到现有的分布式应用程序上。它也是一个平台，包括允许它集成到任何日志记录平台、遥测或策略系统的 API。Istio 的多样化功能集使您能够成功高效地运行分布式微服务架构，并提供保护、连接和监控微服务的统一方法。</p>
+<h2 id="什么是服务网格？"><a href="#什么是服务网格？" class="headerlink" title="什么是服务网格？"></a>什么是服务网格？</h2><p>​    <strong>服务网格（Service Mesh）</strong>这个术语通常用于描述构成这些应用程序的微服务网络以及应用之间的交互。随着规模和复杂性的增长，服务网格越来越难以理解和管理。它的需求包括服务发现、负载均衡、故障恢复、指标收集和监控以及通常更加复杂的运维需求，例如 A/B 测试、金丝雀发布、限流、访问控制和端到端认证等。</p>
+<p>​    Istio 提供了一个完整的解决方案，通过为整个服务网格提供行为洞察和操作控制来满足微服务应用程序的多样化需求。</p>
+<p>​    Istio 提供一种简单的方式来为已部署的服务建立网络，该网络具有负载均衡、服务间认证、监控等功能，只需要对服务的代码进行<a href="https://istio.io/zh/docs/tasks/telemetry/distributed-tracing/overview/#understanding-what-happened" target="_blank" rel="noopener">一点</a>或不需要做任何改动。想要让服务支持 Istio，只需要在您的环境中部署一个特殊的 sidecar 代理，使用 Istio 控制平面功能配置和管理代理，拦截微服务之间的所有网络通信：</p>
+<ul>
+<li>HTTP、gRPC、WebSocket 和 TCP 流量的自动负载均衡。</li>
+<li>通过丰富的路由规则、重试、故障转移和故障注入，可以对流量行为进行细粒度控制。</li>
+<li>可插入的策略层和配置 API，支持访问控制、速率限制和配额。</li>
+<li>对出入集群入口和出口中所有流量的自动度量指标、日志记录和追踪。</li>
+<li>通过强大的基于身份的验证和授权，在集群中实现安全的服务间通信。</li>
 </ul>
-<h3 id="常识"><a href="#常识" class="headerlink" title="常识"></a>常识</h3><p>图：Graph (G)<br>顶点（节点）：Vertex (V)<br>边：Edge (E)</p>
-<h3 id="BFS-广度优先搜索"><a href="#BFS-广度优先搜索" class="headerlink" title="BFS 广度优先搜索"></a>BFS 广度优先搜索</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> visited[MaxNum];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BFSTraverse</span><span class="params">(Graph G)</span></span>&#123;</span><br><span class="line">    Queue Q;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;G.vexnum;++i)&#123; <span class="comment">//数组下标初始化</span></span><br><span class="line">        visited[i]=False;</span><br><span class="line">    &#125;</span><br><span class="line">    InitQueue Q;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;G.vexnum;++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(!visited[i])&#123; <span class="comment">//对每个连通分量调用一次BFS</span></span><br><span class="line">            BFS(G,i); <span class="comment">//i如果没被访问，从i开始BFS</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">BFS</span><span class="params">(Graph G,<span class="keyword">int</span> v)</span></span>&#123;</span><br><span class="line">    visit(v);</span><br><span class="line">    visited[v]=True;</span><br><span class="line">    EnQueue(Q,v);</span><br><span class="line">    <span class="keyword">while</span>(!IsEmpty(Q))&#123;</span><br><span class="line">        DeQueue(Q,v);</span><br><span class="line">        <span class="keyword">for</span>(w=FirstNeighbour(G,v);w&gt;=<span class="number">0</span>;w=NextNeighbor(G,v,w))&#123;</span><br><span class="line">            <span class="keyword">if</span>(!visited[w])&#123;</span><br><span class="line">                visit(w);</span><br><span class="line">                visited[w]=True;</span><br><span class="line">                EnQueue(Q,w);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="BFS-性能分析"><a href="#BFS-性能分析" class="headerlink" title="BFS 性能分析"></a>BFS 性能分析</h4><blockquote>
-<p>空间复杂度：$O(|V|)$<br>时间复杂度：$O(|V|^2)$</p>
-<h3 id="BFS算法求单源最短路径"><a href="#BFS算法求单源最短路径" class="headerlink" title="BFS算法求单源最短路径"></a>BFS算法求单源最短路径</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">min_Distance</span><span class="params">(Graph G,<span class="keyword">int</span> u)</span></span>&#123;</span><br><span class="line">    <span class="comment">//d[i]表示从u到i节点的最短路径</span></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>;i&lt;G.vexnum;++i)&#123;</span><br><span class="line">        d[i]=MaxSize; <span class="comment">//初始化长度</span></span><br><span class="line">    &#125;</span><br><span class="line">    visited[u]=True;</span><br><span class="line">    d[u]=<span class="number">0</span>;</span><br><span class="line">    EnQueue(Q,u);</span><br><span class="line">    <span class="keyword">while</span>(!IsEmpty(Q))&#123;</span><br><span class="line">        DeQueue(Q,u);</span><br><span class="line">        <span class="keyword">for</span>(w=FirstNeighbour(G,u),w&gt;=<span class="number">0</span>;w=NextNeighbour(G,u,w))&#123;</span><br><span class="line">            <span class="keyword">if</span>(!visited[w])&#123;</span><br><span class="line">                visited[w]=True;</span><br><span class="line">                d[w]=d[u]+<span class="number">1</span>;</span><br><span class="line">                EnQueue(Q,w);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h3 id="DFS-深度优先搜索"><a href="#DFS-深度优先搜索" class="headerlink" title="DFS 深度优先搜索"></a>DFS 深度优先搜索</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> visited[MaxNum];</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DFSTraverse</span><span class="params">(Graph G)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(v=<span class="number">0</span>;v&lt;G.vexnum;++v)&#123;</span><br><span class="line">        visited[v]=False;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(v=<span class="number">0</span>;v&lt;G.vexnum;++v)&#123;</span><br><span class="line">        <span class="keyword">if</span>(!visited[v])&#123;</span><br><span class="line">            DFS(G,v);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">DFS</span><span class="params">(Graph G,<span class="keyword">int</span> v)</span></span>&#123;</span><br><span class="line">    visit(v);</span><br><span class="line">    visited[v]=True;</span><br><span class="line">    <span class="keyword">for</span>(w=FirstNeighbour(G,v);w&gt;=<span class="number">0</span>;w=NextNeighbour(G,v,w))&#123;</span><br><span class="line">        DFS(G,w);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="DFS性能分析"><a href="#DFS性能分析" class="headerlink" title="DFS性能分析"></a>DFS性能分析</h4><blockquote>
-<p>空间复杂度： $O(|V|)$<br>时间复杂度： $O(|V|+|E|)$</p>
-</blockquote>
-<h2 id="Hash表"><a href="#Hash表" class="headerlink" title="Hash表"></a>Hash表</h2><h3 id="散列函数的构造方法"><a href="#散列函数的构造方法" class="headerlink" title="散列函数的构造方法"></a>散列函数的构造方法</h3><ul>
-<li>直接地址法<br>H(key)=a*key+b</li>
-<li>除留余数法<br>H(key)=key%p</li>
-<li>数字分析法<br>如果关键字在某些位数上分布均匀，某些位置上分配不均匀，那么就选在分配均匀的若干位做位散列地址</li>
-<li>平方取中法<br>取关键字的平均值的中间几位作为散列地址</li>
-<li>折叠法<br>将关键字分割成位数相同的几部分，然后取这及部分的叠加作为散列地址</li>
+<p>Istio 旨在实现可扩展性，满足各种部署需求。</p>
+<h2 id="Istio-的核心功能"><a href="#Istio-的核心功能" class="headerlink" title="Istio 的核心功能"></a>Istio 的核心功能</h2><h3 id="流量管理"><a href="#流量管理" class="headerlink" title="流量管理"></a>流量管理</h3><p>通过简单的规则配置和流量路由，您可以控制服务之间的流量和 API 调用。Istio 简化了断路器、超时和重试等服务级别属性的配置，并且可以轻松设置 A/B测试、金丝雀部署和基于百分比的流量分割的分阶段部署等重要任务。</p>
+<p>通过更好地了解您的流量和开箱即用的故障恢复功能，您可以在问题出现之前先发现问题，使调用更可靠，并且使您的网络更加强大——无论您面临什么条件。</p>
+<h3 id="安全"><a href="#安全" class="headerlink" title="安全"></a>安全</h3><p>Istio 的安全功能使开发人员可以专注于应用程序级别的安全性。Istio 提供底层安全通信信道，并大规模管理服务通信的认证、授权和加密。使用Istio，服务通信在默认情况下是安全的，它允许您跨多种协议和运行时一致地实施策略——所有这些都很少或根本不需要应用程序更改。</p>
+<p>虽然 Istio 与平台无关，但将其与 Kubernetes（或基础架构）网络策略结合使用，其优势会更大，包括在网络和应用层保护 pod 间或服务间通信的能力。</p>
+<h3 id="可观察性"><a href="#可观察性" class="headerlink" title="可观察性"></a>可观察性</h3><p>Istio 强大的追踪、监控和日志记录可让您深入了解服务网格部署。通过 Istio 的监控功能，可以真正了解服务性能如何影响上游和下游的功能，而其自定义仪表板可以提供对所有服务性能的可视性，并让您了解该性能如何影响您的其他进程。</p>
+<p>Istio 的 Mixer 组件负责策略控制和遥测收集。它提供后端抽象和中介，将 Istio 的其余部分与各个基础架构后端的实现细节隔离开来，并为运维提供对网格和基础架构后端之间所有交互的细粒度控制。</p>
+<p>所有这些功能可以让您可以更有效地设置、监控和实施服务上的 SLO。当然，最重要的是，您可以快速有效地检测和修复问题。</p>
+<h3 id="平台支持"><a href="#平台支持" class="headerlink" title="平台支持"></a>平台支持</h3><p>Istio 是独立于平台的，旨在运行在各种环境中，包括跨云、内部部署、Kubernetes、Mesos 等。您可以在 Kubernetes 上部署 Istio 或具有 Consul 的 Nomad 上部署。Istio 目前支持：</p>
+<ul>
+<li>在 Kubernetes 上部署的服务</li>
+<li>使用 Consul 注册的服务</li>
+<li>在虚拟机上部署的服务</li>
 </ul>
-<h3 id="处理冲突的方法"><a href="#处理冲突的方法" class="headerlink" title="处理冲突的方法"></a>处理冲突的方法</h3><p>1.开地址法<br>$H_i=(H(key)+d_i) \% m$<br>其中i=1,2,3…k，m为散列表表长,di为增量序列<br>(1)线性探测法<br>发现被占往后存<br>(2) 平方探测法<br>$d_i = 1^2 ,-1^2,2^2,-2^2,…,k^2,-k^2  (k \leq m/2 )$<br>其中m必须是一个可以表示成4k+3的质数。<br>(3) 再散列法<br> $d_i= Hash_2(key)$<br>也称为双散列法<br>(4)伪随机序列法<br>di=伪随机序列</p>
-<blockquote>
-<p>在开地址的情形下，不能随便物理删除已有元素，若删除则会截断与他具有相同的查找地址的元素的查找地址。所以如果想删除一个元素，就给他做删除标记，进行逻辑删除。副作用是表面上看起来散列表很满，但是有很多的位置没有利用。</p>
-</blockquote>
-<p>2.拉链法</p>
-<h3 id="散列表查找性能分析"><a href="#散列表查找性能分析" class="headerlink" title="散列表查找性能分析"></a>散列表查找性能分析</h3><p>$\alpha=\frac{n}{m}$<br>其中n为表中记录数，m为散列表长度</p>
+<h3 id="集成和定制"><a href="#集成和定制" class="headerlink" title="集成和定制"></a>集成和定制</h3><p>策略执行组件可以扩展和定制，以便与现有的 ACL、日志、监控、配额、审计等方案集成。</p>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p>Istio 服务网格逻辑上分为<strong>数据平面</strong>和<strong>控制平面</strong>。</p>
+<ul>
+<li><strong>数据平面</strong>由一组以 sidecar 方式部署的智能代理（<a href="https://www.envoyproxy.io/" target="_blank" rel="noopener">Envoy</a>）组成。这些代理可以调节和控制微服务及 <a href="https://istio.io/zh/docs/concepts/policies-and-telemetry/" target="_blank" rel="noopener">Mixer</a> 之间所有的网络通信。</li>
+<li><strong>控制平面</strong>负责管理和配置代理来路由流量。此外控制平面配置 Mixer 以实施策略和收集遥测数据。</li>
+</ul>
+<p>下图显示了构成每个面板的不同组件：</p>
+<p><img src="https://istio.io/docs/concepts/what-is-istio/arch.svg" alt="Arch"></p>
+<h3 id="Envoy"><a href="#Envoy" class="headerlink" title="Envoy"></a>Envoy</h3><p>Istio 使用 <a href="https://www.envoyproxy.io/" target="_blank" rel="noopener">Envoy</a> 代理的扩展版本，Envoy 是以 C++ 开发的高性能代理，用于调解服务网格中所有服务的所有入站和出站流量。Istio 使用 Envoy 作为 Istio 的 Sidecar 组件，Envoy 的许多内置功能被 Istio 发扬光大，例如：</p>
+<ul>
+<li>动态服务发现</li>
+<li>负载均衡</li>
+<li>TLS 终止</li>
+<li>HTTP/2 &amp; gRPC 代理</li>
+<li>熔断器</li>
+<li>健康检查、基于百分比流量拆分的灰度发布</li>
+<li>故障注入</li>
+<li>丰富的度量指标</li>
+</ul>
+<p>Envoy 被部署为 <strong>sidecar</strong>，和对应服务在同一个 Kubernetes pod 中。这允许 Istio 将大量关于流量行为的信号作为<a href="https://istio.io/zh/docs/concepts/policies-and-telemetry/#%E5%B1%9E%E6%80%A7" target="_blank" rel="noopener">属性</a>提取出来，而这些属性又可以在 <a href="https://istio.io/zh/docs/concepts/policies-and-telemetry/" target="_blank" rel="noopener">Mixer</a> 中用于执行策略决策，并发送给监控系统，以提供整个网格行为的信息。</p>
+<p>Sidecar 代理模型还可以将 Istio 的功能添加到现有部署中，而无需重新构建或重写代码。可以阅读更多来了解为什么我们在<a href="https://istio.io/zh/docs/concepts/what-is-istio/#%E8%AE%BE%E8%AE%A1%E7%9B%AE%E6%A0%87" target="_blank" rel="noopener">设计目标</a>中选择这种方式。</p>
+<h3 id="Mixer"><a href="#Mixer" class="headerlink" title="Mixer"></a>Mixer</h3><p><a href="https://istio.io/zh/docs/concepts/policies-and-telemetry/" target="_blank" rel="noopener">Mixer</a> 是一个独立于平台的组件，负责在服务网格上执行访问控制和使用策略，并从 Envoy 代理和其他服务收集遥测数据。代理提取请求级<a href="https://istio.io/zh/docs/concepts/policies-and-telemetry/#%E5%B1%9E%E6%80%A7" target="_blank" rel="noopener">属性</a>，发送到 Mixer 进行评估。有关属性提取和策略评估的更多信息，请参见 <a href="https://istio.io/zh/docs/concepts/policies-and-telemetry/#%E9%85%8D%E7%BD%AE%E6%A8%A1%E5%9E%8B" target="_blank" rel="noopener">Mixer 配置</a>。</p>
+<p>Mixer 中包括一个灵活的插件模型，使其能够接入到各种主机环境和基础设施后端，从这些细节中抽象出 Envoy 代理和 Istio 管理的服务。</p>
+<h3 id="Pilot"><a href="#Pilot" class="headerlink" title="Pilot"></a>Pilot</h3><p><a href="https://istio.io/zh/docs/concepts/traffic-management/#pilot-%E5%92%8C-envoy" target="_blank" rel="noopener">Pilot</a> 为 Envoy sidecar 提供服务发现功能，为智能路由（例如 A/B 测试、金丝雀部署等）和弹性（超时、重试、熔断器等）提供流量管理功能。它将控制流量行为的高级路由规则转换为特定于 Envoy 的配置，并在运行时将它们传播到 sidecar。</p>
+<p>Pilot 将平台特定的服务发现机制抽象化并将其合成为符合 <a href="https://github.com/envoyproxy/data-plane-api" target="_blank" rel="noopener">Envoy 数据平面 API</a> 的任何 sidecar 都可以使用的标准格式。这种松散耦合使得 Istio 能够在多种环境下运行（例如，Kubernetes、Consul、Nomad），同时保持用于流量管理的相同操作界面。</p>
+<h3 id="Citadel"><a href="#Citadel" class="headerlink" title="Citadel"></a>Citadel</h3><p><a href="https://istio.io/zh/docs/concepts/security/" target="_blank" rel="noopener">Citadel</a> 通过内置身份和凭证管理赋能强大的服务间和最终用户身份验证。可用于升级服务网格中未加密的流量，并为运维人员提供基于服务标识而不是网络控制的强制执行策略的能力。从 0.5 版本开始，Istio 支持<a href="https://istio.io/zh/docs/concepts/security/#%E8%AE%A4%E8%AF%81" target="_blank" rel="noopener">基于角色的访问控制</a>，以控制谁可以访问您的服务，而不是基于不稳定的三层或四层网络标识。</p>
+<h3 id="Galley"><a href="#Galley" class="headerlink" title="Galley"></a>Galley</h3><p>Galley 代表其他的 Istio 控制平面组件，用来验证用户编写的 Istio API 配置。随着时间的推移，Galley 将接管 Istio 获取配置、 处理和分配组件的顶级责任。它将负责将其他的 Istio 组件与从底层平台（例如 Kubernetes）获取用户配置的细节中隔离开来。</p>
+<h2 id="设计目标"><a href="#设计目标" class="headerlink" title="设计目标"></a>设计目标</h2><p>Istio 的架构设计中有几个关键目标，这些目标对于使系统能够应对大规模流量和高性能地服务处理至关重要。</p>
+<ul>
+<li><strong>最大化透明度</strong>：若想 Istio 被采纳，应该让运维和开发人员只需付出很少的代价就可以从中受益。为此，Istio 将自身自动注入到服务间所有的网络路径中。Istio 使用 sidecar 代理来捕获流量，并且在尽可能的地方自动编程网络层，以路由流量通过这些代理，而无需对已部署的应用程序代码进行任何改动。在 Kubernetes中，代理被注入到 pod 中，通过编写 iptables 规则来捕获流量。注入 sidecar 代理到 pod 中并且修改路由规则后，Istio 就能够调解所有流量。这个原则也适用于性能。当将 Istio 应用于部署时，运维人员可以发现，为提供这些功能而增加的资源开销是很小的。所有组件和 API 在设计时都必须考虑性能和规模。</li>
+<li><strong>可扩展性</strong>：随着运维人员和开发人员越来越依赖 Istio 提供的功能，系统必然和他们的需求一起成长。虽然我们期望继续自己添加新功能，但是我们预计最大的需求是扩展策略系统，集成其他策略和控制来源，并将网格行为信号传播到其他系统进行分析。策略运行时支持标准扩展机制以便插入到其他服务中。此外，它允许扩展词汇表，以允许基于网格生成的新信号来执行策略。</li>
+<li><strong>可移植性</strong>：使用 Istio 的生态系统将在很多维度上有差异。Istio 必须能够以最少的代价运行在任何云或预置环境中。将基于 Istio 的服务移植到新环境应该是轻而易举的，而使用 Istio 将一个服务同时部署到多个环境中也是可行的（例如，在多个云上进行冗余部署）。</li>
+<li><strong>策略一致性</strong>：在服务间的 API 调用中，策略的应用使得可以对网格间行为进行全面的控制，但对于无需在 API 级别表达的资源来说，对资源应用策略也同样重要。例如，将配额应用到 ML 训练任务消耗的 CPU 数量上，比将配额应用到启动这个工作的调用上更为有用。因此，策略系统作为独特的服务来维护，具有自己的 API，而不是将其放到代理/sidecar 中，这容许服务根据需要直接与其集成。</li>
+</ul>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><p><a href="https://istio.io/" target="_blank" rel="noopener">Istio 官方文档</a></p>
+</li>
+<li><p>《深入浅出 Istio — ServiceMesh 快速入门实践》</p>
+</li>
+</ul>
 
     </article>
     <!-- license  -->
     
         <div class="license-wrapper">
             <p>原文作者：<a href="http://note.run-linux.com">Linus Lee</a>
-            <p>原文链接：<a href="http://note.run-linux.com/2017/12/12/Graph-traversal/">http://note.run-linux.com/2017/12/12/Graph-traversal/</a>
-            <p>发表日期：<a href="http://note.run-linux.com/2017/12/12/Graph-traversal/">December 12th 2017, 3:53:44 pm</a>
-            <p>更新日期：<a href="http://note.run-linux.com/2017/12/12/Graph-traversal/">July 5th 2018, 1:20:09 am</a>
+            <p>原文链接：<a href="http://note.run-linux.com/2019/03/27/Views-about-the-struct-of-istio/">http://note.run-linux.com/2019/03/27/Views-about-the-struct-of-istio/</a>
+            <p>发表日期：<a href="http://note.run-linux.com/2019/03/27/Views-about-the-struct-of-istio/">March 27th 2019, 9:13:55 pm</a>
+            <p>更新日期：<a href="http://note.run-linux.com/2019/03/27/Views-about-the-struct-of-istio/">March 27th 2019, 9:32:23 pm</a>
             <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -445,16 +484,16 @@ height:50vh;
         <li class="next">
             
                 <div class="nextSlogan">Next Post</div>
-                <a href= "/2017/12/12/Binary-tree/" title= "Binary tree  of Data Structure">
-                    <div class="nextTitle">Binary tree  of Data Structure</div>
+                <a href= "/2019/03/27/Istio-s-traffic-management/" title= "Istio's traffic management">
+                    <div class="nextTitle">Istio's traffic management</div>
                 </a>
             
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/2017/10/28/search/" title= "Search of Data Structure">
-                    <div class="prevTitle">Search of Data Structure</div>
+                <a href= "/2019/03/25/Install-istio-with-helm/" title= "Install Istio using helm">
+                    <div class="prevTitle">Install Istio using helm</div>
                 </a>
             
         </li>
@@ -575,7 +614,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#图的遍历"><span class="toc-number">1.</span> <span class="toc-text">图的遍历</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#常识"><span class="toc-number">1.1.</span> <span class="toc-text">常识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BFS-广度优先搜索"><span class="toc-number">1.2.</span> <span class="toc-text">BFS 广度优先搜索</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#BFS-性能分析"><span class="toc-number">1.2.1.</span> <span class="toc-text">BFS 性能分析</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BFS算法求单源最短路径"><span class="toc-number">1.3.</span> <span class="toc-text">BFS算法求单源最短路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DFS-深度优先搜索"><span class="toc-number">1.4.</span> <span class="toc-text">DFS 深度优先搜索</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#DFS性能分析"><span class="toc-number">1.4.1.</span> <span class="toc-text">DFS性能分析</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hash表"><span class="toc-number">2.</span> <span class="toc-text">Hash表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#散列函数的构造方法"><span class="toc-number">2.1.</span> <span class="toc-text">散列函数的构造方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#处理冲突的方法"><span class="toc-number">2.2.</span> <span class="toc-text">处理冲突的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#散列表查找性能分析"><span class="toc-number">2.3.</span> <span class="toc-text">散列表查找性能分析</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#浅谈-Istio-架构"><span class="toc-number">1.</span> <span class="toc-text">浅谈 Istio 架构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#什么是服务网格？"><span class="toc-number">1.1.</span> <span class="toc-text">什么是服务网格？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Istio-的核心功能"><span class="toc-number">1.2.</span> <span class="toc-text">Istio 的核心功能</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#流量管理"><span class="toc-number">1.2.1.</span> <span class="toc-text">流量管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安全"><span class="toc-number">1.2.2.</span> <span class="toc-text">安全</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#可观察性"><span class="toc-number">1.2.3.</span> <span class="toc-text">可观察性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#平台支持"><span class="toc-number">1.2.4.</span> <span class="toc-text">平台支持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集成和定制"><span class="toc-number">1.2.5.</span> <span class="toc-text">集成和定制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#架构"><span class="toc-number">1.3.</span> <span class="toc-text">架构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Envoy"><span class="toc-number">1.3.1.</span> <span class="toc-text">Envoy</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mixer"><span class="toc-number">1.3.2.</span> <span class="toc-text">Mixer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pilot"><span class="toc-number">1.3.3.</span> <span class="toc-text">Pilot</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Citadel"><span class="toc-number">1.3.4.</span> <span class="toc-text">Citadel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Galley"><span class="toc-number">1.3.5.</span> <span class="toc-text">Galley</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#设计目标"><span class="toc-number">1.4.</span> <span class="toc-text">设计目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文档"><span class="toc-number">1.5.</span> <span class="toc-text">参考文档</span></a></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>

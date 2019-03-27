@@ -346,9 +346,65 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2019/03/27/Istio-s-traffic-management/" >
+            
+                <span>Istio&#39;s traffic management</span>
+        </a>
+        <div class="abstract-content">
+            Istio 流量管理使用 Istio 的流量管理模型，本质上是将流量与基础设施扩容解耦，让运维人员可以通过 Pilot 指定流量遵循什么规则，而不是指定哪些 pod/VM 应该接收流量——Pilot 和智能 Envoy 代理会帮我们搞定。因此，例如，您可以通过 Pilot 指定特定服务的 5％ 流量可以转到金丝雀版本，而不必考虑金丝雀部署的大小，或根据请求的内容将流量发送到特定版本。
+
+将流量从基础设施扩展中解耦，这样就可以让 Istio 提供各种独立于应用程序代码之外的流量管理功能。 除了 A/B 测试的动态请求路由，逐步推出和金丝雀发布之外， 它还使用超时、重试和熔断器来处理故障恢复...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/27</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/03/27/Views-about-the-struct-of-istio/" >
+            
+                <span>Views about the struct of istio</span>
+        </a>
+        <div class="abstract-content">
+            浅谈 Istio 架构​    使用云平台可以为组织提供丰富的好处。然而，不可否认的是，采用云可能会给 DevOps 团队带来压力。开发人员必须使用微服务以满足应用的可移植性，同时运营商管理了极其庞大的混合和多云部署。
+​    在较高的层次上，Istio 有助于降低这些部署的复杂性，并减轻开发团队的压力。它是一个完全开源的服务网格，可以透明地分层到现有的分布式应用程序上。它也是一个平台，包括允许它集成到任何日志记录平台、遥测或策略系统的 API。Istio 的多样化功能集使您能够成功高效地运行分布式微服务架构，并提供保护、连接和监控微服务的统一方法。
+什么是服务网格？​    服务网格...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/27</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "istio">istio</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2019/03/25/Install-istio-with-helm/" >
             
-                <span>Install-istio-with-helm</span>
+                <span>Install Istio using helm</span>
         </a>
         <div class="abstract-content">
             使用 Helm 安装 istio v1.1一、下载 Istio1、你可以通过以下官方提供的脚本安装最新版本的 istio，也可以通过设置ISTIO_VERSION对应的版本安装指定版本的 istio：
@@ -380,7 +436,7 @@
     <article class="index-post">
         <a class="abstract-title" href = "/2019/03/18/Install-Helm-with-k8s/" >
             
-                <span>Install-Helm-with-k8s</span>
+                <span>Install Helm for k8s</span>
         </a>
         <div class="abstract-content">
             为 Kubernetes 集群安装 HelmStep1:  使用官方提供的脚本安装 Helm：使用以下命令安装 Helm：
@@ -408,7 +464,7 @@
     <article class="index-post">
         <a class="abstract-title" href = "/2019/03/15/Install-K8S-dashboard/" >
             
-                <span>Install-K8S-dashboard-with-ingress</span>
+                <span>Install K8S dashboard with ingress</span>
         </a>
         <div class="abstract-content">
             安装 kubernetes dashboard（仪表盘）同时开启 ingressKubernetes Dashboard是Kubernetes集群的基于Web的通用UI。 它允许用户管理在群集中运行的应用程序并对其进行故障排除，以及管理群集本身。
@@ -801,9 +857,37 @@ docker安装完毕
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 21
+        Total : 23
         </div>
         <!-- search  -->
         
@@ -819,17 +903,27 @@ docker安装完毕
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/25</span><a class="archive-post-title" href= "/2019/03/25/Install-istio-with-helm/" >Install-istio-with-helm</a>
+            <span class="archive-post-date">03/27</span><a class="archive-post-title" href= "/2019/03/27/Views-about-the-struct-of-istio/" >Views about the struct of istio</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/18</span><a class="archive-post-title" href= "/2019/03/18/Install-Helm-with-k8s/" >Install-Helm-with-k8s</a>
+            <span class="archive-post-date">03/27</span><a class="archive-post-title" href= "/2019/03/27/Istio-s-traffic-management/" >Istio's traffic management</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2019/03/15/Install-K8S-dashboard/" >Install-K8S-dashboard-with-ingress</a>
+            <span class="archive-post-date">03/25</span><a class="archive-post-title" href= "/2019/03/25/Install-istio-with-helm/" >Install Istio using helm</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span><a class="archive-post-title" href= "/2019/03/18/Install-Helm-with-k8s/" >Install Helm for k8s</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2019/03/15/Install-K8S-dashboard/" >Install K8S dashboard with ingress</a>
         </li>
     
     

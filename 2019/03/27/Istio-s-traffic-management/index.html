@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Linus Lee">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Linus Lee">
+    
+    <meta name="keywords" content="Funky's NoteBook,Linus Lee">
+    
+    <meta name="description" content="It's Funky's NoteBook">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>Istio&#39;s traffic management · Funky&#39;s NoteBook</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/gun.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Funky&#39;s NoteBook</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Istio's traffic management</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Funky's NoteBook</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Istio's traffic management
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">7,153</span>阅读时长: <span class="post-count reading-time">28 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/03/27</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="Istio-流量管理"><a href="#Istio-流量管理" class="headerlink" title="Istio 流量管理"></a>Istio 流量管理</h1><p>使用 Istio 的流量管理模型，本质上是将流量与基础设施扩容解耦，让运维人员可以通过 Pilot 指定流量遵循什么规则，而不是指定哪些 pod/VM 应该接收流量——Pilot 和智能 Envoy 代理会帮我们搞定。因此，例如，您可以通过 Pilot 指定特定服务的 5％ 流量可以转到金丝雀版本，而不必考虑金丝雀部署的大小，或根据请求的内容将流量发送到特定版本。</p>
+<p><img src="https://istio.io/docs/concepts/traffic-management/TrafficManagementOverview.svg" alt="Istio 流量管理"></p>
+<p>将流量从基础设施扩展中解耦，这样就可以让 Istio 提供各种独立于应用程序代码之外的流量管理功能。 除了 A/B 测试的动态<a href="https://istio.io/zh/docs/concepts/traffic-management/#%E8%AF%B7%E6%B1%82%E8%B7%AF%E7%94%B1" target="_blank" rel="noopener">请求路由</a>，逐步推出和金丝雀发布之外， 它还使用超时、重试和熔断器来处理<a href="https://istio.io/zh/docs/concepts/traffic-management/#%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86" target="_blank" rel="noopener">故障恢复</a>， 最后还可以通过<a href="https://istio.io/zh/docs/concepts/traffic-management/#%E6%95%85%E9%9A%9C%E6%B3%A8%E5%85%A5" target="_blank" rel="noopener">故障注入</a>来测试服务之间故障恢复策略的兼容性。 这些功能都是通过在服务网格中部署的 Envoy sidecar/代理来实现的。</p>
+<h2 id="Pilot-和-Envoy"><a href="#Pilot-和-Envoy" class="headerlink" title="Pilot 和 Envoy"></a>Pilot 和 Envoy</h2><p>Istio 流量管理的核心组件是 <a href="https://istio.io/zh/docs/concepts/traffic-management/#pilot-%E5%92%8C-envoy" target="_blank" rel="noopener">Pilot</a>，它管理和配置部署在特定 Istio 服务网格中的所有 Envoy 代理实例。它允许您指定在 Envoy 代理之间使用什么样的路由流量规则，并配置故障恢复功能，如超时、重试和熔断器。它还维护了网格中所有服务的规范模型，并使用这个模型通过发现服务让 Envoy 了解网格中的其他实例。</p>
+<p>每个 Envoy 实例都会维护<a href="https://istio.io/zh/docs/concepts/traffic-management/#%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0%E5%92%8C%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1" target="_blank" rel="noopener">负载均衡信息</a>信息，这些信息来自 Pilot 以及对负载均衡池中其他实例的定期健康检查。从而允许其在目标实例之间智能分配流量，同时遵循其指定的路由规则。</p>
+<p>Pilot 负责管理通过 Istio 服务网格发布的 Envoy 实例的生命周期。</p>
+<p><a href="https://istio.io/docs/concepts/traffic-management/PilotAdapters.svg" target="_blank" rel="noopener"><img src="https://istio.io/docs/concepts/traffic-management/PilotAdapters.svg" alt="Pilot 架构"></a></p>
+<p>如上图所示，在网格中 Pilot 维护了一个服务的规则表示并独立于底层平台。Pilot中的特定于平台的适配器负责适当地填充这个规范模型。例如，在 Pilot 中的 Kubernetes 适配器实现了必要的控制器，来观察 Kubernetes API 服务器，用于更改 pod 的注册信息、入口资源以及存储流量管理规则的第三方资源。这些数据被转换为规范表示。然后根据规范表示生成特定的 Envoy 的配置。</p>
+<p>Pilot 公开了用于服务发现 、负载均衡池和路由表的动态更新的 API。</p>
+<p>运维人员可以通过 <a href="https://istio.io/docs/reference/config/networking/" target="_blank" rel="noopener">Pilot 的 Rules API</a> 指定高级流量管理规则。这些规则被翻译成低级配置，并通过 discovery API 分发到 Envoy 实例。</p>
+<h2 id="请求路由"><a href="#请求路由" class="headerlink" title="请求路由"></a>请求路由</h2><p>如 <a href="https://istio.io/zh/docs/concepts/traffic-management/#pilot-%E5%92%8C-envoy" target="_blank" rel="noopener">Pilot</a> 所述，特定网格中服务的规范表示由 Pilot 维护。服务的 Istio 模型和在底层平台（Kubernetes、Mesos 以及 Cloud Foundry 等）中的表达无关。特定平台的适配器负责从各自平台中获取元数据的各种字段，然后对服务模型进行填充。</p>
+<p>Istio 引入了服务版本的概念，可以通过版本（<code>v1</code>、<code>v2</code>）或环境（<code>staging</code>、<code>prod</code>）对服务进行进一步的细分。这些版本不一定是不同的 API 版本：它们可能是部署在不同环境（prod、staging 或者 dev 等）中的同一服务的不同迭代。使用这种方式的常见场景包括 A/B 测试或金丝雀部署。Istio 的<a href="https://istio.io/zh/docs/concepts/traffic-management/#%E8%A7%84%E5%88%99%E9%85%8D%E7%BD%AE" target="_blank" rel="noopener">流量路由规则</a>可以根据服务版本来对服务之间流量进行附加控制。</p>
+<h3 id="服务之间的通讯"><a href="#服务之间的通讯" class="headerlink" title="服务之间的通讯"></a>服务之间的通讯</h3><p><a href="https://istio.io/docs/concepts/traffic-management/ServiceModel_Versions.svg" target="_blank" rel="noopener"><img src="https://istio.io/docs/concepts/traffic-management/ServiceModel_Versions.svg" alt="服务版本的处理。"></a></p>
+<p>服务版本</p>
+<p>如上图所示，服务的客户端不知道服务不同版本间的差异。它们可以使用服务的主机名或者 IP 地址继续访问服务。Envoy sidecar/代理拦截并转发客户端和服务器之间的所有请求和响应。</p>
+<p>运维人员使用 Pilot 指定路由规则，Envoy 根据这些规则动态地确定其服务版本的实际选择。该模型使应用程序代码能够将它从其依赖服务的演进中解耦出来，同时提供其他好处（参见 <a href="https://istio.io/zh/docs/concepts/policies-and-telemetry/" target="_blank" rel="noopener">Mixer</a>）。路由规则让 Envoy 能够根据诸如 header、与源/目的地相关联的标签和/或分配给每个版本的权重等标准来进行版本选择。</p>
+<p>Istio 还为同一服务版本的多个实例提供流量负载均衡。可以在<a href="https://istio.io/zh/docs/concepts/traffic-management/#%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0%E5%92%8C%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1" target="_blank" rel="noopener">服务发现和负载均衡</a>中找到更多信息。</p>
+<p>Istio 不提供 DNS。应用程序可以尝试使用底层平台（<code>kube-dns</code>、<code>mesos-dns</code> 等）中存在的 DNS 服务来解析 FQDN。</p>
+<h3 id="Ingress-和-Egress"><a href="#Ingress-和-Egress" class="headerlink" title="Ingress 和 Egress"></a>Ingress 和 Egress</h3><p>Istio 假定进入和离开服务网络的所有流量都会通过 Envoy 代理进行传输。通过将 Envoy 代理部署在服务之前，运维人员可以针对面向用户的服务进行 A/B 测试、部署金丝雀服务等。类似地，通过使用 Envoy 将流量路由到外部 Web 服务（例如，访问 Maps API 或视频服务 API）的方式，运维人员可以为这些服务添加超时控制、重试、断路器等功能，同时还能从服务连接中获取各种细节指标。</p>
+<p><a href="https://istio.io/docs/concepts/traffic-management/ServiceModel_RequestFlow.svg" target="_blank" rel="noopener"><img src="https://istio.io/docs/concepts/traffic-management/ServiceModel_RequestFlow.svg" alt="通过 Envoy 的 Ingress 和 Egress。"></a></p>
+<p>请求流</p>
+<h2 id="服务发现和负载均衡"><a href="#服务发现和负载均衡" class="headerlink" title="服务发现和负载均衡"></a>服务发现和负载均衡</h2><p>Istio 负载均衡服务网格中实例之间的通信。</p>
+<p>Istio 假定存在服务注册表，以追踪应用程序中服务的 pod/VM。它还假设服务的新实例自动注册到服务注册表，并且不健康的实例将被自动删除。诸如 Kubernetes、Mesos 等平台已经为基于容器的应用程序提供了这样的功能。为基于虚拟机的应用程序提供的解决方案就更多了。</p>
+<p>Pilot 使用来自服务注册的信息，并提供与平台无关的服务发现接口。网格中的 Envoy 实例执行服务发现，并相应地动态更新其负载均衡池。</p>
+<p><a href="https://istio.io/docs/concepts/traffic-management/LoadBalancing.svg" target="_blank" rel="noopener"><img src="https://istio.io/docs/concepts/traffic-management/LoadBalancing.svg" alt="发现与负载均衡"></a></p>
+<p>发现与负载均衡</p>
+<p>如上图所示，网格中的服务使用其 DNS 名称访问彼此。服务的所有 HTTP 流量都会通过 Envoy 自动重新路由。Envoy 在负载均衡池中的实例之间分发流量。虽然 Envoy 支持多种<a href="https://www.envoyproxy.io/docs/envoy/latest/intro/arch_overview/load_balancing/load_balancing" target="_blank" rel="noopener">复杂的负载均衡算法</a>，但 Istio 目前仅允许三种负载均衡模式：轮询、随机和带权重的最少请求。</p>
+<p>除了负载均衡外，Envoy 还会定期检查池中每个实例的运行状况。Envoy 遵循熔断器风格模式，根据健康检查 API 调用的失败率将实例分类为不健康和健康两种。换句话说，当给定实例的健康检查失败次数超过预定阈值时，将会被从负载均衡池中弹出。类似地，当通过的健康检查数超过预定阈值时，该实例将被添加回负载均衡池。您可以在<a href="https://istio.io/zh/docs/concepts/traffic-management/#%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86" target="_blank" rel="noopener">处理故障</a>中了解更多有关 Envoy 的故障处理功能。</p>
+<p>服务可以通过使用 HTTP 503 响应健康检查来主动减轻负担。在这种情况下，服务实例将立即从调用者的负载均衡池中删除。</p>
+<h2 id="故障处理"><a href="#故障处理" class="headerlink" title="故障处理"></a>故障处理</h2><p>Envoy 提供了一套开箱即用，<strong>可选的</strong>的故障恢复功能，对应用中的服务大有裨益。这些功能包括：</p>
+<ol>
+<li>超时</li>
+<li>具备超时预算，并能够在重试之间进行可变抖动（间隔）的有限重试功能</li>
+<li>并发连接数和上游服务请求数限制</li>
+<li>对负载均衡池中的每个成员主动（定期）运行健康检查</li>
+<li>细粒度熔断器（被动健康检查）——适用于负载均衡池中的每个实例</li>
+</ol>
+<p>这些功能可以使用 <a href="https://istio.io/zh/docs/concepts/traffic-management/#%E8%A7%84%E5%88%99%E9%85%8D%E7%BD%AE" target="_blank" rel="noopener">Istio 的流量管理规则</a>在运行时进行动态配置。</p>
+<p>对超载的上游服务来说，重试之间的抖动极大的降低了重试造成的影响，而超时预算确保调用方服务在可预测的时间范围内获得响应（成功/失败）。</p>
+<p>主动和被动健康检查（上述 4 和 5 ）的组合最大限度地减少了在负载均衡池中访问不健康实例的机会。当将其与平台级健康检查（例如由 Kubernetes 或 Mesos 支持的检查）相结合时， 可以确保应用程序将不健康的 Pod/容器/虚拟机快速地从服务网格中去除，从而最小化请求失败和延迟产生影响。</p>
+<p>总之，这些功能使得服务网格能够耐受故障节点，并防止本地故障导致的其他节点的稳定性下降。</p>
+<h2 id="故障注入"><a href="#故障注入" class="headerlink" title="故障注入"></a>故障注入</h2><p>虽然 Envoy sidecar/proxy 为在 Istio 上运行的服务提供了大量的<a href="https://istio.io/zh/docs/concepts/traffic-management/#%E6%95%85%E9%9A%9C%E5%A4%84%E7%90%86" target="_blank" rel="noopener">故障恢复机制</a>，但测试整个应用程序端到端的故障恢复能力依然是必须的。错误配置的故障恢复策略（例如，跨服务调用的不兼容/限制性超时）可能导致应用程序中的关键服务持续不可用，从而破坏用户体验。</p>
+<p>Istio 能在不杀死 Pod 的情况下，将特定协议的故障注入到网络中，在 TCP 层制造数据包的延迟或损坏。我们的理由是，无论网络级别的故障如何，应用层观察到的故障都是一样的，并且可以在应用层注入更有意义的故障（例如，HTTP 错误代码），以检验和改善应用的弹性。</p>
+<p>运维人员可以为符合特定条件的请求配置故障，还可以进一步限制遭受故障的请求的百分比。可以注入两种类型的故障：延迟和中断。延迟是计时故障，模拟网络延迟上升或上游服务超载的情况。中断是模拟上游服务的崩溃故障。中断通常以 HTTP 错误代码或 TCP 连接失败的形式表现。</p>
+<h2 id="规则配置"><a href="#规则配置" class="headerlink" title="规则配置"></a>规则配置</h2><p>Istio 提供了一个简单的配置模型，用来控制 API 调用以及应用部署内多个服务之间的四层通信。运维人员可以使用这个模型来配置服务级别的属性，这些属性可以是断路器、超时、重试，以及一些普通的持续发布任务，例如金丝雀发布、A/B 测试、使用百分比对流量进行控制，从而完成应用的逐步发布等。</p>
+<p>Istio 中包含有四种流量管理配置资源，分别是 <code>VirtualService</code>、<code>DestinationRule</code>、<code>ServiceEntry</code> 以及 <code>Gateway</code>。下面会讲一下这几个资源的一些重点。在<a href="https://istio.io/docs/reference/config/networking/" target="_blank" rel="noopener">网络参考</a>中可以获得更多这方面的信息。</p>
+<ul>
+<li><a href="https://istio.io/docs/reference/config/networking/v1alpha3/virtual-service/" target="_blank" rel="noopener"><code>VirtualService</code></a> 在 Istio 服务网格中定义路由规则，控制路由如何路由到服务上。</li>
+<li><a href="https://istio.io/docs/reference/config/networking/v1alpha3/destination-rule/" target="_blank" rel="noopener"><code>DestinationRule</code></a> 是 <code>VirtualService</code> 路由生效后，配置应用与请求的策略集。</li>
+<li><a href="https://istio.io/docs/reference/config/networking/v1alpha3/service-entry/" target="_blank" rel="noopener"><code>ServiceEntry</code></a> 是通常用于在 Istio 服务网格之外启用对服务的请求。</li>
+<li><a href="https://istio.io/docs/reference/config/networking/v1alpha3/gateway/" target="_blank" rel="noopener"><code>Gateway</code></a> 为 HTTP/TCP 流量配置负载均衡器，最常见的是在网格的边缘的操作，以启用应用程序的入口流量。</li>
+</ul>
+<p>例如，将 <code>reviews</code> 服务接收到的流量 100% 地发送到 <code>v1</code> 版本，这一需求可以用下面的规则来实现：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">  http:</span></span><br><span class="line"><span class="attr">  - route:</span></span><br><span class="line"><span class="attr">    - destination:</span></span><br><span class="line"><span class="attr">        host:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">        subset:</span> <span class="string">v1</span></span><br></pre></td></tr></table></figure>
+<p>这个配置的用意是，发送到 <code>reviews</code> 服务（在 <code>hosts</code> 字段中标识）的流量应该被路由到 <code>reviews</code> 服务实例的 <code>v1</code> 子集中。路由中的 <code>subset</code> 制定了一个预定义的子集名称，子集的定义来自于目标规则配置：</p>
+<p>子集指定了一个或多个特定版本的实例标签。例如，在 Kubernetes 中部署 Istio 时，“version: v1” 表示只有包含 “version: v1” 标签版本的 pod 才会接收流量。</p>
+<p>在 <code>DestinationRule</code> 中，你可以添加其他策略，例如：下面的定义指定使用随机负载均衡模式：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">DestinationRule</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  host:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">  trafficPolicy:</span></span><br><span class="line"><span class="attr">    loadBalancer:</span></span><br><span class="line"><span class="attr">      simple:</span> <span class="string">RANDOM</span></span><br><span class="line"><span class="attr">  subsets:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">    labels:</span></span><br><span class="line"><span class="attr">      version:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">v2</span></span><br><span class="line"><span class="attr">    labels:</span></span><br><span class="line"><span class="attr">      version:</span> <span class="string">v2</span></span><br></pre></td></tr></table></figure>
+<p>可以使用 <code>kubectl</code> 命令配置规则。在<a href="https://istio.io/docs/tasks/traffic-management/request-routing/" target="_blank" rel="noopener">配置请求路由任务</a>中包含有配置示例。</p>
+<p>以下部分提供了流量管理配置资源的基本概述。详细信息请查看<a href="https://istio.io/docs/reference/config/networking/" target="_blank" rel="noopener">网络参考</a>。</p>
+<h2 id="Virtual-Service"><a href="#Virtual-Service" class="headerlink" title="Virtual Service"></a>Virtual Service</h2><p><a href="https://istio.io/docs/reference/config/networking/v1alpha3/virtual-service/" target="_blank" rel="noopener"><code>VirtualService</code></a> 定义了控制在 Istio 服务网格中如何路由服务请求的规则。例如一个 Virtual Service 可以把请求路由到不同版本，甚至是可以路由到一个完全不同于请求要求的服务上去。路由可以用很多条件进行判断，例如请求的源和目的地、HTTP 路径和 Header 以及各个服务版本的权重等。</p>
+<h3 id="规则的目标描述"><a href="#规则的目标描述" class="headerlink" title="规则的目标描述"></a>规则的目标描述</h3><p>路由规则对应着一或多个用 <code>VirtualService</code> 配置指定的请求目的主机。这些主机可以是也可以不是实际的目标负载，甚至可以不是同一网格内可路由的服务。例如要给到 <code>reviews</code> 服务的请求定义路由规则，可以使用内部的名称 <code>reviews</code>，也可以用域名 <code>bookinfo.com</code>，<code>VirtualService</code> 可以定义这样的 <code>hosts</code> 字段：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">hosts:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">reviews</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">bookinfo.com</span></span><br></pre></td></tr></table></figure>
+<p><code>hosts</code> 字段用显示或者隐式的方式定义了一或多个完全限定名（FQDN）。上面的 <code>reviews</code>，会隐式的扩展成为特定的 FQDN，例如在 Kubernetes 环境中，全名会从 <code>VirtualService</code> 所在的集群和命名空间中继承而来（比如说 <code>reviews.default.svc.cluster.local</code>）。</p>
+<h3 id="在服务之间分拆流量"><a href="#在服务之间分拆流量" class="headerlink" title="在服务之间分拆流量"></a>在服务之间分拆流量</h3><p>每个路由规则都需要对一或多个有权重的后端进行甄别并调用合适的后端。每个后端都对应一个特定版本的目标服务，服务的版本是依靠标签来区分的。如果一个服务版本包含多个注册实例，那么会根据为该服务定义的负载均衡策略进行路由，缺省策略是 <code>round-robin</code>。</p>
+<p>例如下面的规则会把 25% 的 <code>reviews</code> 服务流量分配给 <code>v2</code> 标签；其余的 75% 流量分配给 <code>v1</code>：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">  http:</span></span><br><span class="line"><span class="attr">  - route:</span></span><br><span class="line"><span class="attr">    - destination:</span></span><br><span class="line"><span class="attr">        host:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">        subset:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">      weight:</span> <span class="number">75</span></span><br><span class="line"><span class="attr">    - destination:</span></span><br><span class="line"><span class="attr">        host:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">        subset:</span> <span class="string">v2</span></span><br><span class="line"><span class="attr">      weight:</span> <span class="number">25</span></span><br></pre></td></tr></table></figure>
+<h3 id="超时和重试"><a href="#超时和重试" class="headerlink" title="超时和重试"></a>超时和重试</h3><p>缺省情况下，HTTP 请求的超时设置为 15 秒，可以使用路由规则来覆盖这个限制：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">  http:</span></span><br><span class="line"><span class="attr">  - route:</span></span><br><span class="line"><span class="attr">    - destination:</span></span><br><span class="line"><span class="attr">        host:</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">        subset:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">    timeout:</span> <span class="number">10</span><span class="string">s</span></span><br></pre></td></tr></table></figure>
+<p>还可以用路由规则来指定某些 http 请求的重试次数。下面的代码可以用来设置最大重试次数，或者在规定时间内一直重试，时间长度同样可以进行覆盖：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">  http:</span></span><br><span class="line"><span class="attr">  - route:</span></span><br><span class="line"><span class="attr">    - destination:</span></span><br><span class="line"><span class="attr">        host:</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">        subset:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">    retries:</span></span><br><span class="line"><span class="attr">      attempts:</span> <span class="number">3</span></span><br><span class="line"><span class="attr">      perTryTimeout:</span> <span class="number">2</span><span class="string">s</span></span><br></pre></td></tr></table></figure>
+<p>注意请求的重试和超时还可以<a href="https://istio.io/zh/docs/concepts/traffic-management/#%E5%BE%AE%E8%B0%83" target="_blank" rel="noopener">针对每个请求分别设置</a>。</p>
+<p><a href="https://istio.io/zh/docs/tasks/traffic-management/request-timeouts/" target="_blank" rel="noopener">请求超时任务</a>中展示了超时控制的相关示例。</p>
+<h3 id="错误注入"><a href="#错误注入" class="headerlink" title="错误注入"></a>错误注入</h3><p>在根据路由规则向选中目标转发 http 请求的时候，可以向其中注入一或多个错误。错误可以是延迟，也可以是退出。</p>
+<p>下面的例子在目标为 <code>ratings:v1</code> 服务的流量中，对其中的 10% 注入 5 秒钟的延迟。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">  http:</span></span><br><span class="line"><span class="attr">  - fault:</span></span><br><span class="line"><span class="attr">      delay:</span></span><br><span class="line"><span class="attr">        percent:</span> <span class="number">10</span></span><br><span class="line"><span class="attr">        fixedDelay:</span> <span class="number">5</span><span class="string">s</span></span><br><span class="line"><span class="attr">    route:</span></span><br><span class="line"><span class="attr">    - destination:</span></span><br><span class="line"><span class="attr">        host:</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">        subset:</span> <span class="string">v1</span></span><br></pre></td></tr></table></figure>
+<p>可以使用其他类型的故障，终止、提前终止请求。例如，模拟失败。</p>
+<p>接下来，在目标为 <code>ratings:v1</code> 服务的流量中，对其中的 10% 注入 HTTP 400 错误。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">  http:</span></span><br><span class="line"><span class="attr">  - fault:</span></span><br><span class="line"><span class="attr">      abort:</span></span><br><span class="line"><span class="attr">        percent:</span> <span class="number">10</span></span><br><span class="line"><span class="attr">        httpStatus:</span> <span class="number">400</span></span><br><span class="line"><span class="attr">    route:</span></span><br><span class="line"><span class="attr">    - destination:</span></span><br><span class="line"><span class="attr">        host:</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">        subset:</span> <span class="string">v1</span></span><br></pre></td></tr></table></figure>
+<p>有时会把延迟和退出同时使用。例如下面的规则对从 <code>reviews:v2</code> 到 <code>ratings:v1</code> 的流量生效，会让所有的请求延迟 5 秒钟，接下来把其中的 10% 退出：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">  http:</span></span><br><span class="line"><span class="attr">  - match:</span></span><br><span class="line"><span class="attr">    - sourceLabels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">        version:</span> <span class="string">v2</span></span><br><span class="line"><span class="attr">    fault:</span></span><br><span class="line"><span class="attr">      delay:</span></span><br><span class="line"><span class="attr">        fixedDelay:</span> <span class="number">5</span><span class="string">s</span></span><br><span class="line"><span class="attr">      abort:</span></span><br><span class="line"><span class="attr">        percent:</span> <span class="number">10</span></span><br><span class="line"><span class="attr">        httpStatus:</span> <span class="number">400</span></span><br><span class="line"><span class="attr">    route:</span></span><br><span class="line"><span class="attr">    - destination:</span></span><br><span class="line"><span class="attr">        host:</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">        subset:</span> <span class="string">v1</span></span><br></pre></td></tr></table></figure>
+<p>可以参考<a href="https://istio.io/zh/docs/tasks/traffic-management/fault-injection/" target="_blank" rel="noopener">错误注入任务</a>，进行这方面的实际体验。</p>
+<h3 id="条件规则"><a href="#条件规则" class="headerlink" title="条件规则"></a>条件规则</h3><p>可以选择让规则只对符合某些要求的请求生效：</p>
+<p><strong>1. 使用工作负载 label 限制特定客户端工作负载</strong>。例如，规则可以指示它仅适用于实现 <code>reviews</code> 服务的工作负载实例（pod）的调用：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">  http:</span></span><br><span class="line"><span class="attr">  - match:</span></span><br><span class="line"><span class="attr">      sourceLabels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">reviews</span></span><br><span class="line">    <span class="string">...</span></span><br></pre></td></tr></table></figure>
+<p><code>sourceLabels</code> 的值取决于服务的实现。例如，在 Kubernetes 中，它可能与相应 Kubernetes 服务的 pod 选择器中使用的 label 相同。</p>
+<p>以上示例还可以进一步细化为仅适用于 <code>reviews</code> 服务版本 <code>v2</code> 负载均衡实例的调用：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">  http:</span></span><br><span class="line"><span class="attr">  - match:</span></span><br><span class="line"><span class="attr">    - sourceLabels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">        version:</span> <span class="string">v2</span></span><br><span class="line">    <span class="string">...</span></span><br></pre></td></tr></table></figure>
+<p><strong>2. 根据 HTTP Header 选择规则</strong>。下面的规则只会对包含了 <code>end-user</code> 标头的来源请求，且值为 <code>jason</code> 的请求生效：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">  http:</span></span><br><span class="line"><span class="attr">  - match:</span></span><br><span class="line"><span class="attr">    - headers:</span></span><br><span class="line"><span class="attr">        end-user:</span></span><br><span class="line"><span class="attr">          exact:</span> <span class="string">jason</span></span><br><span class="line">    <span class="string">...</span></span><br></pre></td></tr></table></figure>
+<p>如果规则中指定了多个标头，则所有相应的标头必须匹配才能应用规则。</p>
+<p><strong>3. 根据请求URI选择规则</strong>。例如，如果 URI 路径以 <code>/api/v1</code> 开头，则以下规则仅适用于请求：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">productpage</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">productpage</span></span><br><span class="line"><span class="attr">  http:</span></span><br><span class="line"><span class="attr">  - match:</span></span><br><span class="line"><span class="attr">    - uri:</span></span><br><span class="line"><span class="attr">        prefix:</span> <span class="string">/api/v1</span></span><br><span class="line">    <span class="string">...</span></span><br></pre></td></tr></table></figure>
+<h3 id="多重匹配条件"><a href="#多重匹配条件" class="headerlink" title="多重匹配条件"></a>多重匹配条件</h3><p>可以同时设置多个匹配条件。在这种情况下，根据嵌套，应用 AND 或 OR 语义。</p>
+<p>如果多个条件嵌套在单个匹配子句中，则条件为 AND。例如，以下规则仅适用于客户端工作负载为 <code>reviews:v2</code> 且请求中包含 <code>jason</code> 的自定义 <code>end-user</code>标头：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">  http:</span></span><br><span class="line"><span class="attr">  - match:</span></span><br><span class="line"><span class="attr">    - sourceLabels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">        version:</span> <span class="string">v2</span></span><br><span class="line"><span class="attr">      headers:</span></span><br><span class="line"><span class="attr">        end-user:</span></span><br><span class="line"><span class="attr">          exact:</span> <span class="string">jason</span></span><br><span class="line">    <span class="string">...</span></span><br></pre></td></tr></table></figure>
+<p>相反，如果条件出现在单独的匹配子句中，则只应用其中一个条件（OR 语义）：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">ratings</span></span><br><span class="line"><span class="attr">  http:</span></span><br><span class="line"><span class="attr">  - match:</span></span><br><span class="line"><span class="attr">    - sourceLabels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">        version:</span> <span class="string">v2</span></span><br><span class="line"><span class="attr">    - headers:</span></span><br><span class="line"><span class="attr">        end-user:</span></span><br><span class="line"><span class="attr">          exact:</span> <span class="string">jason</span></span><br><span class="line">    <span class="string">...</span></span><br></pre></td></tr></table></figure>
+<p>如果客户端工作负载是 <code>reviews:v2</code>，或者请求中包含 <code>jason</code> 的自定义 <code>end-user</code> 标头，则适用此规则。</p>
+<h3 id="优先级"><a href="#优先级" class="headerlink" title="优先级"></a>优先级</h3><p>当对同一目标有多个规则时，会按照在 <code>VirtualService</code> 中的顺序进行应用，换句话说，列表中的第一条规则具有最高优先级。</p>
+<p><strong>为什么优先级很重要：</strong>当对某个服务的路由是完全基于权重的时候，就可以在单一规则中完成。另一方面，如果有多重条件（例如来自特定用户的请求）用来进行路由，就会需要不止一条规则。这样就出现了优先级问题，需要通过优先级来保证根据正确的顺序来执行规则。</p>
+<p>常见的路由模式是提供一或多个高优先级规则，这些优先规则使用源服务以及 Header 来进行路由判断，然后才提供一条单独的基于权重的规则，这些低优先级规则不设置匹配规则，仅根据权重对所有剩余流量进行分流。</p>
+<p>例如下面的 <code>VirtualService</code> 包含了两个规则，所有对 <code>reviews</code> 服务发起的请求，如果 Header 包含 <code>Foo=bar</code>，就会被路由到 <code>v2</code> 实例，而其他请求则会发送给 <code>v1</code> ：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">  http:</span></span><br><span class="line"><span class="attr">  - match:</span></span><br><span class="line"><span class="attr">    - headers:</span></span><br><span class="line"><span class="attr">        Foo:</span></span><br><span class="line"><span class="attr">          exact:</span> <span class="string">bar</span></span><br><span class="line"><span class="attr">    route:</span></span><br><span class="line"><span class="attr">    - destination:</span></span><br><span class="line"><span class="attr">        host:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">        subset:</span> <span class="string">v2</span></span><br><span class="line"><span class="attr">  - route:</span></span><br><span class="line"><span class="attr">    - destination:</span></span><br><span class="line"><span class="attr">        host:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">        subset:</span> <span class="string">v1</span></span><br></pre></td></tr></table></figure>
+<p>注意，基于 Header 的规则具有更高优先级。如果降低它的优先级，那么这一规则就无法生效了，这是因为那些没有限制的权重规则会首先被执行，也就是说所有请求即使包含了符合条件的 <code>Foo</code> 头，也都会被路由到 <code>v1</code>。流量特征被判断为符合一条规则的条件的时候，就会结束规则的选择过程，这就是在存在多条规则时，需要慎重考虑优先级问题的原因。</p>
+<h2 id="目标规则"><a href="#目标规则" class="headerlink" title="目标规则"></a>目标规则</h2><p>在请求被 <code>VirtualService</code> 路由之后，<a href="https://istio.io/docs/reference/config/networking/v1alpha3/destination-rule/" target="_blank" rel="noopener"><code>DestinationRule</code></a> 配置的一系列策略就生效了。这些策略由服务属主编写，包含断路器、负载均衡以及 TLS 等的配置内容。</p>
+<p><code>DestinationRule</code> 还定义了对应目标主机的可路由 <code>subset</code>（例如有命名的版本）。<code>VirtualService</code> 在向特定服务版本发送请求时会用到这些子集。</p>
+<p>下面是 <code>reviews</code> 服务的 <code>DestinationRule</code> 配置策略以及子集：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">DestinationRule</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  host:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">  trafficPolicy:</span></span><br><span class="line"><span class="attr">    loadBalancer:</span></span><br><span class="line"><span class="attr">      simple:</span> <span class="string">RANDOM</span></span><br><span class="line"><span class="attr">  subsets:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">    labels:</span></span><br><span class="line"><span class="attr">      version:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">v2</span></span><br><span class="line"><span class="attr">    labels:</span></span><br><span class="line"><span class="attr">      version:</span> <span class="string">v2</span></span><br><span class="line"><span class="attr">    trafficPolicy:</span></span><br><span class="line"><span class="attr">      loadBalancer:</span></span><br><span class="line"><span class="attr">        simple:</span> <span class="string">ROUND_ROBIN</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">v3</span></span><br><span class="line"><span class="attr">    labels:</span></span><br><span class="line"><span class="attr">      version:</span> <span class="string">v3</span></span><br></pre></td></tr></table></figure>
+<p>注意在单个 <code>DestinationRule</code> 配置中可以包含多条策略（比如 default 和 v2）。</p>
+<h3 id="断路器"><a href="#断路器" class="headerlink" title="断路器"></a>断路器</h3><p>可以用一系列的标准，例如连接数和请求数限制来定义简单的断路器。</p>
+<p>例如下面的 <code>DestinationRule</code> 给 <code>reviews</code> 服务的 <code>v1</code> 版本设置了 100 连接的限制：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">DestinationRule</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  host:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">  subsets:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">    labels:</span></span><br><span class="line"><span class="attr">      version:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">    trafficPolicy:</span></span><br><span class="line"><span class="attr">      connectionPool:</span></span><br><span class="line"><span class="attr">        tcp:</span></span><br><span class="line"><span class="attr">          maxConnections:</span> <span class="number">100</span></span><br></pre></td></tr></table></figure>
+<p>查看断路器演示请查看 <a href="https://istio.io/zh/docs/tasks/traffic-management/circuit-breaking/" target="_blank" rel="noopener">断路器任务</a></p>
+<h3 id="规则评估"><a href="#规则评估" class="headerlink" title="规则评估"></a>规则评估</h3><p>和路由规则类似，<code>DestinationRule</code> 中定义的策略也是和特定的 <code>host</code> 相关联的，如果指定了 <code>subset</code>，那么具体生效的 <code>subset</code> 的决策是由路由规则来决定的。</p>
+<p>规则评估的第一步，是确认 <code>VirtualService</code> 中所请求的主机相对应的路由规则（如果有的话），这一步骤决定了将请求发往目标服务的哪一个 <code>subset</code>（就是特定版本）。下一步，被选中的 <code>subset</code> 如果定义了策略，就会开始是否生效的评估。</p>
+<p><strong>注意：</strong>这一算法需要留心是，为特定 <code>subset</code> 定义的策略，只有在该 <code>subset</code> 被显式的路由时候才能生效。例如下面的配置，只为 <code>review</code> 服务定义了规则（没有对应的 <code>VirtualService</code> 路由规则）。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">DestinationRule</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  host:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">  subsets:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">    labels:</span></span><br><span class="line"><span class="attr">      version:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">    trafficPolicy:</span></span><br><span class="line"><span class="attr">      connectionPool:</span></span><br><span class="line"><span class="attr">        tcp:</span></span><br><span class="line"><span class="attr">          maxConnections:</span> <span class="number">100</span></span><br></pre></td></tr></table></figure>
+<p>既然没有为 <code>reviews</code> 服务定义路由规则，那么就会使用缺省的 <code>round-robin</code> 策略，偶尔会请求到 <code>v1</code> 实例，如果只有一个 <code>v1</code> 实例，那么所有请求都会发送给它。然而上面的策略是永远不会生效的，这是因为，缺省路由是在更底层完成的任务，策略引擎无法获知最终目的，也无法为请求选择匹配的 <code>subset</code>策略。</p>
+<p>有两种方法来解决这个问题。可以把路由策略提高一级，要求他对所有版本生效：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">DestinationRule</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  host:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">  trafficPolicy:</span></span><br><span class="line"><span class="attr">    connectionPool:</span></span><br><span class="line"><span class="attr">      tcp:</span></span><br><span class="line"><span class="attr">        maxConnections:</span> <span class="number">100</span></span><br><span class="line"><span class="attr">  subsets:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">    labels:</span></span><br><span class="line"><span class="attr">      version:</span> <span class="string">v1</span></span><br></pre></td></tr></table></figure>
+<p>还有一个更好的方法，就是为服务定义路由规则，例如给 <code>reviews:v1</code> 加入一个简单的路由规则：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">  http:</span></span><br><span class="line"><span class="attr">  - route:</span></span><br><span class="line"><span class="attr">    - destination:</span></span><br><span class="line"><span class="attr">        host:</span> <span class="string">reviews</span></span><br><span class="line"><span class="attr">        subset:</span> <span class="string">v1</span></span><br></pre></td></tr></table></figure>
+<p>虽然 Istio 在没有定义任何规则的情况下，能将所有来源的流量发送给所有版本的目标服务。然而一旦需要对版本有所区别，就需要制定规则了。从一开始就给每个服务设置缺省规则，是 Istio 世界里推荐的最佳实践。</p>
+<h3 id="Service-Entry"><a href="#Service-Entry" class="headerlink" title="Service Entry"></a>Service Entry</h3><p>Istio 内部会维护一个服务注册表，可以用 <a href="https://istio.io/docs/reference/config/networking/v1alpha3/service-entry/" target="_blank" rel="noopener"><code>ServiceEntry</code></a> 向其中加入额外的条目。通常这个对象用来启用对 Istio 服务网格之外的服务发出请求。例如下面的 <code>ServiceEntry</code> 可以用来允许外部对 <code>*.foo.com</code> 域名上的服务主机的调用。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ServiceEntry</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">foo-ext-svc</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">*.foo.com</span></span><br><span class="line"><span class="attr">  ports:</span></span><br><span class="line"><span class="attr">  - number:</span> <span class="number">80</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">http</span></span><br><span class="line"><span class="attr">    protocol:</span> <span class="string">HTTP</span></span><br><span class="line"><span class="attr">  - number:</span> <span class="number">443</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">https</span></span><br><span class="line"><span class="attr">    protocol:</span> <span class="string">HTTPS</span></span><br></pre></td></tr></table></figure>
+<p><code>ServiceEntry</code> 中使用 <code>hosts</code> 字段来指定目标，字段值可以是一个完全限定名，也可以是个通配符域名。其中包含的白名单，包含一或多个允许网格中服务访问的服务。</p>
+<p><code>ServiceEntry</code> 的配置不仅限于外部服务，它有两种类型：网格内部和网格外部。网格内的条目和其他的内部服务类似，用于显式的将服务加入网格。可以用来把服务作为服务网格扩展的一部分加入不受管理的基础设置（例如加入到基于 Kubernetes 的服务网格中的虚拟机）中。网格外的条目用于表达网格外的服务。对这种条目来说，双向 TLS 认证被禁用，策略实现需要在客户端执行，而不像内部服务请求那样在服务端执行。</p>
+<p>只要 <code>ServiceEntry</code> 涉及到了匹配 <code>hosts</code> 的服务，就可以和 <code>VirtualService</code> 以及 <code>DestinationRule</code> 配合工作。例如下面的规则可以和上面的 <code>ServiceEntry</code>同时使用，在访问 <code>bar.foo.com</code> 的外部服务时，设置一个 10 秒钟的超时。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">bar-foo-ext-svc</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">bar.foo.com</span></span><br><span class="line"><span class="attr">  http:</span></span><br><span class="line"><span class="attr">  - route:</span></span><br><span class="line"><span class="attr">    - destination:</span></span><br><span class="line"><span class="attr">        host:</span> <span class="string">bar.foo.com</span></span><br><span class="line"><span class="attr">    timeout:</span> <span class="number">10</span><span class="string">s</span></span><br></pre></td></tr></table></figure>
+<p>流量的重定向和转发、定义重试和超时以及错误注入策略都支持外部目标。然而由于外部服务没有多版本的概念，因此权重（基于版本）路由就无法实现了。</p>
+<p>参照 <a href="https://istio.io/zh/docs/tasks/traffic-management/egress/" target="_blank" rel="noopener">egress 任务</a>可以了解更多的访问外部服务方面的知识。</p>
+<h3 id="Gateway"><a href="#Gateway" class="headerlink" title="Gateway"></a>Gateway</h3><p><a href="https://istio.io/docs/reference/config/networking/v1alpha3/gateway/" target="_blank" rel="noopener">Gateway</a> 为 HTTP/TCP 流量配置了一个负载均衡，多数情况下在网格边缘进行操作，用于启用一个服务的入口（ingress）流量。</p>
+<p>和 Kubernetes Ingress 不同，Istio <code>Gateway</code> 只配置四层到六层的功能（例如开放端口或者 TLS 配置）。绑定一个 <code>VirtualService</code> 到 <code>Gateway</code> 上，用户就可以使用标准的 Istio 规则来控制进入的 HTTP 和 TCP 流量。</p>
+<p>例如下面提供一个简单的 <code>Gateway</code> 代码，配合一个负载均衡，允许外部针对主机 <code>bookinfo.com</code> 的 https 流量：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Gateway</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">bookinfo-gateway</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  servers:</span></span><br><span class="line"><span class="attr">  - port:</span></span><br><span class="line"><span class="attr">      number:</span> <span class="number">443</span></span><br><span class="line"><span class="attr">      name:</span> <span class="string">https</span></span><br><span class="line"><span class="attr">      protocol:</span> <span class="string">HTTPS</span></span><br><span class="line"><span class="attr">    hosts:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">bookinfo.com</span></span><br><span class="line"><span class="attr">    tls:</span></span><br><span class="line"><span class="attr">      mode:</span> <span class="string">SIMPLE</span></span><br><span class="line"><span class="attr">      serverCertificate:</span> <span class="string">/tmp/tls.crt</span></span><br><span class="line"><span class="attr">      privateKey:</span> <span class="string">/tmp/tls.key</span></span><br></pre></td></tr></table></figure>
+<p>要为 <code>Gateway</code> 配置对应的路由，必须为定义一个同样 <code>hosts</code> 定义的 <code>VirtualService</code>，其中用 <code>gateways</code> 字段来绑定到定义好的 <code>Gateway</code> 上：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">networking.istio.io/v1alpha3</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">VirtualService</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">bookinfo</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  hosts:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">bookinfo.com</span></span><br><span class="line"><span class="attr">  gateways:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">bookinfo-gateway</span> <span class="comment"># &lt;---- 绑定到 Gateway</span></span><br><span class="line"><span class="attr">  http:</span></span><br><span class="line"><span class="attr">  - match:</span></span><br><span class="line"><span class="attr">    - uri:</span></span><br><span class="line"><span class="attr">        prefix:</span> <span class="string">/reviews</span></span><br><span class="line"><span class="attr">    route:</span></span><br><span class="line">    <span class="string">...</span></span><br></pre></td></tr></table></figure>
+<p>在 <a href="https://istio.io/zh/docs/tasks/traffic-management/ingress/" target="_blank" rel="noopener">Ingress 任务</a> 中有完整的 Ingress Gateway 例子。</p>
+<p>虽然主要用于管理入口（Ingress）流量，<code>Gateway</code> 还可以用在纯粹的内部服务之间或者出口（Egress）场景下使用。不管处于什么位置，所有的网关都可以以同样的方式进行配置和控制。<a href="https://istio.io/docs/reference/config/networking/v1alpha3/gateway/" target="_blank" rel="noopener">Gateway 参考</a> 中包含更多细节描述。</p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><p><a href="https://istio.io/" target="_blank" rel="noopener">Istio 官方文档</a></p>
+</li>
+<li><p>《深入浅出 Istio — ServiceMesh 快速入门实践》</p>
+</li>
+</ul>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://note.run-linux.com">Linus Lee</a>
+            <p>原文链接：<a href="http://note.run-linux.com/2019/03/27/Istio-s-traffic-management/">http://note.run-linux.com/2019/03/27/Istio-s-traffic-management/</a>
+            <p>发表日期：<a href="http://note.run-linux.com/2019/03/27/Istio-s-traffic-management/">March 27th 2019, 9:31:06 pm</a>
+            <p>更新日期：<a href="http://note.run-linux.com/2019/03/27/Istio-s-traffic-management/">March 27th 2019, 9:32:20 pm</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2019/03/27/Views-about-the-struct-of-istio/" title= "Views about the struct of istio">
+                    <div class="prevTitle">Views about the struct of istio</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zMjU0Ni85MTA3>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:708863861@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/mr-linus" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Istio-流量管理"><span class="toc-number">1.</span> <span class="toc-text">Istio 流量管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Pilot-和-Envoy"><span class="toc-number">1.1.</span> <span class="toc-text">Pilot 和 Envoy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#请求路由"><span class="toc-number">1.2.</span> <span class="toc-text">请求路由</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#服务之间的通讯"><span class="toc-number">1.2.1.</span> <span class="toc-text">服务之间的通讯</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Ingress-和-Egress"><span class="toc-number">1.2.2.</span> <span class="toc-text">Ingress 和 Egress</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#服务发现和负载均衡"><span class="toc-number">1.3.</span> <span class="toc-text">服务发现和负载均衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#故障处理"><span class="toc-number">1.4.</span> <span class="toc-text">故障处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#故障注入"><span class="toc-number">1.5.</span> <span class="toc-text">故障注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#规则配置"><span class="toc-number">1.6.</span> <span class="toc-text">规则配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Virtual-Service"><span class="toc-number">1.7.</span> <span class="toc-text">Virtual Service</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#规则的目标描述"><span class="toc-number">1.7.1.</span> <span class="toc-text">规则的目标描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#在服务之间分拆流量"><span class="toc-number">1.7.2.</span> <span class="toc-text">在服务之间分拆流量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#超时和重试"><span class="toc-number">1.7.3.</span> <span class="toc-text">超时和重试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#错误注入"><span class="toc-number">1.7.4.</span> <span class="toc-text">错误注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#条件规则"><span class="toc-number">1.7.5.</span> <span class="toc-text">条件规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多重匹配条件"><span class="toc-number">1.7.6.</span> <span class="toc-text">多重匹配条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#优先级"><span class="toc-number">1.7.7.</span> <span class="toc-text">优先级</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#目标规则"><span class="toc-number">1.8.</span> <span class="toc-text">目标规则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#断路器"><span class="toc-number">1.8.1.</span> <span class="toc-text">断路器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#规则评估"><span class="toc-number">1.8.2.</span> <span class="toc-text">规则评估</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Service-Entry"><span class="toc-number">1.8.3.</span> <span class="toc-text">Service Entry</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Gateway"><span class="toc-number">1.8.4.</span> <span class="toc-text">Gateway</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文档"><span class="toc-number">1.9.</span> <span class="toc-text">参考文档</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 23
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/27</span><a class="archive-post-title" href= "/2019/03/27/Views-about-the-struct-of-istio/" >Views about the struct of istio</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/27</span><a class="archive-post-title" href= "/2019/03/27/Istio-s-traffic-management/" >Istio's traffic management</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span><a class="archive-post-title" href= "/2019/03/25/Install-istio-with-helm/" >Install Istio using helm</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span><a class="archive-post-title" href= "/2019/03/18/Install-Helm-with-k8s/" >Install Helm for k8s</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2019/03/15/Install-K8S-dashboard/" >Install K8S dashboard with ingress</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/Install-K8S-with-kubeadm/" >Install a single master K8S cluster with kubeadm</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span><a class="archive-post-title" href= "/2019/01/24/Go-Core-Interface/" >Go Core Dev Interface</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span><a class="archive-post-title" href= "/2019/01/23/Go-Core-TypeSystem/" >Go Core Dev Type-System</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/17</span><a class="archive-post-title" href= "/2019/01/17/Go-Core-Function/" >Go Core Dev Function</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span><a class="archive-post-title" href= "/2019/01/15/Go-Core-Base/" >Go Core Dev Base</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2018/09/09/Go-Primer/" >Go Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/contribute-to-opensource/" >How to contribute to open source projects</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/Linux-namespace/" >Views about Namespace & Cgroups of Linux Kernel</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2018/07/17/K8S-InfoCollection/" >Kubernetes Information Collection</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2018/07/01/Scraping-Primer/" >Scraping-Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2018/06/21/Linux-Primer/" >Linux-Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/15</span><a class="archive-post-title" href= "/2018/06/15/Docker-faq/" >Docker-FAQ</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span><a class="archive-post-title" href= "/2017/12/12/Binary-tree/" >Binary tree  of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span><a class="archive-post-title" href= "/2017/12/12/Graph-traversal/" >Graph traversal  of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/search/" >Search of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2017/10/24/struct/" >Concept of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/sort/" >Sort of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2017/10/20/Docker-Primer/" >Docker-Primer</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
+    
+        <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
+    
+        <span class="sidebar-tag-name" data-tags="open-source"><span class="iconfont-archer">&#xe606;</span>open-source</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="k8s"><span class="iconfont-archer">&#xe606;</span>k8s</span>
+    
+        <span class="sidebar-tag-name" data-tags="istio"><span class="iconfont-archer">&#xe606;</span>istio</span>
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Linus Lee"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>
+
+

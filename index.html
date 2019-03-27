@@ -359,9 +359,65 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2019/03/27/Istio-s-traffic-management/" >
+            
+                <span>Istio&#39;s traffic management</span>
+        </a>
+        <div class="abstract-content">
+            Istio 流量管理使用 Istio 的流量管理模型，本质上是将流量与基础设施扩容解耦，让运维人员可以通过 Pilot 指定流量遵循什么规则，而不是指定哪些 pod/VM 应该接收流量——Pilot 和智能 Envoy 代理会帮我们搞定。因此，例如，您可以通过 Pilot 指定特定服务的 5％ 流量可以转到金丝雀版本，而不必考虑金丝雀部署的大小，或根据请求的内容将流量发送到特定版本。
+
+将流量从基础设施扩展中解耦，这样就可以让 Istio 提供各种独立于应用程序代码之外的流量管理功能。 除了 A/B 测试的动态请求路由，逐步推出和金丝雀发布之外， 它还使用超时、重试和熔断器来处理故障恢复...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/27</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
+        <a class="abstract-title" href = "/2019/03/27/Views-about-the-struct-of-istio/" >
+            
+                <span>Views about the struct of istio</span>
+        </a>
+        <div class="abstract-content">
+            浅谈 Istio 架构​    使用云平台可以为组织提供丰富的好处。然而，不可否认的是，采用云可能会给 DevOps 团队带来压力。开发人员必须使用微服务以满足应用的可移植性，同时运营商管理了极其庞大的混合和多云部署。
+​    在较高的层次上，Istio 有助于降低这些部署的复杂性，并减轻开发团队的压力。它是一个完全开源的服务网格，可以透明地分层到现有的分布式应用程序上。它也是一个平台，包括允许它集成到任何日志记录平台、遥测或策略系统的 API。Istio 的多样化功能集使您能够成功高效地运行分布式微服务架构，并提供保护、连接和监控微服务的统一方法。
+什么是服务网格？​    服务网格...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/27</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "istio">istio</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2019/03/25/Install-istio-with-helm/" >
             
-                <span>Install-istio-with-helm</span>
+                <span>Install Istio using helm</span>
         </a>
         <div class="abstract-content">
             使用 Helm 安装 istio v1.1一、下载 Istio1、你可以通过以下官方提供的脚本安装最新版本的 istio，也可以通过设置ISTIO_VERSION对应的版本安装指定版本的 istio：
@@ -393,7 +449,7 @@ height:50vh;
     <article class="index-post">
         <a class="abstract-title" href = "/2019/03/18/Install-Helm-with-k8s/" >
             
-                <span>Install-Helm-with-k8s</span>
+                <span>Install Helm for k8s</span>
         </a>
         <div class="abstract-content">
             为 Kubernetes 集群安装 HelmStep1:  使用官方提供的脚本安装 Helm：使用以下命令安装 Helm：
@@ -421,7 +477,7 @@ height:50vh;
     <article class="index-post">
         <a class="abstract-title" href = "/2019/03/15/Install-K8S-dashboard/" >
             
-                <span>Install-K8S-dashboard-with-ingress</span>
+                <span>Install K8S dashboard with ingress</span>
         </a>
         <div class="abstract-content">
             安装 kubernetes dashboard（仪表盘）同时开启 ingressKubernetes Dashboard是Kubernetes集群的基于Web的通用UI。 它允许用户管理在群集中运行的应用程序并对其进行故障排除，以及管理群集本身。
@@ -617,72 +673,6 @@ docker安装完毕
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "Go">Go</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/09/09/Go-Primer/" >
-            
-                <span>Go Primer</span>
-        </a>
-        <div class="abstract-content">
-            包每个 Go 程序都是由包构成的。
-程序从 main 包开始运行。
-本程序通过导入路径 &quot;fmt&quot; 和 &quot;math/rand&quot; 来使用这两个包。
-按照约定，包名与导入路径的最后一个元素一致。例如，&quot;math/rand&quot; 包中的源码均以 package rand 语句开始。
-注意： 此程序的运行环境是固定的，因此 rand.Intn 总是会返回相同的数字。 （要得到不同的数字，需为生成器提供不同的种子数，参见rand.Seed。 练习场中的时间为常量，因此你需要用其它的值作为种子数。）
-12345678910package mai...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/09/09</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Go">Go</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/08/24/contribute-to-opensource/" >
-            
-                <span>How to contribute to open source projects</span>
-        </a>
-        <div class="abstract-content">
-            如何贡献开源项目最近看见很多同学遇到这个问题，今天总结下为热爱开源社区并愿意为开源项目贡献的同学提供思路。
-那么下面我们简单的聊聊如何贡献开源项目。
-贡献之前了解项目在贡献开源项目之前首先你要了解你想要贡献的开源项目，这是必须的，不然容易闹出意想不到的笑话，GitHub本身也是个国际交流的平台，我们作为国人也要谨言慎行，维护我们的良好形象。很多高质量的大项目都有他们的贡献注意事项，一定要仔细查看，特别是当你贡献文档类型的项目时，一定要注意文档的约定和术语表的使用以及格式段落用法。
-提高自己的英语水平在 Github 上面，无论是和外国人还是中国人交流，统一使用英语。除非你明确知道这个项目...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/08/24</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "open-source">open-source</a>
     
 </div>
             
@@ -1106,9 +1096,37 @@ docker安装完毕
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 21
+        Total : 23
         </div>
         <!-- search  -->
         
@@ -1124,17 +1142,27 @@ docker安装完毕
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/25</span><a class="archive-post-title" href= "/2019/03/25/Install-istio-with-helm/" >Install-istio-with-helm</a>
+            <span class="archive-post-date">03/27</span><a class="archive-post-title" href= "/2019/03/27/Views-about-the-struct-of-istio/" >Views about the struct of istio</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/18</span><a class="archive-post-title" href= "/2019/03/18/Install-Helm-with-k8s/" >Install-Helm-with-k8s</a>
+            <span class="archive-post-date">03/27</span><a class="archive-post-title" href= "/2019/03/27/Istio-s-traffic-management/" >Istio's traffic management</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2019/03/15/Install-K8S-dashboard/" >Install-K8S-dashboard-with-ingress</a>
+            <span class="archive-post-date">03/25</span><a class="archive-post-title" href= "/2019/03/25/Install-istio-with-helm/" >Install Istio using helm</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span><a class="archive-post-title" href= "/2019/03/18/Install-Helm-with-k8s/" >Install Helm for k8s</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2019/03/15/Install-K8S-dashboard/" >Install K8S dashboard with ingress</a>
         </li>
     
     
