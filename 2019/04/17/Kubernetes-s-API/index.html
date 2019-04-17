@@ -11,7 +11,7 @@
 
 
 <head>
-    <meta charset="utf-8">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
     <meta name="author" content="Linus Lee">
     <meta name="renderer" content="webkit">
@@ -22,7 +22,7 @@
     <meta name="description" content="It's Funky's NoteBook">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>Funky&#39;s NoteBook</title>
+    <title>Kubernetes&#39;s API · Funky&#39;s NoteBook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -198,17 +198,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
     <!-- 百度统计  -->
     
-    <!-- 谷歌统计  -->
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
     
 </head>
 
     
+        <body class="post-body">
     
-<header class="header">
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Funky&#39;s NoteBook</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Kubernetes's API</a>
+            </div>
+    </div>
     
     <a class="home-link" href=/>Funky's NoteBook</a>
 </header>
@@ -220,24 +231,74 @@
 
 
 
+
+height:50vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            Kubernetes's API
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "k8s">k8s</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">347</span>阅读时长: <span class="post-count reading-time">1 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/04/17</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -338,81 +399,75 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/06/21/Linux-Primer/" >
-            
-                <span>Linux-Primer</span>
-        </a>
-        <div class="abstract-content">
-            GNOME的简单快捷键
-图形界面帮助：F1
-活动概述：super
-切换工作区：shift+ctrl+alt+↑
-运行命令：Alt+F2
-锁定桌面:Alt+Ctrl+L
-快速重启：Ctrl+Alt+Del
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="Kubernetes-声明式-API"><a href="#Kubernetes-声明式-API" class="headerlink" title="Kubernetes 声明式 API"></a>Kubernetes 声明式 API</h2><p>Kubernetes 项目中，一个API 对象在 Etcd 里的完整资源路径由：Group（API 组）、Version（API 版本）和 Resource (API 资源类型）三部分组成。</p>
+<p><img src="../images/api.png" alt="API"></p>
+<p>通过该图可以清楚看见 kubernetes 里 API 组织方式是层层递进的。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">batch/v2alpha1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">CronJob</span></span><br><span class="line"><span class="string">...</span></span><br></pre></td></tr></table></figure>
+<p>当Group和完整的版本保证后，kind标识版本下的对象，此时APIServer 就可以创建这个对象了。</p>
+<p><img src="../images/api-object.png" alt="api-object"></p>
+<p><strong>首先</strong>发起 创建 CronJob 的 Post 请求后，我们编写的 YAML 的信息就被提交给了 APIServer。而 APIServer 的第一个功能，就是过滤这个请求，并完成一些前置性工作，比如授权、超时处理、审计等。</p>
+<p><strong>然后</strong>，请求会进入 MUX 和 Routes 流程。MUX 和 Routes是 APIServer 完成 URL 和 Handler 绑定的场所，而 APIServer 的 Handler 用于匹配API组织，找到对应的CronJob的类型定义。</p>
+<p><strong>接着</strong>，APIServer 根据CronJob类型定义，使用用户提交的YAML文件里的字段，创建一个CronJob对象。</p>
+<p><strong>最后</strong>，APIServer 会把验证过的API对象转换为用户最初提交的版本，进行序列化操作，并调用 Etcd 的API 把它保存起来。</p>
+<h2 id="Kubernetes-CRD-设计"><a href="#Kubernetes-CRD-设计" class="headerlink" title="Kubernetes CRD 设计"></a>Kubernetes CRD 设计</h2><p>假设创建一个 network 对象，它的 YAML 文件类似为：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">samplecrd.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Network</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">example-network</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  cidr:</span> <span class="string">"192.168.0.0/16"</span></span><br><span class="line"><span class="attr">  gateway:</span> <span class="string">"192.168.0.1"</span></span><br></pre></td></tr></table></figure>
 
-基础命令：123456789101112131415161718192021222324lsblk 查看分区情况ls -l  显示目录详细信息ls -lh 详细显示大小ls -a 显示全部文件（包括隐藏文件）ls -d 查看目录本身属性 建议使用 ls -ldll 等价于ls -lcp -a 复制并保留原有属性（不改变属主和组）cp -r 拷贝跟目录下的mv -f 强制移动（覆盖不提示...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/21</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-</div>
-            
-        </div>
     </article>
+    <!-- license  -->
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/06/15/Docker-faq/" >
-            
-                <span>Docker-FAQ</span>
-        </a>
-        <div class="abstract-content">
-            前言
-本FAQ基于twang2218大佬Blog的100问制作，用于解决学习Docker出现的常见问题。
-
-Docker 引擎相关问题 (67)概念问题 (5)宿主如果和容器系统不同的话，那不是和虚拟机一样，一层层的调用，那么 Docker 和虚拟机还有什么差别？要把 Windows 和 Linux 分清楚，更要把内核(kernel)和用户空间(userland)分清楚。
-容器内的进程是直接运行于宿主内核的，这点和宿主进程一致，只是容器的 userland 不同，容器的 userland 由容器镜像提供，也就是说镜像提供了 rootfs。
-假设宿主是 Ubuntu，容器是 CentOS。...
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://note.run-linux.com">Linus Lee</a>
+            <p>原文链接：<a href="http://note.run-linux.com/2019/04/17/Kubernetes-s-API/">http://note.run-linux.com/2019/04/17/Kubernetes-s-API/</a>
+            <p>发表日期：<a href="http://note.run-linux.com/2019/04/17/Kubernetes-s-API/">April 17th 2019, 1:57:29 pm</a>
+            <p>更新日期：<a href="http://note.run-linux.com/2019/04/17/Kubernetes-s-API/">April 17th 2019, 2:30:56 pm</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/15</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2019/03/27/Istio-s-traffic-management/" title= "Istio's traffic management">
+                    <div class="prevTitle">Istio's traffic management</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zMjU0Ni85MTA3>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
     
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
 </main>
             <!-- profile -->
             
@@ -484,6 +539,24 @@ Docker 引擎相关问题 (67)概念问题 (5)宿主如果和容器系统不同�
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Kubernetes-声明式-API"><span class="toc-number">1.</span> <span class="toc-text">Kubernetes 声明式 API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kubernetes-CRD-设计"><span class="toc-number">2.</span> <span class="toc-text">Kubernetes CRD 设计</span></a></li></ol>
+    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -1015,6 +1088,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -1030,7 +1105,7 @@ jsonContent:
             all[i].SourceElement().parentNode.className += ' has-jax';
     });
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
 </body>

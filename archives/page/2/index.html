@@ -346,6 +346,36 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2019/01/15/Go-Core-Base/" >
+            
+                <span>Go Core Dev Base</span>
+        </a>
+        <div class="abstract-content">
+            基础知识常量预声明标识符 iota 用在常量声明中，其初始值为 0。一组多个常量同时声明时其值逐行增加，iota 可以看做是自增枚举变量，专门用来初始化常量。
+123456789101112131415161718192021222324252627// 类似枚举的 iotaconst (	c0 = iota // 0    c1 = iota // 1    c3 = iota // 2)//简写const (	c0 = iota // 0    c1 // 1    c2 // 2)//注意 iota 逐行增加const (	a == 1 &lt;&lt; iota // 1    ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/15</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Go">Go</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2018/09/09/Go-Primer/" >
             
                 <span>Go Primer</span>
@@ -643,44 +673,6 @@ BFS 广度优先搜索1234567891011121314151617181920212223242526272829bool visi
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/12/12</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Data Structure">Data Structure</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2017/10/28/search/" >
-            
-                <span>Search of Data Structure</span>
-        </a>
-        <div class="abstract-content">
-            查找查找方法
-顺序查找
-折半查找
-分块查找
-
-平均查找长度 ASL（Average Search Length  ）所有查找过程中进行关键字比较次数的平均值数学定义为：$ASL=\sum _{i=1}^n P_i C_i$
-
-n是查找长度，$P_i$是查找第i个元素的概率，$C_i$是找到第i个元素所需进行比较次数
-
-顺序查找适用于无序的表，挨个查找123456789typedef struct &#123;    ElemType *elem; //元素存储空间基址    int TableLen;//表长&#125;SSTable;int Search_Seq(SSTable ST,...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2017/10/28</span>
             </div>
             <!-- tags  -->
             
@@ -1056,9 +1048,14 @@ n是查找长度，$P_i$是查找第i个元素的概率，$C_i$是找到第i个�
     
     
     
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 23
+        Total : 24
         </div>
         <!-- search  -->
         
@@ -1071,6 +1068,11 @@ n是查找长度，$P_i$是查找第i个元素的概率，$C_i$是找到第i个�
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/17</span><a class="archive-post-title" href= "/2019/04/17/Kubernetes-s-API/" >Kubernetes's API</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1212,13 +1214,13 @@ n是查找长度，$P_i$是查找第i个元素的概率，$C_i$是找到第i个�
     
         <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
     
+        <span class="sidebar-tag-name" data-tags="k8s"><span class="iconfont-archer">&#xe606;</span>k8s</span>
+    
         <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
     
         <span class="sidebar-tag-name" data-tags="open-source"><span class="iconfont-archer">&#xe606;</span>open-source</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
-    
-        <span class="sidebar-tag-name" data-tags="k8s"><span class="iconfont-archer">&#xe606;</span>k8s</span>
     
         <span class="sidebar-tag-name" data-tags="istio"><span class="iconfont-archer">&#xe606;</span>istio</span>
     

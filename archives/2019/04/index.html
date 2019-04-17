@@ -346,65 +346,29 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2018/06/21/Linux-Primer/" >
+        <a class="abstract-title" href = "/2019/04/17/Kubernetes-s-API/" >
             
-                <span>Linux-Primer</span>
+                <span>Kubernetes&#39;s API</span>
         </a>
         <div class="abstract-content">
-            GNOME的简单快捷键
-图形界面帮助：F1
-活动概述：super
-切换工作区：shift+ctrl+alt+↑
-运行命令：Alt+F2
-锁定桌面:Alt+Ctrl+L
-快速重启：Ctrl+Alt+Del
+            Kubernetes 声明式 APIKubernetes 项目中，一个API 对象在 Etcd 里的完整资源路径由：Group（API 组）、Version（API 版本）和 Resource (API 资源类型）三部分组成。
 
-基础命令：123456789101112131415161718192021222324lsblk 查看分区情况ls -l  显示目录详细信息ls -lh 详细显示大小ls -a 显示全部文件（包括隐藏文件）ls -d 查看目录本身属性 建议使用 ls -ldll 等价于ls -lcp -a 复制并保留原有属性（不改变属主和组）cp -r 拷贝跟目录下的mv -f 强制移动（覆盖不提示...
+通过该图可以清楚看见 kubernetes 里 API 组织方式是层层递进的。
+123apiVersion: batch/v2alpha1kind: CronJob...
+当Group和完整的版本保证后，kind标识版本下的对象，此时APIServer 就可以创建这个对象了。
+
+首先发起 创建 CronJob 的 Post 请求后，我们编写的 YAML 的信息就...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/21</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/04/17</span>
             </div>
             <!-- tags  -->
             
             <div class= abstract-tags >
     
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Linux">Linux</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/06/15/Docker-faq/" >
-            
-                <span>Docker-FAQ</span>
-        </a>
-        <div class="abstract-content">
-            前言
-本FAQ基于twang2218大佬Blog的100问制作，用于解决学习Docker出现的常见问题。
-
-Docker 引擎相关问题 (67)概念问题 (5)宿主如果和容器系统不同的话，那不是和虚拟机一样，一层层的调用，那么 Docker 和虚拟机还有什么差别？要把 Windows 和 Linux 分清楚，更要把内核(kernel)和用户空间(userland)分清楚。
-容器内的进程是直接运行于宿主内核的，这点和宿主进程一致，只是容器的 userland 不同，容器的 userland 由容器镜像提供，也就是说镜像提供了 rootfs。
-假设宿主是 Ubuntu，容器是 CentOS。...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/06/15</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags = "k8s">k8s</a>
     
 </div>
             

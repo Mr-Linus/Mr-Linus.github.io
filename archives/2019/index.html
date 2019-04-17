@@ -346,6 +346,41 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2019/04/17/Kubernetes-s-API/" >
+            
+                <span>Kubernetes&#39;s API</span>
+        </a>
+        <div class="abstract-content">
+            Kubernetes 声明式 APIKubernetes 项目中，一个API 对象在 Etcd 里的完整资源路径由：Group（API 组）、Version（API 版本）和 Resource (API 资源类型）三部分组成。
+
+通过该图可以清楚看见 kubernetes 里 API 组织方式是层层递进的。
+123apiVersion: batch/v2alpha1kind: CronJob...
+当Group和完整的版本保证后，kind标识版本下的对象，此时APIServer 就可以创建这个对象了。
+
+首先发起 创建 CronJob 的 Post 请求后，我们编写的 YAML 的信息就...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/04/17</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "k8s">k8s</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2019/03/27/Istio-s-traffic-management/" >
             
                 <span>Istio&#39;s traffic management</span>
@@ -636,37 +671,11 @@ docker安装完毕
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/01/15/Go-Core-Base/" >
-            
-                <span>Go Core Dev Base</span>
-        </a>
-        <div class="abstract-content">
-            基础知识常量预声明标识符 iota 用在常量声明中，其初始值为 0。一组多个常量同时声明时其值逐行增加，iota 可以看做是自增枚举变量，专门用来初始化常量。
-123456789101112131415161718192021222324252627// 类似枚举的 iotaconst (	c0 = iota // 0    c1 = iota // 1    c3 = iota // 2)//简写const (	c0 = iota // 0    c1 // 1    c2 // 2)//注意 iota 逐行增加const (	a == 1 &lt;&lt; iota // 1    ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/15</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Go">Go</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
+    
+    <nav class="page-nav">
+        <span class="page-number current">1</span><a class="page-number" href="/archives/2019/page/2/">2</a><a class="extend next" rel="next" href="/archives/2019/page/2/">NEXT &#62;</a>
+    </nav>
     
 </main>
             <!-- profile -->
@@ -1025,9 +1034,14 @@ docker安装完毕
     
     
     
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 23
+        Total : 24
         </div>
         <!-- search  -->
         
@@ -1040,6 +1054,11 @@ docker安装完毕
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/17</span><a class="archive-post-title" href= "/2019/04/17/Kubernetes-s-API/" >Kubernetes's API</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1181,13 +1200,13 @@ docker安装完毕
     
         <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
     
+        <span class="sidebar-tag-name" data-tags="k8s"><span class="iconfont-archer">&#xe606;</span>k8s</span>
+    
         <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
     
         <span class="sidebar-tag-name" data-tags="open-source"><span class="iconfont-archer">&#xe606;</span>open-source</span>
     
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
-    
-        <span class="sidebar-tag-name" data-tags="k8s"><span class="iconfont-archer">&#xe606;</span>k8s</span>
     
         <span class="sidebar-tag-name" data-tags="istio"><span class="iconfont-archer">&#xe606;</span>istio</span>
     
