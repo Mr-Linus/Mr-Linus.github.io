@@ -402,11 +402,11 @@ height:50vh;
             <main class="main post-page">
     <article class="article-entry">
         <h2 id="Kubernetes-声明式-API"><a href="#Kubernetes-声明式-API" class="headerlink" title="Kubernetes 声明式 API"></a>Kubernetes 声明式 API</h2><p>Kubernetes 项目中，一个API 对象在 Etcd 里的完整资源路径由：Group（API 组）、Version（API 版本）和 Resource (API 资源类型）三部分组成。</p>
-<p><img src="../images/api.png" alt="API"></p>
+<p><img src="/images/api.png" alt="API"></p>
 <p>通过该图可以清楚看见 kubernetes 里 API 组织方式是层层递进的。</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">batch/v2alpha1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">CronJob</span></span><br><span class="line"><span class="string">...</span></span><br></pre></td></tr></table></figure>
 <p>当Group和完整的版本保证后，kind标识版本下的对象，此时APIServer 就可以创建这个对象了。</p>
-<p><img src="../images/api-object.png" alt="api-object"></p>
+<p><img src="/images/api-object.png" alt="api-object"></p>
 <p><strong>首先</strong>发起 创建 CronJob 的 Post 请求后，我们编写的 YAML 的信息就被提交给了 APIServer。而 APIServer 的第一个功能，就是过滤这个请求，并完成一些前置性工作，比如授权、超时处理、审计等。</p>
 <p><strong>然后</strong>，请求会进入 MUX 和 Routes 流程。MUX 和 Routes是 APIServer 完成 URL 和 Handler 绑定的场所，而 APIServer 的 Handler 用于匹配API组织，找到对应的CronJob的类型定义。</p>
 <p><strong>接着</strong>，APIServer 根据CronJob类型定义，使用用户提交的YAML文件里的字段，创建一个CronJob对象。</p>
@@ -482,7 +482,7 @@ height:50vh;
 <li>main函数启动上述的Informer，然后执行controler.Run 启动自定义控制器。</li>
 </ul>
 <p>工作原理：</p>
-<p><img src="../images/controller.png" alt="controller"></p>
+<p><img src="/images/controller.png" alt="controller"></p>
 <p>这个控制器要做的事是从k8s的apiserver里获取它关心的对象，也就是我们定义的Network对象。这个操作依靠的是一个叫做Informer（通知器）的代码库完成的。Informer与API对象是一一对应的，所以我们传递给自定义控制器的，正是一个Network对象的Informer，当我们在创建这个Informer的时候，需要给他传递一个networkClient。</p>
 <p>事实上，Network Informer 正是使用这个 networkClient，跟APIServer 建立了连接，但是真正负责这个连接的则是Informer 所使用的Reflector包。Reflector 使用的是一种叫做ListAndWatch的方法来获取并监听这些Network对象实例的变化。</p>
 <p>在ListAndWatch机制下，一旦APIServer端有新的Network实例被创建、删除或者更新，Reflector都会收到事件通知，此时，该事件与它对应的API对象这个组合就被成为增量（Delta），它会被放进一个Delta FIFO Queue（即：增量先进先出队列）中。</p>
@@ -560,7 +560,7 @@ height:50vh;
             <p>原文作者：<a href="http://note.run-linux.com">Linus Lee</a>
             <p>原文链接：<a href="http://note.run-linux.com/2019/04/17/Kubernetes-s-API/">http://note.run-linux.com/2019/04/17/Kubernetes-s-API/</a>
             <p>发表日期：<a href="http://note.run-linux.com/2019/04/17/Kubernetes-s-API/">April 17th 2019, 1:57:29 pm</a>
-            <p>更新日期：<a href="http://note.run-linux.com/2019/04/17/Kubernetes-s-API/">April 22nd 2019, 9:52:10 pm</a>
+            <p>更新日期：<a href="http://note.run-linux.com/2019/04/17/Kubernetes-s-API/">April 22nd 2019, 10:08:04 pm</a>
             <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -707,6 +707,10 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
     
     
     
@@ -1164,9 +1168,9 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="k8s"><span class="iconfont-archer">&#xe606;</span>k8s</span>
     
-        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
-    
         <span class="sidebar-tag-name" data-tags="istio"><span class="iconfont-archer">&#xe606;</span>istio</span>
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
     
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
