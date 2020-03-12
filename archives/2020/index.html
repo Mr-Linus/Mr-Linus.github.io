@@ -346,72 +346,23 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2018/07/17/K8S-InfoCollection/" >
+        <a class="abstract-title" href = "/2020/03/12/Go 数据结构 ——排序/" >
             
-                <span>Kubernetes Information Collection</span>
+                <span>Go Sort</span>
         </a>
         <div class="abstract-content">
-            kubernetes 架构分层架构
+            Go 数据结构 ——排序1. 插入排序
+直接插入排序 （内存6.3MB，用时 944ms）
 
-核心层:Kubernetes最核心的功能，对外提供API构建高层的应用，对内提供 插件式应用执行环境 
-
-应用层:部署(无状态应用、有状态应用、批处理任务、集群应用等)和路 由(服务发现、DNS解析等) 
-
-管理层:系统度量(如基础设施、容器和网络的度量)，自动化(如自动扩 展、动态Provision等)以及策略管理(RBAC、Quota、PSP、NetworkPolicy 等) 
-
-接口层:kubectl命令行工具、客户端SDK以及集群联邦 
-
-生态系统:在接口层之上的庞大容器集群管理调度的生态系统，可以划分为 
-两个范畴 :
-
-Kubernete...
+插排的思想是排序的排到底i个的时候，保证前面下标是0~(i-1)的序列是有序的。
+12345678910111213141516func sortArray(nums []int) []int &#123;    for i,v := range nums &#123;        if i == 0&#123;            continue        &#125;      	// 左子序列判断+挪位子        for j := i-1 ; j&gt;=0 ; j--&#...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/17</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/03/12</span>
             </div>
             <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "k8s">k8s</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/07/01/Scraping-Primer/" >
-            
-                <span>Scraping-Primer</span>
-        </a>
-        <div class="abstract-content">
-            Scraping Primer识别网站builtwith模块
-安装
-1pip installl builtwith
-
-使用
-12345import builtwithprint(builtwith.parse('http://example.webscraping.com'))## 输出结果&#123;'web-servers': ['Nginx'], 'web-frameworks': ['Web2py', 'Twitter Bootstrap'], 'programming-languages': ['Python'], 'javascript-frameworks': ['jQue...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "scraping">scraping</a>
-    
-</div>
             
         </div>
     </article>
