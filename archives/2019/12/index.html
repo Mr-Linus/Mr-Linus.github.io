@@ -346,21 +346,20 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/2019/11/24/k8s-storage/" >
+        <a class="abstract-title" href = "/2019/12/24/Kubernetes StatefulSet/" >
             
                 <span>Kubernetes Storage</span>
         </a>
         <div class="abstract-content">
-            Kubernetes 持久化存储Kubernetes 项目中涉及存储最多的2个概念即是 Persistent Volume（PV）和 Persistent Volume Claim（PVC），这两个概念形成的kubernetes的持久化存储体系。
-PV 与 PVC
-Persistent Volume（PV）即持久化存储卷，他是实现创建好的一个已经挂载在宿主机上的目录，示例定义如下:
-
-12345678910111213apiVersion: v1kind: PersistentVolumemetadata:  name: nfsspec:  storageClassName: manua...
+            Kubernetes StatefulSetStatefulSet 是用来管理有状态应用的工作负载 API 对象。
+StatefulSet 用来管理 Deployment 和扩展一组 Pod，并且能为这些 Pod 提供序号和唯一性保证。
+和 Deployment 相同的是，StatefulSet 管理了基于相同容器定义的一组 Pod。但和 Deployment 不同的是，StatefulSet 为它们的每个 Pod 维护了一个固定的 ID。这些 Pod 是基于相同的声明来创建的，但是不能相互替换：无论怎么调度，每个 Pod 都有一个永久不变的 ID。
+StatefulSet 和其他控制器...
         </div>
         <div class="abstract-post-meta">
             <!-- date  -->
             <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/11/24</span>
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/12/24</span>
             </div>
             <!-- tags  -->
             
