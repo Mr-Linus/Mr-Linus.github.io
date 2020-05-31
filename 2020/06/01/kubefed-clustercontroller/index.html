@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Linus Lee">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Linus Lee">
+    
+    <meta name="keywords" content="Funky's NoteBook,Linus Lee">
+    
+    <meta name="description" content="It's Funky's NoteBook">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>Funky&#39;s NoteBook</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/gun.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Funky&#39;s NoteBook</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name"></a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Funky's NoteBook</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            [Untitled Post]
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2,262</span>阅读时长: <span class="post-count reading-time">12 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2020/06/01</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <hr>
+<p>title: Kubefed - ClusterController<br>date: 2020-06-01 01:16:18</p>
+<h2 id="tags-k8s"><a href="#tags-k8s" class="headerlink" title="tags: k8s"></a>tags: k8s</h2><h2 id="闲谈-kubefed-源码-——-ClusterController"><a href="#闲谈-kubefed-源码-——-ClusterController" class="headerlink" title="闲谈 kubefed 源码 —— ClusterController"></a>闲谈 kubefed 源码 —— ClusterController</h2><p>kubefed 其实是用 kubebuilder v1 脚手架做的，所以源代码看起来不是那么困难，首先来看看kubefed的集群管理是怎么做到的。</p>
+<h4 id="1-kubefed-中的集群资源"><a href="#1-kubefed-中的集群资源" class="headerlink" title="1.kubefed 中的集群资源"></a>1.kubefed 中的集群资源</h4><p>先来看看 kubefed 里定义的集群资源长什么样子：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">core.kubefed.io/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">KubeFedCluster</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  creationTimestamp:</span> <span class="string">"2020-05-31T09:31:20Z"</span></span><br><span class="line"><span class="attr">  generation:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">center</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">kube-federation-system</span></span><br><span class="line"><span class="attr">  resourceVersion:</span> <span class="string">"23933"</span></span><br><span class="line"><span class="attr">  selfLink:</span> <span class="string">/apis/core.kubefed.io/v1beta1/namespaces/kube-federation-system/kubefedclusters/center</span></span><br><span class="line"><span class="attr">  uid:</span> <span class="string">cc9d5756-c65e-4f8d-bbfd-96ca081961d4</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  apiEndpoint:</span> <span class="attr">https://10.10.10.10:8443</span></span><br><span class="line"><span class="attr">  caBundle:</span> <span class="string">xxaa</span></span><br><span class="line"><span class="attr">  secretRef:</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">center-q4k9n</span></span><br><span class="line"><span class="attr">status:</span></span><br><span class="line"><span class="attr">  conditions:</span></span><br><span class="line"><span class="attr">  - lastProbeTime:</span> <span class="string">"2020-05-31T15:34:23Z"</span></span><br><span class="line"><span class="attr">    lastTransitionTime:</span> <span class="string">"2020-05-31T15:33:52Z"</span></span><br><span class="line"><span class="attr">    message:</span> <span class="string">/healthz</span> <span class="string">responded</span> <span class="string">with</span> <span class="string">ok</span></span><br><span class="line"><span class="attr">    reason:</span> <span class="string">ClusterReady</span></span><br><span class="line"><span class="attr">    status:</span> <span class="string">"True"</span></span><br><span class="line"><span class="attr">    type:</span> <span class="string">Ready</span></span><br><span class="line"><span class="attr">  region:</span> <span class="string">""</span></span><br></pre></td></tr></table></figure>
+<p>这个API其实被定义在 <code>/pkg/apis/core/kubefedcluster_types.go</code> 里：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// KubeFedClusterSpec defines the desired state of KubeFedCluster</span></span><br><span class="line"><span class="keyword">type</span> KubeFedClusterSpec <span class="keyword">struct</span> &#123;</span><br><span class="line">	APIEndpoint <span class="keyword">string</span> <span class="string">`json:"apiEndpoint"`</span></span><br><span class="line">	CABundle []<span class="keyword">byte</span> <span class="string">`json:"caBundle,omitempty"`</span></span><br><span class="line">	SecretRef LocalSecretReference <span class="string">`json:"secretRef"`</span></span><br><span class="line">	DisabledTLSValidations []TLSValidation <span class="string">`json:"disabledTLSValidations,omitempty"`</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> KubeFedClusterStatus <span class="keyword">struct</span> &#123;</span><br><span class="line">	Conditions []ClusterCondition <span class="string">`json:"conditions"`</span></span><br><span class="line">	Zones []<span class="keyword">string</span> <span class="string">`json:"zones,omitempty"`</span></span><br><span class="line">	Region *<span class="keyword">string</span> <span class="string">`json:"region,omitempty"`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中，<code>ClusterCondition</code>   的定义内容如下：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ClusterCondition <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// Type of cluster condition, Ready or Offline.</span></span><br><span class="line">	Type common.ClusterConditionType <span class="string">`json:"type"`</span></span><br><span class="line">	<span class="comment">// Status of the condition, one of True, False, Unknown.</span></span><br><span class="line">	Status apiv1.ConditionStatus <span class="string">`json:"status"`</span></span><br><span class="line">	<span class="comment">// Last time the condition was checked.</span></span><br><span class="line">	LastProbeTime metav1.Time <span class="string">`json:"lastProbeTime"`</span></span><br><span class="line">	LastTransitionTime *metav1.Time <span class="string">`json:"lastTransitionTime,omitempty"`</span></span><br><span class="line">	Reason *<span class="keyword">string</span> <span class="string">`json:"reason,omitempty"`</span></span><br><span class="line">	Message *<span class="keyword">string</span> <span class="string">`json:"message,omitempty"`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-kubefed-中的集群资源-Client"><a href="#2-kubefed-中的集群资源-Client" class="headerlink" title="2. kubefed 中的集群资源 Client"></a>2. kubefed 中的集群资源 Client</h4><p>kubefed 中的集群控制器是名称是 <code>kubefedcluster</code> ，源代码位于 <code>/pkg/controller/kubefedcluser</code>。</p>
+<p>这里为了用于监听不同集群的状态，kubefed 专门定义了一套ClusterClient用于 list/watch 多个集群的状态信息，位于<code>/pkg/controller/kubefedcluser/clusterclient.go</code>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// particular KubeFedCluster.</span></span><br><span class="line"><span class="keyword">type</span> ClusterClient <span class="keyword">struct</span> &#123;</span><br><span class="line">	kubeClient  *kubeclientset.Clientset</span><br><span class="line">	clusterName <span class="keyword">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其实就是在 go client 的基础上封装了一个集群名称，所以初始化的时候可能需要多做一些处理，通过从上面定义的 <code>kubefedcluster</code>   CR 获得 相关信息：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">NewClusterClientSet</span><span class="params">(c *fedv1b1.KubeFedCluster, client generic.Client, fedNamespace <span class="keyword">string</span>, timeout time.Duration)</span> <span class="params">(*ClusterClient, error)</span></span> &#123;</span><br><span class="line">  <span class="comment">// 这里的 BuildClusterConfig 主要用于从CR中提取相关的配置参数，并生成</span></span><br><span class="line">  <span class="comment">// 一个 rest client</span></span><br><span class="line">  <span class="comment">// BuildClusterConfig 详细代码位于:  </span></span><br><span class="line">  <span class="comment">// pkg/controller/util/cluster_util.go</span></span><br><span class="line">	clusterConfig, err := util.BuildClusterConfig(c, client, fedNamespace)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">	&#125;</span><br><span class="line">	clusterConfig.Timeout = timeout</span><br><span class="line">	<span class="keyword">var</span> clusterClientSet = ClusterClient&#123;clusterName: c.Name&#125;</span><br><span class="line">	<span class="keyword">if</span> clusterConfig != <span class="literal">nil</span> &#123;</span><br><span class="line">		clusterClientSet.kubeClient = kubeclientset.NewForConfigOrDie((restclient.AddUserAgent(clusterConfig, UserAgentName)))</span><br><span class="line">		<span class="keyword">if</span> clusterClientSet.kubeClient == <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">nil</span>, <span class="literal">nil</span></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> &amp;clusterClientSet, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>kubefed 也给 clusterclient 定义了获取集群状态的方法:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(self *ClusterClient)</span> <span class="title">GetClusterHealthStatus</span><span class="params">()</span> <span class="params">(*fedv1b1.KubeFedClusterStatus, error)</span></span> &#123;</span><br><span class="line">	<span class="comment">//... 上面一圈状态定义，TL,NR</span></span><br><span class="line">  <span class="comment">// 通过 REST client 获取集群健康状态</span></span><br><span class="line">	body, err := self.kubeClient.DiscoveryClient.RESTClient().Get().AbsPath(<span class="string">"/healthz"</span>).Do().Raw()</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="comment">// 如果可以通信，就把集群的 condition 字段增加数据</span></span><br><span class="line">		runtime.HandleError(errors.Wrapf(err, <span class="string">"Failed to do cluster health check for cluster %q"</span>, self.clusterName))</span><br><span class="line">		clusterStatus.Conditions = <span class="built_in">append</span>(clusterStatus.Conditions, newClusterOfflineCondition)</span><br><span class="line">		metrics.RegisterKubefedClusterTotal(metrics.ClusterOffline, self.clusterName)</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> !strings.EqualFold(<span class="keyword">string</span>(body), <span class="string">"ok"</span>) &#123;</span><br><span class="line">      <span class="comment">// 可以通信就把集群的 condition 字段增加数据</span></span><br><span class="line">			metrics.RegisterKubefedClusterTotal(metrics.ClusterNotReady, self.clusterName)</span><br><span class="line">			clusterStatus.Conditions = <span class="built_in">append</span>(clusterStatus.Conditions, newClusterNotReadyCondition, newClusterNotOfflineCondition)</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			metrics.RegisterKubefedClusterTotal(metrics.ClusterReady, self.clusterName)</span><br><span class="line">			clusterStatus.Conditions = <span class="built_in">append</span>(clusterStatus.Conditions, newClusterReadyCondition)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> &amp;clusterStatus, err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-kubefed-中的集群资源控制器"><a href="#3-kubefed-中的集群资源控制器" class="headerlink" title="3. kubefed 中的集群资源控制器"></a>3. kubefed 中的集群资源控制器</h4><p>在 <code>/pkg/controller/kubefedcluser/controller.go</code> 里，我们找到的真正的控制器代码，kubefed首先定义了一个集群数据结构体，用于存放集群状态、健康监测探针等变量：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ClusterData <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// clusterKubeClient is the kube client for the cluster.</span></span><br><span class="line">	clusterKubeClient *ClusterClient</span><br><span class="line"></span><br><span class="line">	<span class="comment">// clusterStatus is the cluster status as of last sampling.</span></span><br><span class="line">	clusterStatus *fedv1b1.KubeFedClusterStatus</span><br><span class="line"></span><br><span class="line">	<span class="comment">// How many times in a row the probe has returned the same result.</span></span><br><span class="line">	resultRun <span class="keyword">int64</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// cachedObj holds the last observer object from apiserver</span></span><br><span class="line">	cachedObj *fedv1b1.KubeFedCluster</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们接下来再看看 控制器结构体有什么不一样：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ClusterController <span class="keyword">struct</span> &#123;</span><br><span class="line">	client genericclient.Client</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 增加了一个健康监测配置</span></span><br><span class="line">	clusterHealthCheckConfig *util.ClusterHealthCheckConfig</span><br><span class="line"></span><br><span class="line">	mu sync.RWMutex</span><br><span class="line">  <span class="comment">// 增加了一个hashmap 用于存储多个节点的集群状态信息</span></span><br><span class="line">	clusterDataMap <span class="keyword">map</span>[<span class="keyword">string</span>]*ClusterData</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 定义了一个集群控制器（基于cache controller） 用于注册事件回调</span></span><br><span class="line">	clusterController cache.Controller</span><br><span class="line">   </span><br><span class="line">  <span class="comment">//用于记录kubefed 在中心集群的那个 ns 里</span></span><br><span class="line">	<span class="comment">// fedNamespace is the name of the namespace containing</span></span><br><span class="line">	<span class="comment">// KubeFedCluster resources and their associated secrets.</span></span><br><span class="line">	fedNamespace <span class="keyword">string</span></span><br><span class="line"></span><br><span class="line">	eventRecorder record.EventRecorder</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的 <code>util.ClusterHealthCheckConfig</code> 长这个样子：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> ClusterHealthCheckConfig <span class="keyword">struct</span> &#123;</span><br><span class="line">	Period           time.Duration</span><br><span class="line">	FailureThreshold <span class="keyword">int64</span></span><br><span class="line">	SuccessThreshold <span class="keyword">int64</span></span><br><span class="line">	Timeout          time.Duration</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里，该结构体用于设置控制器的检测周期，连接数和超时时间。</p>
+<p>接下来我们看看创建控制器的函数，这个函数很“原生控制器“：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">newClusterController</span><span class="params">(config *util.ControllerConfig, clusterHealthCheckConfig *util.ClusterHealthCheckConfig)</span> <span class="params">(*ClusterController, error)</span></span> &#123;</span><br><span class="line">   <span class="comment">// 省略定义， TL,NR</span></span><br><span class="line">   kubeConfig := restclient.CopyConfig(config.KubeConfig)</span><br><span class="line">   cc := &amp;ClusterController&#123;</span><br><span class="line">      client:                   client,</span><br><span class="line">      clusterHealthCheckConfig: clusterHealthCheckConfig,</span><br><span class="line">      clusterDataMap:           <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]*ClusterData),</span><br><span class="line">      fedNamespace:             config.KubeFedNamespace,</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">//...</span></span><br><span class="line">   kubeClient := kubeclient.NewForConfigOrDie(kubeConfig)</span><br><span class="line">  </span><br><span class="line">   <span class="keyword">var</span> err error</span><br><span class="line">   <span class="comment">// 创建一个Informer 用于监听 KubeFedCluster 的变化</span></span><br><span class="line">   _, cc.clusterController, err = util.NewGenericInformerWithEventHandler(</span><br><span class="line">      config.KubeConfig,</span><br><span class="line">      config.KubeFedNamespace,</span><br><span class="line">      &amp;fedv1b1.KubeFedCluster&#123;&#125;,</span><br><span class="line">      util.NoResyncPeriod,</span><br><span class="line">      <span class="comment">// 定义了监听资源变化的处理方法</span></span><br><span class="line">      &amp;cache.ResourceEventHandlerFuncs&#123;</span><br><span class="line">         DeleteFunc: <span class="function"><span class="keyword">func</span><span class="params">(obj <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">            <span class="comment">// go 语言断言处理，直接转换为 KubeFedCluster 资源对象</span></span><br><span class="line">            castObj, ok := obj.(*fedv1b1.KubeFedCluster)</span><br><span class="line">            <span class="keyword">if</span> !ok &#123;</span><br><span class="line">               tombstone, ok := obj.(cache.DeletedFinalStateUnknown)</span><br><span class="line">               <span class="keyword">if</span> !ok &#123;</span><br><span class="line">                  klog.Errorf(<span class="string">"Couldn't get object from tombstone %#v"</span>, obj)</span><br><span class="line">                  <span class="keyword">return</span></span><br><span class="line">               &#125;</span><br><span class="line">               castObj, ok = tombstone.Obj.(*fedv1b1.KubeFedCluster)</span><br><span class="line">               <span class="keyword">if</span> !ok &#123;</span><br><span class="line">                  klog.Errorf(<span class="string">"Tombstone contained object that is not expected %#v"</span>, obj)</span><br><span class="line">                  <span class="keyword">return</span></span><br><span class="line">               &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 执行删除对象处理</span></span><br><span class="line">            cc.delFromClusterSet(castObj)</span><br><span class="line">         &#125;,</span><br><span class="line">         AddFunc: <span class="function"><span class="keyword">func</span><span class="params">(obj <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">            castObj := obj.(*fedv1b1.KubeFedCluster)</span><br><span class="line">           <span class="comment">// 执行增加对象处理</span></span><br><span class="line">            cc.addToClusterSet(castObj)</span><br><span class="line">         &#125;,</span><br><span class="line">         UpdateFunc: <span class="function"><span class="keyword">func</span><span class="params">(oldObj, newObj <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">            <span class="keyword">var</span> clusterChanged <span class="keyword">bool</span></span><br><span class="line">            cluster := newObj.(*fedv1b1.KubeFedCluster)</span><br><span class="line">            cc.mu.Lock()</span><br><span class="line">           <span class="comment">// 更新下控制器的集群数据状态</span></span><br><span class="line">            clusterData, ok := cc.clusterDataMap[cluster.Name]</span><br><span class="line">            <span class="comment">// 缓存和更新状态一致的判断，需要将 clusterChanged设为true</span></span><br><span class="line">            <span class="keyword">if</span> !ok || !equality.Semantic.DeepEqual(clusterData.cachedObj.Spec, cluster.Spec) ||</span><br><span class="line">               !equality.Semantic.DeepEqual(clusterData.cachedObj.ObjectMeta.Annotations, cluster.ObjectMeta.Annotations) ||</span><br><span class="line">               !equality.Semantic.DeepEqual(clusterData.cachedObj.ObjectMeta.Labels, cluster.ObjectMeta.Labels) &#123;</span><br><span class="line">               clusterChanged = <span class="literal">true</span></span><br><span class="line">            &#125;</span><br><span class="line">            cc.mu.Unlock()</span><br><span class="line">            <span class="comment">// 否则 新版本和缓存一致，没有发生变化</span></span><br><span class="line">            <span class="keyword">if</span> !clusterChanged &#123;</span><br><span class="line">               <span class="keyword">return</span></span><br><span class="line">            &#125;</span><br><span class="line">           <span class="comment">// 执行更新对象处理，删了再加，简单粗暴</span></span><br><span class="line">            cc.delFromClusterSet(cluster)</span><br><span class="line">            cc.addToClusterSet(cluster)</span><br><span class="line">         &#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">   )</span><br><span class="line">   <span class="keyword">return</span> cc, err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里面出现的 ClusterSet 增删函数其实简单，就是对控制器里的ClusterData map的增删而已：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(cc *ClusterController)</span> <span class="title">delFromClusterSet</span><span class="params">(obj *fedv1b1.KubeFedCluster)</span></span> &#123;</span><br><span class="line">	cc.mu.Lock()</span><br><span class="line">	<span class="keyword">defer</span> cc.mu.Unlock()</span><br><span class="line">	klog.V(<span class="number">1</span>).Infof(<span class="string">"ClusterController observed a cluster deletion: %v"</span>, obj.Name)</span><br><span class="line">	<span class="built_in">delete</span>(cc.clusterDataMap, obj.Name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(cc *ClusterController)</span> <span class="title">addToClusterSet</span><span class="params">(obj *fedv1b1.KubeFedCluster)</span></span> &#123;</span><br><span class="line">	cc.mu.Lock()</span><br><span class="line">	<span class="keyword">defer</span> cc.mu.Unlock()</span><br><span class="line">	clusterData := cc.clusterDataMap[obj.Name]</span><br><span class="line">  <span class="comment">// 这里比较奇怪，如果存在且集群client也存在就直接return了</span></span><br><span class="line">  <span class="comment">// 个人感觉这里应该分析下问题</span></span><br><span class="line">	<span class="keyword">if</span> clusterData != <span class="literal">nil</span> &amp;&amp; clusterData.clusterKubeClient != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	klog.V(<span class="number">1</span>).Infof(<span class="string">"ClusterController observed a new cluster: %v"</span>, obj.Name)</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 给新集群创建一个集群Client</span></span><br><span class="line">	restClient, err := NewClusterClientSet(obj, cc.client, cc.fedNamespace, cc.clusterHealthCheckConfig.Timeout)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> || restClient == <span class="literal">nil</span> &#123;</span><br><span class="line">		cc.RecordError(obj, <span class="string">"MalformedClusterConfig"</span>, errors.Wrap(err, <span class="string">"The configuration for this cluster may be malformed"</span>))</span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">  <span class="comment">// 把新 ClusterData 加到控制器里</span></span><br><span class="line">	cc.clusterDataMap[obj.Name] = &amp;ClusterData&#123;clusterKubeClient: restClient, cachedObj: obj.DeepCopy()&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里也可以看出来，控制器里加的那个锁的目的其实就是用来保证ClusterData的并发安全（为啥不直接用并发安全字典）。</p>
+<p>我们最后来看下 控制器的 run 方法,这个方法其实是被 StartClusterController 调用，StartClusterController 其实也只是对 run 方法的简单封装，这里就不详细看了，我们之间看 run 方法的实现:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(cc *ClusterController)</span> <span class="title">Run</span><span class="params">(stopChan &lt;-<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	<span class="keyword">defer</span> utilruntime.HandleCrash()</span><br><span class="line">  <span class="comment">// 调用 cache Controller 的 Run 方法 </span></span><br><span class="line">	<span class="keyword">go</span> cc.clusterController.Run(stopChan)</span><br><span class="line">	<span class="comment">// 周期性监控集群状态</span></span><br><span class="line">	<span class="keyword">go</span> wait.Until(<span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">if</span> err := cc.updateClusterStatus(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">			klog.Errorf(<span class="string">"Error monitoring cluster status: %v"</span>, err)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;, cc.clusterHealthCheckConfig.Period, stopChan)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里我们在看看这里涉及的更新集群状态函数：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(cc *ClusterController)</span> <span class="title">updateClusterStatus</span><span class="params">()</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	clusters := &amp;fedv1b1.KubeFedClusterList&#123;&#125;</span><br><span class="line">	err := cc.client.List(context.TODO(), clusters, cc.fedNamespace)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line">	<span class="keyword">for</span> _, obj := <span class="keyword">range</span> clusters.Items &#123;</span><br><span class="line">		cc.mu.RLock()</span><br><span class="line">		cluster := obj.DeepCopy()</span><br><span class="line">		clusterData := cc.clusterDataMap[cluster.Name]</span><br><span class="line">		cc.mu.RUnlock()</span><br><span class="line">		<span class="keyword">if</span> clusterData == <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="comment">// 如果 clusterData 不存在</span></span><br><span class="line">			cc.addToClusterSet(cluster)</span><br><span class="line">			cc.mu.RLock()</span><br><span class="line">			clusterData = cc.clusterDataMap[cluster.Name]</span><br><span class="line">			cc.mu.RUnlock()</span><br><span class="line">			<span class="keyword">if</span> clusterData == <span class="literal">nil</span> &#123;</span><br><span class="line">				klog.Warningf(<span class="string">"Failed to retrieve stored data for cluster %s"</span>, cluster.Name)</span><br><span class="line">				<span class="keyword">continue</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		wg.Add(<span class="number">1</span>)</span><br><span class="line">    <span class="comment">// 真正的更新集群状态的方法</span></span><br><span class="line">		<span class="keyword">go</span> cc.updateIndividualClusterStatus(cluster, clusterData, &amp;wg)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	wg.Wait()</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(cc *ClusterController)</span> <span class="title">updateIndividualClusterStatus</span><span class="params">(cluster *fedv1b1.KubeFedCluster,</span></span></span><br><span class="line"><span class="function"><span class="params">	storedData *ClusterData, wg *sync.WaitGroup)</span></span> &#123;</span><br><span class="line">	<span class="keyword">defer</span> metrics.ClusterHealthStatusDurationFromStart(time.Now())</span><br><span class="line"></span><br><span class="line">	clusterClient := storedData.clusterKubeClient</span><br><span class="line">  <span class="comment">// 更新集群状态</span></span><br><span class="line">	currentClusterStatus, err := clusterClient.GetClusterHealthStatus()</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		cc.RecordError(cluster, <span class="string">"RetrievingClusterHealthFailed"</span>, errors.Wrap(err, <span class="string">"Failed to retrieve health of the cluster"</span>))</span><br><span class="line">	&#125;</span><br><span class="line">  </span><br><span class="line">	currentClusterStatus = thresholdAdjustedClusterStatus(currentClusterStatus, storedData, cc.clusterHealthCheckConfig)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> utilfeature.DefaultFeatureGate.Enabled(features.CrossClusterServiceDiscovery) &#123;</span><br><span class="line">		currentClusterStatus = cc.updateClusterZonesAndRegion(currentClusterStatus, cluster, clusterClient)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	storedData.clusterStatus = currentClusterStatus</span><br><span class="line">	cluster.Status = *currentClusterStatus</span><br><span class="line">  <span class="comment">// 更新资源对象的status字段</span></span><br><span class="line">	<span class="keyword">if</span> err := cc.client.UpdateStatus(context.TODO(), cluster); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		klog.Warningf(<span class="string">"Failed to update the status of cluster %q: %v"</span>, cluster.Name, err)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	wg.Done()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>至此，kubefed控制器的基本工作流也就梳理的差不多了，其实外部想启用kubefed 集群控制器也只需调用下StartClusterController 函数就可以让集群控制器工作了。</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://note.run-linux.com">Linus Lee</a>
+            <p>原文链接：<a href="http://note.run-linux.com/2020/06/01/kubefed-clustercontroller/">http://note.run-linux.com/2020/06/01/kubefed-clustercontroller/</a>
+            <p>发表日期：<a href="http://note.run-linux.com/2020/06/01/kubefed-clustercontroller/">June 1st 2020, 1:12:06 am</a>
+            <p>更新日期：<a href="http://note.run-linux.com/2020/06/01/kubefed-clustercontroller/">June 1st 2020, 1:16:19 am</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2019/11/24/k8s-storage/" title= "Kubernetes Storage">
+                    <div class="prevTitle">Kubernetes Storage</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zMjU0Ni85MTA3>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:708863861@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/mr-linus" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#tags-k8s"><span class="toc-number">1.</span> <span class="toc-text">tags: k8s</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#闲谈-kubefed-源码-——-ClusterController"><span class="toc-number">2.</span> <span class="toc-text">闲谈 kubefed 源码 —— ClusterController</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-kubefed-中的集群资源"><span class="toc-number">2.0.1.</span> <span class="toc-text">1.kubefed 中的集群资源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-kubefed-中的集群资源-Client"><span class="toc-number">2.0.2.</span> <span class="toc-text">2. kubefed 中的集群资源 Client</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-kubefed-中的集群资源控制器"><span class="toc-number">2.0.3.</span> <span class="toc-text">3. kubefed 中的集群资源控制器</span></a></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 27
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2020/06/01/kubefed-clustercontroller/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span><a class="archive-post-title" href= "/2019/11/24/k8s-storage/" >Kubernetes Storage</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/17</span><a class="archive-post-title" href= "/2019/04/17/Kubernetes-s-API/" >Kubernetes's API</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/27</span><a class="archive-post-title" href= "/2019/03/27/Istio-s-traffic-management/" >Istio's traffic management</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/27</span><a class="archive-post-title" href= "/2019/03/27/Views-about-the-struct-of-istio/" >Views about the struct of istio</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span><a class="archive-post-title" href= "/2019/03/25/Install-istio-with-helm/" >Install Istio using helm</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span><a class="archive-post-title" href= "/2019/03/18/Install-Helm-with-k8s/" >Install Helm for k8s</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2019/03/15/Install-K8S-dashboard/" >Install K8S dashboard with ingress</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/Install-K8S-with-kubeadm/" >Install a single master K8S cluster with kubeadm</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span><a class="archive-post-title" href= "/2019/01/24/Go-Core-Interface/" >Go Core Dev Interface</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span><a class="archive-post-title" href= "/2019/01/23/Go-Core-TypeSystem/" >Go Core Dev Type-System</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/17</span><a class="archive-post-title" href= "/2019/01/17/Go-Core-Function/" >Go Core Dev Function</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span><a class="archive-post-title" href= "/2019/01/15/Go-Core-Base/" >Go Core Dev Base</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2018/09/09/Go-Primer/" >Go Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/Kubernetes StatefulSet/" >Kubernetes StatefulSet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/contribute-to-opensource/" >How to contribute to open source projects</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/Linux-namespace/" >Views about Namespace & Cgroups of Linux Kernel</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2018/07/17/K8S-InfoCollection/" >Kubernetes Information Collection</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2018/07/01/Scraping-Primer/" >Scraping-Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2018/06/21/Linux-Primer/" >Linux-Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/15</span><a class="archive-post-title" href= "/2018/06/15/Docker-faq/" >Docker-FAQ</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span><a class="archive-post-title" href= "/2017/12/12/Binary-tree/" >Binary tree  of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span><a class="archive-post-title" href= "/2017/12/12/Graph-traversal/" >Graph traversal  of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/search/" >Search of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2017/10/24/struct/" >Concept of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/sort/" >Sort of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2017/10/20/Docker-Primer/" >Docker-Primer</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="k8s"><span class="iconfont-archer">&#xe606;</span>k8s</span>
+    
+        <span class="sidebar-tag-name" data-tags="istio"><span class="iconfont-archer">&#xe606;</span>istio</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
+    
+        <span class="sidebar-tag-name" data-tags="open-source"><span class="iconfont-archer">&#xe606;</span>open-source</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Linus Lee"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>
+
+

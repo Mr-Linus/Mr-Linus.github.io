@@ -346,6 +346,33 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2020/06/01/kubefed-clustercontroller/" >
+            
+                <span>[Untitled Post]</span>
+        </a>
+        <div class="abstract-content">
+            
+title: Kubefed - ClusterControllerdate: 2020-06-01 01:16:18
+tags: k8s闲谈 kubefed 源码 —— ClusterControllerkubefed 其实是用 kubebuilder v1 脚手架做的，所以源代码看起来不是那么困难，首先来看看kubefed的集群管理是怎么做到的。
+1.kubefed 中的集群资源先来看看 kubefed 里定义的集群资源长什么样子：
+123456789101112131415161718192021222324apiVersion: core.kubefed.io/v1beta1k...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/06/01</span>
+            </div>
+            <!-- tags  -->
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2019/11/24/k8s-storage/" >
             
                 <span>Kubernetes Storage</span>
@@ -619,35 +646,6 @@ docker安装完毕
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/24</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "Go">Go</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2019/01/23/Go-Core-TypeSystem/" >
-            
-                <span>Go Core Dev Type-System</span>
-        </a>
-        <div class="abstract-content">
-            类型系统命名类型 &amp; 未命名类型1234567891011121314151617181920package mainimport "fmt"type Person struct &#123;    name string    age int&#125;func main() &#123;    // 使用 struct 字面量声明的是未命名类型    a := struct &#123;        name string        age int    &#125;&#123;"andes", 18&#125;    fmt.Printf("%T\n", a)    ...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/01/23</span>
             </div>
             <!-- tags  -->
             
@@ -1064,9 +1062,30 @@ docker安装完毕
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 26
+        Total : 27
         </div>
         <!-- search  -->
         
@@ -1076,6 +1095,20 @@ docker安装完毕
     
     
     
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2020/06/01/kubefed-clustercontroller/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
@@ -1235,17 +1268,17 @@ docker安装完毕
     
         <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
     
-        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
-    
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
     
         <span class="sidebar-tag-name" data-tags="k8s"><span class="iconfont-archer">&#xe606;</span>k8s</span>
     
         <span class="sidebar-tag-name" data-tags="istio"><span class="iconfont-archer">&#xe606;</span>istio</span>
     
-        <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
-    
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
     
         <span class="sidebar-tag-name" data-tags="open-source"><span class="iconfont-archer">&#xe606;</span>open-source</span>
     
