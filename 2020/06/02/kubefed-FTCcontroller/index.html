@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+
+
+
+
+<!-- keywords -->
+
+
+
+
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Linus Lee">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Linus Lee">
+    
+    <meta name="keywords" content="Funky's NoteBook,Linus Lee">
+    
+    <meta name="description" content="It's Funky's NoteBook">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>Kubefed - ClusterController · Funky&#39;s NoteBook</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= "/css/style.css?v=20180824" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= "/css/mobile.css?v=20180824" media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/gun.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Funky&#39;s NoteBook</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Kubefed - ClusterController</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Funky's NoteBook</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style="
+
+
+
+
+
+
+
+height:50vh;
+">
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Kubefed - ClusterController
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "k8s">k8s</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3,425</span>阅读时长: <span class="post-count reading-time">17 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2020/06/02</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h2 id="透视-kubefed-源码-——-FTC-Controller"><a href="#透视-kubefed-源码-——-FTC-Controller" class="headerlink" title="透视 kubefed 源码 —— FTC Controller"></a>透视 kubefed 源码 —— FTC Controller</h2><p>kubefed 中的 FederatedTypeConfig（FTC） 是用于联邦资源到 kubernetes 集群资源的映射关系，以便让联邦可以管控各个集群里的API资源对象。</p>
+<p>和之前一样，我们先看看API资源长什么样：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">core.kubefed.io/v1beta1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">FederatedTypeConfig</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  creationTimestamp:</span> <span class="string">"2020-05-31T09:36:32Z"</span></span><br><span class="line"><span class="attr">  finalizers:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">core.kubefed.io/federated-type-config</span></span><br><span class="line"><span class="attr">  generation:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">deployments.apps</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">kube-federation-system</span></span><br><span class="line"><span class="attr">  resourceVersion:</span> <span class="string">"15506"</span></span><br><span class="line"><span class="attr">  selfLink:</span> <span class="string">/apis/core.kubefed.io/v1beta1/namespaces/kube-federation-system/federatedtypeconfigs/deployments.apps</span></span><br><span class="line"><span class="attr">  uid:</span> <span class="number">762447</span><span class="string">f3-b7f7-46d0-8f88-e0d2b47c6181</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  federatedType:</span></span><br><span class="line"><span class="attr">    group:</span> <span class="string">types.kubefed.io</span></span><br><span class="line"><span class="attr">    kind:</span> <span class="string">FederatedDeployment</span></span><br><span class="line"><span class="attr">    pluralName:</span> <span class="string">federateddeployments</span></span><br><span class="line"><span class="attr">    scope:</span> <span class="string">Namespaced</span></span><br><span class="line"><span class="attr">    version:</span> <span class="string">v1beta1</span></span><br><span class="line"><span class="attr">  propagation:</span> <span class="string">Enabled</span></span><br><span class="line"><span class="attr">  targetType:</span></span><br><span class="line"><span class="attr">    group:</span> <span class="string">apps</span></span><br><span class="line"><span class="attr">    kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">    pluralName:</span> <span class="string">deployments</span></span><br><span class="line"><span class="attr">    scope:</span> <span class="string">Namespaced</span></span><br><span class="line"><span class="attr">    version:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">status:</span></span><br><span class="line"><span class="attr">  observedGeneration:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  propagationController:</span> <span class="string">Running</span></span><br><span class="line"><span class="attr">  statusController:</span> <span class="string">NotRunning</span></span><br></pre></td></tr></table></figure>
+<p>这里需要注意的几个地方就是 spec 对应的 federatedType 是定义的联邦资源，而 targetType 实际上是真正的 kubernetes 资源，这个资源可以是 kubernetes 的原生资源也可以是类似 istio 的 CR。</p>
+<p>这里的 propagation 字段若设置为 Enable，则 kubefed 可以通过  federatedType 来控制各个集群里的对应的 targetType 的资源，这个我们在后面具体展开讲。我们继续看看源码里 API 的定义,代码位于<code>/pkg/apis/core/v1beta1/federatedtypeconfig_types.go</code>：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> FederatedTypeConfigSpec <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// The configuration of the target type. If not set, the pluralName and</span></span><br><span class="line">	<span class="comment">// groupName fields will be set from the metadata.name of this resource. The</span></span><br><span class="line">	<span class="comment">// kind field must be set.</span></span><br><span class="line">	TargetType APIResource <span class="string">`json:"targetType"`</span></span><br><span class="line">	<span class="comment">// Whether or not propagation to member clusters should be enabled.</span></span><br><span class="line">	Propagation PropagationMode <span class="string">`json:"propagation"`</span></span><br><span class="line">	<span class="comment">// Configuration for the federated type that defines (via</span></span><br><span class="line">	<span class="comment">// template, placement and overrides fields) how the target type</span></span><br><span class="line">	<span class="comment">// should appear in multiple cluster.</span></span><br><span class="line">	FederatedType APIResource <span class="string">`json:"federatedType"`</span></span><br><span class="line">	<span class="comment">// Configuration for the status type that holds information about which type</span></span><br><span class="line">	<span class="comment">// holds the status of the federated resource. If not provided, the group</span></span><br><span class="line">	<span class="comment">// and version will default to those provided for the federated type api</span></span><br><span class="line">	<span class="comment">// resource.</span></span><br><span class="line">	<span class="comment">// +optional</span></span><br><span class="line">	StatusType *APIResource <span class="string">`json:"statusType,omitempty"`</span></span><br><span class="line">	<span class="comment">// Whether or not Status object should be populated.</span></span><br><span class="line">	<span class="comment">// +optional</span></span><br><span class="line">	StatusCollection *StatusCollectionMode <span class="string">`json:"statusCollection,omitempty"`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的 APIResource 其实就是 GVK 的组合：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// APIResource defines how to configure the dynamic client for an API resource.</span></span><br><span class="line"><span class="keyword">type</span> APIResource <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// metav1.GroupVersion is not used since the json annotation of</span></span><br><span class="line">	<span class="comment">// the fields enforces them as mandatory.</span></span><br><span class="line">	<span class="comment">// Group of the resource.</span></span><br><span class="line">	<span class="comment">// +optional</span></span><br><span class="line">	Group <span class="keyword">string</span> <span class="string">`json:"group,omitempty"`</span></span><br><span class="line">	<span class="comment">// Version of the resource.</span></span><br><span class="line">	Version <span class="keyword">string</span> <span class="string">`json:"version"`</span></span><br><span class="line">	<span class="comment">// Camel-cased singular name of the resource (e.g. ConfigMap)</span></span><br><span class="line">	Kind <span class="keyword">string</span> <span class="string">`json:"kind"`</span></span><br><span class="line">	<span class="comment">// Lower-cased plural name of the resource (e.g. configmaps).  If</span></span><br><span class="line">	<span class="comment">// not provided, it will be computed by lower-casing the kind and</span></span><br><span class="line">	<span class="comment">// suffixing an 's'.</span></span><br><span class="line">	PluralName <span class="keyword">string</span> <span class="string">`json:"pluralName"`</span></span><br><span class="line">	<span class="comment">// Scope of the resource.</span></span><br><span class="line">	Scope apiextv1b1.ResourceScope <span class="string">`json:"scope"`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们继续看看 FederatedTypeConfig 的状态结构体：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> FederatedTypeConfigStatus <span class="keyword">struct</span> &#123;</span><br><span class="line">	ObservedGeneration <span class="keyword">int64</span> <span class="string">`json:"observedGeneration"`</span></span><br><span class="line">	<span class="comment">// PropagationController 追踪 sync controller 的状态.</span></span><br><span class="line">	PropagationController ControllerStatus <span class="string">`json:"propagationController"`</span></span><br><span class="line">	<span class="comment">// StatusController 追踪 status controller 的状态.</span></span><br><span class="line">	StatusController *ControllerStatus <span class="string">`json:"statusController,omitempty"`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>API看完了，根据 kubebuilder的 套路，我们直接去看控制器的源码吧！</p>
+<p>控制器的源代码位于<code>/pkg/controller/federatedtypeconfig/controller.go</code>。我最开始，我们在API资源上就看见了 federatedtypeconfig 资源 （以下简称 FTC）里有个 finalizer 终结器，于是 在代码的最开头，kubefed 就声明了它：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> finalizer <span class="keyword">string</span> = <span class="string">"core.kubefed.io/federated-type-config"</span></span><br></pre></td></tr></table></figure>
+<p>根据kubernetes 资源的约定写法，只有API资源的 终结器标签全部消失，该资源才能被删除，因此终结器其实是用于管理删除资源操作的标签,这玩意一般会和 DeletionTimestamp 配合删除我们的 CR。我们继续看看控制器结构体:</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Controller <span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">// Arguments to use when starting new controllers</span></span><br><span class="line">	controllerConfig *util.ControllerConfig</span><br><span class="line"></span><br><span class="line">	client genericclient.Client</span><br><span class="line">  <span class="comment">// 一个 hashmap，map的 key 为 sync 控制器的 targetType</span></span><br><span class="line">	stopChannels <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;</span><br><span class="line">	lock         sync.RWMutex</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 存放 FederatedTypeConfig 对象</span></span><br><span class="line">	store cache.Store</span><br><span class="line">	<span class="comment">// FederatedTypeConfig 对象的 Informer </span></span><br><span class="line">	controller cache.Controller</span><br><span class="line"></span><br><span class="line">	worker util.ReconcileWorker</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个控制器和之前看的集群控制器明显不一样，这个一看就是 kubebuilder 生成的，我们直接去看下调协函数吧~</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Controller)</span> <span class="title">reconcile</span><span class="params">(qualifiedName util.QualifiedName)</span> <span class="title">util</span>.<span class="title">ReconciliationStatus</span></span> &#123;</span><br></pre></td></tr></table></figure>
+<p>这里的 <code>util.QualifiedName</code> 其实就是 名称和 NS 的组合, 和 kubebuilder v2 传入参数类似：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> QualifiedName <span class="keyword">struct</span> &#123;</span><br><span class="line">	Namespace <span class="keyword">string</span></span><br><span class="line">	Name      <span class="keyword">string</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于调协函数内容较长，我们分成几个部分进行深入剖析：</p>
+<ul>
+<li>第一部分 初始化 FTC 资源对象的 Spec 部分</li>
+</ul>
+<p>调协函数一开始将获取的 FTC 请求资源获取并做些初始化处理。 </p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">// 获取请求的 FTC 的名称 比如：deployments.apps</span></span><br><span class="line"> key := qualifiedName.String()</span><br><span class="line"><span class="comment">// 拷贝至缓存</span></span><br><span class="line">cachedObj, err := c.objCopyFromCache(key)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> util.StatusError</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> cachedObj == <span class="literal">nil</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> util.StatusAllOK</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 通过类型断言直接将缓存中的对象转换为 FTC 对象</span></span><br><span class="line">typeConfig := cachedObj.(*corev1b1.FederatedTypeConfig)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化下字段里的数据</span></span><br><span class="line">corev1b1.SetFederatedTypeConfigDefaults(typeConfig)</span><br><span class="line"> <span class="comment">// 获取 FTC 中的 sync 和 status 控制器的启动状态</span></span><br><span class="line">syncEnabled := typeConfig.GetPropagationEnabled()</span><br><span class="line">statusEnabled := typeConfig.GetStatusEnabled()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>第二部分 初始化 FTC 对象对应的控制器</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"> limitedScope := c.controllerConfig.TargetNamespace != metav1.NamespaceAll</span><br><span class="line"><span class="keyword">if</span> limitedScope &amp;&amp; syncEnabled &amp;&amp; !typeConfig.GetNamespaced() &#123;</span><br><span class="line">	_, ok := c.getStopChannel(typeConfig.Name)</span><br><span class="line">	<span class="keyword">if</span> !ok &#123;</span><br><span class="line">		holderChan := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">		c.lock.Lock()</span><br><span class="line">     <span class="comment">// 将该 FTC 的 channel 加入到 控制器 map 里</span></span><br><span class="line">		c.stopChannels[typeConfig.Name] = holderChan</span><br><span class="line">		c.lock.Unlock()</span><br><span class="line">		klog.Infof(<span class="string">"Skipping start of sync &amp; status controller for cluster-scoped resource %q. It is not required for a namespaced KubeFed control plane."</span>, typeConfig.GetFederatedType().Kind)</span><br><span class="line">	&#125;</span><br><span class="line">   <span class="comment">// 初始化 FTC 的相关状态</span></span><br><span class="line">	typeConfig.Status.ObservedGeneration = typeConfig.Generation</span><br><span class="line">	typeConfig.Status.PropagationController = corev1b1.ControllerStatusNotRunning</span><br><span class="line">   </span><br><span class="line">	<span class="keyword">if</span> typeConfig.Status.StatusController == <span class="literal">nil</span> &#123;</span><br><span class="line">		typeConfig.Status.StatusController = <span class="built_in">new</span>(corev1b1.ControllerStatus)</span><br><span class="line">	&#125;</span><br><span class="line">   <span class="comment">// 更新 Status 状态</span></span><br><span class="line">	*typeConfig.Status.StatusController = corev1b1.ControllerStatusNotRunning</span><br><span class="line">	err = c.client.UpdateStatus(context.TODO(), typeConfig)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		runtime.HandleError(errors.Wrapf(err, <span class="string">"Could not update status fields of the CRD: %q"</span>, key))</span><br><span class="line">		<span class="keyword">return</span> util.StatusError</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> util.StatusAllOK</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 获取 statusKey、停止channel </span></span><br><span class="line">statusKey := typeConfig.Name + <span class="string">"/status"</span></span><br><span class="line"> <span class="comment">//相当于 sync 和 status 两个 channel 都 存在一个 map 里了，名字对应是 name 和 name/status</span></span><br><span class="line">syncStopChan, syncRunning := c.getStopChannel(typeConfig.Name)</span><br><span class="line">statusStopChan, statusRunning := c.getStopChannel(statusKey)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>第三部分 删除 FTC 资源策略</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">deleted := typeConfig.DeletionTimestamp != <span class="literal">nil</span></span><br><span class="line">	<span class="keyword">if</span> deleted &#123;</span><br><span class="line">    <span class="comment">// 停止两个控制器</span></span><br><span class="line">		<span class="keyword">if</span> syncRunning &#123;</span><br><span class="line">			c.stopController(typeConfig.Name, syncStopChan)</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> statusRunning &#123;</span><br><span class="line">			c.stopController(statusKey, statusStopChan)</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">if</span> typeConfig.IsNamespace() &#123;</span><br><span class="line">			klog.Infof(<span class="string">"Reconciling all namespaced FederatedTypeConfig resources on deletion of %q"</span>, key)</span><br><span class="line">      <span class="comment">// 更新 FTC </span></span><br><span class="line">			c.reconcileOnNamespaceFTCUpdate()</span><br><span class="line">		&#125;</span><br><span class="line">    <span class="comment">// 移除 Finalizer</span></span><br><span class="line">		err := c.removeFinalizer(typeConfig)</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			runtime.HandleError(errors.Wrapf(err, <span class="string">"Failed to remove finalizer from FederatedTypeConfig %q"</span>, key))</span><br><span class="line">			<span class="keyword">return</span> util.StatusError</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> util.StatusAllOK</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>第四部分 FTC 资源 Finalizer 设置策略</li>
+</ul>
+<p>这块其实是给新创建的 FTC 资源用的，主要是用于给 FTC 增加  Finalizer。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">// 确保 FTC	具有 Finalizer</span></span><br><span class="line"> <span class="comment">// 如果没有就添加</span></span><br><span class="line"> updated, err := c.ensureFinalizer(typeConfig)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">	runtime.HandleError(errors.Wrapf(err, <span class="string">"Failed to ensure finalizer for FederatedTypeConfig %q"</span>, key))</span><br><span class="line">	<span class="keyword">return</span> util.StatusError</span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> updated &amp;&amp; typeConfig.IsNamespace() &#123;</span><br><span class="line">	<span class="comment">// Detected creation of the namespace FTC. If there are existing FTCs</span></span><br><span class="line">	<span class="comment">// which did not start their sync controllers due to the lack of a</span></span><br><span class="line">	<span class="comment">// namespace FTC, then reconcile them now so they can start.</span></span><br><span class="line">	klog.Infof(<span class="string">"Reconciling all namespaced FederatedTypeConfig resources on finalizer update for %q"</span>, key)</span><br><span class="line">   <span class="comment">// 更新资源</span></span><br><span class="line">	c.reconcileOnNamespaceFTCUpdate()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>第五部分 控制器调协策略</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">// 获取 Sync 控制器是否在运行</span></span><br><span class="line"> startNewSyncController := !syncRunning &amp;&amp; syncEnabled</span><br><span class="line">stopSyncController := syncRunning &amp;&amp; (!syncEnabled || (typeConfig.GetNamespaced() &amp;&amp; !c.namespaceFTCExists()))</span><br><span class="line"><span class="keyword">if</span> startNewSyncController &#123;</span><br><span class="line">   <span class="comment">// 没有启动 sync 控制器就启动下 sync 控制器</span></span><br><span class="line">	<span class="keyword">if</span> err := c.startSyncController(typeConfig); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		runtime.HandleError(err)</span><br><span class="line">		<span class="keyword">return</span> util.StatusError</span><br><span class="line">	&#125;</span><br><span class="line">   <span class="comment">// 如果 需要停止 sync 控制器就停止</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> stopSyncController &#123;</span><br><span class="line">	c.stopController(typeConfig.Name, syncStopChan)</span><br><span class="line">&#125;</span><br><span class="line"> <span class="comment">// 获取 Status 控制器是否在运行</span></span><br><span class="line"> startNewStatusController := !statusRunning &amp;&amp; statusEnabled</span><br><span class="line">stopStatusController := statusRunning &amp;&amp; !statusEnabled</span><br><span class="line"><span class="keyword">if</span> startNewStatusController &#123;</span><br><span class="line">   <span class="comment">// 如果出现异常就启动下 status 控制器</span></span><br><span class="line">	<span class="keyword">if</span> err := c.startStatusController(statusKey, typeConfig); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		runtime.HandleError(err)</span><br><span class="line">		<span class="keyword">return</span> util.StatusError</span><br><span class="line">	&#125;</span><br><span class="line">   <span class="comment">// 若 status 控制器被 stop，那么停止该控制器</span></span><br><span class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> stopStatusController &#123;</span><br><span class="line">   <span class="comment">// 其实就是把 statusKey 的那个 channel 从 FTC 控制器的map里删除</span></span><br><span class="line">	c.stopController(statusKey, statusStopChan)</span><br><span class="line">&#125;</span><br><span class="line"> <span class="comment">// 处理 Sync 控制器状态</span></span><br><span class="line"><span class="keyword">if</span> !startNewSyncController &amp;&amp; !stopSyncController &amp;&amp;</span><br><span class="line">	typeConfig.Status.ObservedGeneration != typeConfig.Generation &#123;</span><br><span class="line">   <span class="comment">// </span></span><br><span class="line">	<span class="keyword">if</span> err := c.refreshSyncController(typeConfig); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		runtime.HandleError(err)</span><br><span class="line">		<span class="keyword">return</span> util.StatusError</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"> <span class="comment">// 设置 ObservedGeneration 状态</span></span><br><span class="line">typeConfig.Status.ObservedGeneration = typeConfig.Generation</span><br><span class="line">syncControllerRunning := startNewSyncController || (syncRunning &amp;&amp; !stopSyncController)</span><br><span class="line"> <span class="comment">// 更新 FTC 的 sync 控制器状态信息</span></span><br><span class="line"><span class="keyword">if</span> syncControllerRunning &#123;</span><br><span class="line">	typeConfig.Status.PropagationController = corev1b1.ControllerStatusRunning</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	typeConfig.Status.PropagationController = corev1b1.ControllerStatusNotRunning</span><br><span class="line">&#125;</span><br><span class="line"> <span class="comment">// 更新 FTC 的 status 控制器状态信息</span></span><br><span class="line"><span class="keyword">if</span> typeConfig.Status.StatusController == <span class="literal">nil</span> &#123;</span><br><span class="line">	typeConfig.Status.StatusController = <span class="built_in">new</span>(corev1b1.ControllerStatus)</span><br><span class="line">&#125;</span><br><span class="line">statusControllerRunning := startNewStatusController || (statusRunning &amp;&amp; !stopStatusController)</span><br><span class="line"><span class="keyword">if</span> statusControllerRunning &#123;</span><br><span class="line">	*typeConfig.Status.StatusController = corev1b1.ControllerStatusRunning</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	*typeConfig.Status.StatusController = corev1b1.ControllerStatusNotRunning</span><br><span class="line">&#125;</span><br><span class="line"> <span class="comment">// 更新 FTC 资源的状态</span></span><br><span class="line">err = c.client.UpdateStatus(context.TODO(), typeConfig)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">	runtime.HandleError(errors.Wrapf(err, <span class="string">"Could not update status fields of the CRD: %q"</span>, key))</span><br><span class="line">	<span class="keyword">return</span> util.StatusError</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> util.StatusAllOK</span><br></pre></td></tr></table></figure>
+<p>个人认为，kubefed 的 FTC 调协代码过于冗长，造成可读性差不易维护，可以将这5个部分独立拆分成处理方法，增强可读性的同时也方便维护，并且每一次调协，都需要定义那么多的变量，很可能只是一次 FTC资源的更新而出发的调协，就会造成很多无用的变量被定义。</p>
+<p>这里有几个涉及到的方法，我们可以拿出来具体分析下：</p>
+<ul>
+<li>startSyncController</li>
+</ul>
+<p>这也是我们第一次见到和 sync 控制器相关的逻辑，我们先看看在 FTC 控制器里做了什么。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Controller)</span> <span class="title">startSyncController</span><span class="params">(tc *corev1b1.FederatedTypeConfig)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	<span class="comment">// TODO(marun) Consider using a shared informer for federated</span></span><br><span class="line">	<span class="comment">// namespace that can be shared between all controllers of a</span></span><br><span class="line">	<span class="comment">// cluster-scoped KubeFed control plane.  A namespace-scoped</span></span><br><span class="line">	<span class="comment">// control plane would still have to use a non-shared informer due</span></span><br><span class="line">	<span class="comment">// to it not being possible to limit its scope.</span></span><br><span class="line">  <span class="comment">// 首先获取 FTC </span></span><br><span class="line">	ftc := tc.DeepCopyObject().(*corev1b1.FederatedTypeConfig)</span><br><span class="line">  <span class="comment">// 获取联邦类型的 Kind</span></span><br><span class="line">	kind := ftc.Spec.FederatedType.Kind</span><br><span class="line">  <span class="comment">// 对于 sync 控制器管理的资源都需要提供 ns 用于配合联邦命名空间</span></span><br><span class="line">	<span class="keyword">var</span> fedNamespaceAPIResource *metav1.APIResource</span><br><span class="line">	<span class="keyword">if</span> ftc.GetNamespaced() &#123;</span><br><span class="line">		<span class="keyword">var</span> err error</span><br><span class="line">		fedNamespaceAPIResource, err = c.getFederatedNamespaceAPIResource()</span><br><span class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> errors.Wrapf(err, <span class="string">"Unable to start sync controller for %q due to missing FederatedTypeConfig for namespaces"</span>, kind)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	stopChan := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">  <span class="comment">// 这里才真正的启动了 sync 控制器</span></span><br><span class="line">	err := synccontroller.StartKubeFedSyncController(c.controllerConfig, stopChan, ftc, fedNamespaceAPIResource)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">close</span>(stopChan)</span><br><span class="line">		<span class="keyword">return</span> errors.Wrapf(err, <span class="string">"Error starting sync controller for %q"</span>, kind)</span><br><span class="line">	&#125;</span><br><span class="line">	klog.Infof(<span class="string">"Started sync controller for %q"</span>, kind)</span><br><span class="line">	c.lock.Lock()</span><br><span class="line">	<span class="keyword">defer</span> c.lock.Unlock()</span><br><span class="line">  <span class="comment">// 这里创建的 channel 用于管理相应的 sync 控制器</span></span><br><span class="line">	c.stopChannels[ftc.Name] = stopChan</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看到这里其实基本上也就知道 sync 控制器是干啥的了，sync 控制器其实才是真正管理联邦自定义资源的控制器。</p>
+<ul>
+<li>startStatusController</li>
+</ul>
+<p>这也是我们第一次见到和 status 控制器相关的逻辑，功能比 sync 控制器要简单，其实也就是启动下 status控制器而已，同时生成一个 channel 用于 FTC 随时关闭相关的 status 控制器。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Controller)</span> <span class="title">startStatusController</span><span class="params">(statusKey <span class="keyword">string</span>, tc *corev1b1.FederatedTypeConfig)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	kind := tc.Spec.FederatedType.Kind</span><br><span class="line">	stopChan := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span><br><span class="line">	ftc := tc.DeepCopyObject().(*corev1b1.FederatedTypeConfig)</span><br><span class="line">	err := statuscontroller.StartKubeFedStatusController(c.controllerConfig, stopChan, ftc)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="built_in">close</span>(stopChan)</span><br><span class="line">		<span class="keyword">return</span> errors.Wrapf(err, <span class="string">"Error starting status controller for %q"</span>, kind)</span><br><span class="line">	&#125;</span><br><span class="line">	klog.Infof(<span class="string">"Started status controller for %q"</span>, kind)</span><br><span class="line">	c.lock.Lock()</span><br><span class="line">	<span class="keyword">defer</span> c.lock.Unlock()</span><br><span class="line">	c.stopChannels[statusKey] = stopChan</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>refreshSyncController</li>
+</ul>
+<p>刷新就更简单粗暴了，就是停止再启动：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *Controller)</span> <span class="title">refreshSyncController</span><span class="params">(tc *corev1b1.FederatedTypeConfig)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	klog.Infof(<span class="string">"refreshing sync controller for %q"</span>, tc.Name)</span><br><span class="line"></span><br><span class="line">	syncStopChan, ok := c.getStopChannel(tc.Name)</span><br><span class="line">	<span class="keyword">if</span> ok &#123;</span><br><span class="line">		c.stopController(tc.Name, syncStopChan)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> c.startSyncController(tc)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么整个的 FTC Controller 部分的逻辑就看完了， FTC 在 kubefed 里就像个中介一样，负责管理联邦资源（包括自定义资源）和 kubernetes 的资源（包括 CRD）的一一对应关系。</p>
+<p>我们在使用 kubefedctl 命令行的 enable 其实就是创建一个 FTC 资源提交到中心的 API server，在中心的kubernetes集群里去触发 FTC 控制器来完成一系列的处理，我这里找到了 enable 中生成 FTC 资源的函数，大家看了就明白了：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GenerateTypeConfigForTarget</span><span class="params">(apiResource metav1.APIResource, enableTypeDirective *EnableTypeDirective)</span> <span class="title">typeconfig</span>.<span class="title">Interface</span></span> &#123;</span><br><span class="line">	spec := enableTypeDirective.Spec</span><br><span class="line">	kind := apiResource.Kind</span><br><span class="line">	pluralName := apiResource.Name</span><br><span class="line">  <span class="comment">// 生成 FTC 资源对象</span></span><br><span class="line">	typeConfig := &amp;fedv1b1.FederatedTypeConfig&#123;</span><br><span class="line">		<span class="comment">// Explicitly including TypeMeta will ensure it will be</span></span><br><span class="line">		<span class="comment">// serialized properly to yaml.</span></span><br><span class="line">		TypeMeta: metav1.TypeMeta&#123;</span><br><span class="line">			Kind:       <span class="string">"FederatedTypeConfig"</span>,</span><br><span class="line">			APIVersion: <span class="string">"core.kubefed.io/v1beta1"</span>,</span><br><span class="line">		&#125;,</span><br><span class="line">		ObjectMeta: metav1.ObjectMeta&#123;</span><br><span class="line">			Name: typeconfig.GroupQualifiedName(apiResource),</span><br><span class="line">		&#125;,</span><br><span class="line">		Spec: fedv1b1.FederatedTypeConfigSpec&#123;</span><br><span class="line">			TargetType: fedv1b1.APIResource&#123;</span><br><span class="line">				Version: apiResource.Version,</span><br><span class="line">				Kind:    kind,</span><br><span class="line">				Scope:   NamespacedToScope(apiResource),</span><br><span class="line">			&#125;,</span><br><span class="line">			Propagation: fedv1b1.PropagationEnabled,</span><br><span class="line">			FederatedType: fedv1b1.APIResource&#123;</span><br><span class="line">				Group:      spec.FederatedGroup,</span><br><span class="line">				Version:    spec.FederatedVersion,</span><br><span class="line">				Kind:       fmt.Sprintf(<span class="string">"Federated%s"</span>, kind),</span><br><span class="line">				PluralName: fmt.Sprintf(<span class="string">"federated%s"</span>, pluralName),</span><br><span class="line">				Scope:      FederatedNamespacedToScope(apiResource),</span><br><span class="line">			&#125;,</span><br><span class="line">		&#125;,</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 设置下 FTC 资源对象的一些默认值</span></span><br><span class="line">	fedv1b1.SetFederatedTypeConfigDefaults(typeConfig)</span><br><span class="line">	<span class="keyword">return</span> typeConfig</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们继续看看调用这个函数的原函数：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">GetResources</span><span class="params">(config *rest.Config, enableTypeDirective *EnableTypeDirective)</span> <span class="params">(*typeResources, error)</span></span> &#123;</span><br><span class="line">  <span class="comment">// 从这个集群里已经存在的所有资源类型（包括CRD）找到需要联邦管理的资源</span></span><br><span class="line">	apiResource, err := LookupAPIResource(config, enableTypeDirective.Name, enableTypeDirective.Spec.TargetVersion)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">	&#125;</span><br><span class="line">	klog.V(<span class="number">2</span>).Infof(<span class="string">"Found type %q"</span>, resourceKey(*apiResource))</span><br><span class="line">  <span class="comment">// 开始调用上述的函数了</span></span><br><span class="line">	typeConfig := GenerateTypeConfigForTarget(*apiResource, enableTypeDirective)</span><br><span class="line">  <span class="comment">// 这里的 accessor 在后面用于给 API 做 Validation Schema</span></span><br><span class="line">	accessor, err := newSchemaAccessor(config, *apiResource)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">nil</span>, errors.Wrap(err, <span class="string">"Error initializing validation schema accessor"</span>)</span><br><span class="line">	&#125;</span><br><span class="line">  </span><br><span class="line">	shortNames := []<span class="keyword">string</span>&#123;&#125;</span><br><span class="line">	<span class="keyword">for</span> _, shortName := <span class="keyword">range</span> apiResource.ShortNames &#123;</span><br><span class="line">		shortNames = <span class="built_in">append</span>(shortNames, fmt.Sprintf(<span class="string">"f%s"</span>, shortName))</span><br><span class="line">	&#125;</span><br><span class="line">  <span class="comment">// 生成联邦资源CRD</span></span><br><span class="line">	crd := federatedTypeCRD(typeConfig, accessor, shortNames)</span><br><span class="line">	<span class="keyword">return</span> &amp;typeResources&#123;</span><br><span class="line">		TypeConfig: typeConfig,</span><br><span class="line">		CRD:        crd,</span><br><span class="line">	&#125;, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这下大家都看明白了，其实也就是对创建一个 FTC 然后再声明一个联邦 CRD 和 FTC 对象关联，并通过 sync 控制器去获取联邦资源管理的真正的 kubernetes 资源在集群中的状态来实现对联邦资源的管理。</p>
+<p>也就是说，FTC 资源其实是对 kubernetes 资源映射，当 FTC 控制器把 sync 控制器启动了之后，sync 控制器再去监控联邦 CRD （即以federated开头的一些联邦资源），这些资源的创建其实才是 sync 控制器管理的真正对象。FTC 控制器的真正目的其实就是看那些kubernetes资源对象需要被联邦管理，哪些不需要。需要的资源对象，你就创建一个 FTC 对象声明下，那么 FTC 控制器会启动一个 sync 控制器来跟进这个kubernetes 对象（或kubernetes CRD）的变化。</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://note.run-linux.com">Linus Lee</a>
+            <p>原文链接：<a href="http://note.run-linux.com/2020/06/02/kubefed-FTCcontroller/">http://note.run-linux.com/2020/06/02/kubefed-FTCcontroller/</a>
+            <p>发表日期：<a href="http://note.run-linux.com/2020/06/02/kubefed-FTCcontroller/">June 2nd 2020, 8:40:18 pm</a>
+            <p>更新日期：<a href="http://note.run-linux.com/2020/06/02/kubefed-FTCcontroller/">June 2nd 2020, 12:24:44 am</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2020/06/01/kubefed-clustercontroller/" title= "Kubefed - ClusterController">
+                    <div class="prevTitle">Kubefed - ClusterController</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zMjU0Ni85MTA3>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:708863861@qq.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/mr-linus" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#透视-kubefed-源码-——-FTC-Controller"><span class="toc-number">1.</span> <span class="toc-text">透视 kubefed 源码 —— FTC Controller</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 28
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2020 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href= "/2020/06/02/kubefed-FTCcontroller/" >Kubefed - ClusterController</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/01</span><a class="archive-post-title" href= "/2020/06/01/kubefed-clustercontroller/" >Kubefed - ClusterController</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span><a class="archive-post-title" href= "/2019/11/24/k8s-storage/" >Kubernetes Storage</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/17</span><a class="archive-post-title" href= "/2019/04/17/Kubernetes-s-API/" >Kubernetes's API</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/27</span><a class="archive-post-title" href= "/2019/03/27/Istio-s-traffic-management/" >Istio's traffic management</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/27</span><a class="archive-post-title" href= "/2019/03/27/Views-about-the-struct-of-istio/" >Views about the struct of istio</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span><a class="archive-post-title" href= "/2019/03/25/Install-istio-with-helm/" >Install Istio using helm</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/18</span><a class="archive-post-title" href= "/2019/03/18/Install-Helm-with-k8s/" >Install Helm for k8s</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/15</span><a class="archive-post-title" href= "/2019/03/15/Install-K8S-dashboard/" >Install K8S dashboard with ingress</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/10</span><a class="archive-post-title" href= "/2019/03/10/Install-K8S-with-kubeadm/" >Install a single master K8S cluster with kubeadm</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/24</span><a class="archive-post-title" href= "/2019/01/24/Go-Core-Interface/" >Go Core Dev Interface</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/23</span><a class="archive-post-title" href= "/2019/01/23/Go-Core-TypeSystem/" >Go Core Dev Type-System</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/17</span><a class="archive-post-title" href= "/2019/01/17/Go-Core-Function/" >Go Core Dev Function</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/15</span><a class="archive-post-title" href= "/2019/01/15/Go-Core-Base/" >Go Core Dev Base</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/2018/09/09/Go-Primer/" >Go Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/Kubernetes StatefulSet/" >Kubernetes StatefulSet</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/24</span><a class="archive-post-title" href= "/2018/08/24/contribute-to-opensource/" >How to contribute to open source projects</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/20</span><a class="archive-post-title" href= "/2018/08/20/Linux-namespace/" >Views about Namespace & Cgroups of Linux Kernel</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/17</span><a class="archive-post-title" href= "/2018/07/17/K8S-InfoCollection/" >Kubernetes Information Collection</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/01</span><a class="archive-post-title" href= "/2018/07/01/Scraping-Primer/" >Scraping-Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/21</span><a class="archive-post-title" href= "/2018/06/21/Linux-Primer/" >Linux-Primer</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/15</span><a class="archive-post-title" href= "/2018/06/15/Docker-faq/" >Docker-FAQ</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2017 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span><a class="archive-post-title" href= "/2017/12/12/Binary-tree/" >Binary tree  of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/12</span><a class="archive-post-title" href= "/2017/12/12/Graph-traversal/" >Graph traversal  of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/28</span><a class="archive-post-title" href= "/2017/10/28/search/" >Search of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span><a class="archive-post-title" href= "/2017/10/24/struct/" >Concept of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/23</span><a class="archive-post-title" href= "/2017/10/23/sort/" >Sort of Data Structure</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span><a class="archive-post-title" href= "/2017/10/20/Docker-Primer/" >Docker-Primer</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="k8s"><span class="iconfont-archer">&#xe606;</span>k8s</span>
+    
+        <span class="sidebar-tag-name" data-tags="istio"><span class="iconfont-archer">&#xe606;</span>istio</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
+    
+        <span class="sidebar-tag-name" data-tags="open-source"><span class="iconfont-archer">&#xe606;</span>open-source</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Linus Lee"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
+</html>
+
+

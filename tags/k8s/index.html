@@ -346,12 +346,43 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2020/06/02/kubefed-FTCcontroller/" >
+            
+                <span>Kubefed - ClusterController</span>
+        </a>
+        <div class="abstract-content">
+            透视 kubefed 源码 —— FTC Controllerkubefed 中的 FederatedTypeConfig（FTC） 是用于联邦资源到 kubernetes 集群资源的映射关系，以便让联邦可以管控各个集群里的API资源对象。
+和之前一样，我们先看看API资源长什么样：
+123456789101112131415161718192021222324252627282930apiVersion: core.kubefed.io/v1beta1kind: FederatedTypeConfigmetadata:  creationTimestamp: "2020-05-31T0...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2020/06/02</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "k8s">k8s</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2020/06/01/kubefed-clustercontroller/" >
             
                 <span>Kubefed - ClusterController</span>
         </a>
         <div class="abstract-content">
-            闲谈 kubefed 源码 —— ClusterControllerkubefed 其实是用 kubebuilder v1 脚手架做的，所以源代码看起来不是那么困难，首先来看看kubefed的集群管理是怎么做到的。
+            透视 kubefed 源码 —— ClusterControllerkubefed 其实是用 kubebuilder v1 脚手架做的，所以源代码看起来不是那么困难，首先来看看kubefed的集群管理是怎么做到的。
 1.kubefed 中的集群资源先来看看 kubefed 里定义的集群资源长什么样子：
 123456789101112131415161718192021222324apiVersion: core.kubefed.io/v1beta1kind: KubeFedClustermetadata:  creationTimestamp: "2020-05-31T09:31:20Z...
         </div>
@@ -1004,9 +1035,24 @@ Kubernete...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 27
+        Total : 28
         </div>
         <!-- search  -->
         
@@ -1019,6 +1065,11 @@ Kubernete...
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/02</span><a class="archive-post-title" href= "/2020/06/02/kubefed-FTCcontroller/" >Kubefed - ClusterController</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1197,9 +1248,9 @@ Kubernete...
     
         <span class="sidebar-tag-name" data-tags="istio"><span class="iconfont-archer">&#xe606;</span>istio</span>
     
-        <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
-    
         <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
+    
+        <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
     
         <span class="sidebar-tag-name" data-tags="open-source"><span class="iconfont-archer">&#xe606;</span>open-source</span>
     
