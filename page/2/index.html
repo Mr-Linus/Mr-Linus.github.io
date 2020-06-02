@@ -359,6 +359,45 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2019/03/10/Install-K8S-with-kubeadm/" >
+            
+                <span>Install a single master K8S cluster with kubeadm</span>
+        </a>
+        <div class="abstract-content">
+            Prestep: 使用 kubdeadm 安装 K8S 前每个节点：
+
+关闭swap
+关闭selinux
+关闭防火墙
+集群里的每个节点的/etc/hosts都要有所有节点ip和与其对应的hostname
+docker安装完毕 
+让系统内核开启网络转发
+
+关闭 Swap（每个节点）12swapoff -a &amp;&gt;/dev/nullsed  -i '/\s\+swap\s\+/d' /etc/fstab  &amp;&gt;/dev/null
+关闭 Selinux（每个节点）1234567891011121314setenforce 0 cat &gt; /etc/selinux...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/10</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "k8s">k8s</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2019/01/24/Go-Core-Interface/" >
             
                 <span>Go Core Dev Interface</span>
@@ -657,40 +696,6 @@ Kubernete...
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "k8s">k8s</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/07/01/Scraping-Primer/" >
-            
-                <span>Scraping-Primer</span>
-        </a>
-        <div class="abstract-content">
-            Scraping Primer识别网站builtwith模块
-安装
-1pip installl builtwith
-
-使用
-12345import builtwithprint(builtwith.parse('http://example.webscraping.com'))## 输出结果&#123;'web-servers': ['Nginx'], 'web-frameworks': ['Web2py', 'Twitter Bootstrap'], 'programming-languages': ['Python'], 'javascript-frameworks': ['jQue...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "scraping">scraping</a>
     
 </div>
             
@@ -1221,9 +1226,22 @@ Kubernete...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 28
+        Total : 29
         </div>
         <!-- search  -->
         
@@ -1236,6 +1254,11 @@ Kubernete...
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span><a class="archive-post-title" href= "/2020/06/03/kubefed-SyncController/" >Kubefed - Sync Controller</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1411,9 +1434,9 @@ Kubernete...
     
         <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
     
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
-    
         <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="k8s"><span class="iconfont-archer">&#xe606;</span>k8s</span>
     
@@ -1489,9 +1512,26 @@ jsonContent:
     <!-- CNZZ  -->
     
     </div>
-    <!-- async load share.js --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    <!-- async load share.js -->
      
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
 </html>
 
 

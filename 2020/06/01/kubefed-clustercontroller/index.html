@@ -272,7 +272,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">2,250</span>阅读时长: <span class="post-count reading-time">11 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">2,358</span>阅读时长: <span class="post-count reading-time">12 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -431,7 +431,7 @@ height:50vh;
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(cc *ClusterController)</span> <span class="title">Run</span><span class="params">(stopChan &lt;-<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	<span class="keyword">defer</span> utilruntime.HandleCrash()</span><br><span class="line">  <span class="comment">// 调用 cache Controller 的 Run 方法 </span></span><br><span class="line">	<span class="keyword">go</span> cc.clusterController.Run(stopChan)</span><br><span class="line">	<span class="comment">// 周期性监控集群状态</span></span><br><span class="line">	<span class="keyword">go</span> wait.Until(<span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		<span class="keyword">if</span> err := cc.updateClusterStatus(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">			klog.Errorf(<span class="string">"Error monitoring cluster status: %v"</span>, err)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;, cc.clusterHealthCheckConfig.Period, stopChan)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>这里我们在看看这里涉及的更新集群状态函数：</p>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(cc *ClusterController)</span> <span class="title">updateClusterStatus</span><span class="params">()</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	clusters := &amp;fedv1b1.KubeFedClusterList&#123;&#125;</span><br><span class="line">	err := cc.client.List(context.TODO(), clusters, cc.fedNamespace)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line">	<span class="keyword">for</span> _, obj := <span class="keyword">range</span> clusters.Items &#123;</span><br><span class="line">		cc.mu.RLock()</span><br><span class="line">		cluster := obj.DeepCopy()</span><br><span class="line">		clusterData := cc.clusterDataMap[cluster.Name]</span><br><span class="line">		cc.mu.RUnlock()</span><br><span class="line">		<span class="keyword">if</span> clusterData == <span class="literal">nil</span> &#123;</span><br><span class="line">			<span class="comment">// 如果 clusterData 不存在</span></span><br><span class="line">			cc.addToClusterSet(cluster)</span><br><span class="line">			cc.mu.RLock()</span><br><span class="line">			clusterData = cc.clusterDataMap[cluster.Name]</span><br><span class="line">			cc.mu.RUnlock()</span><br><span class="line">			<span class="keyword">if</span> clusterData == <span class="literal">nil</span> &#123;</span><br><span class="line">				klog.Warningf(<span class="string">"Failed to retrieve stored data for cluster %s"</span>, cluster.Name)</span><br><span class="line">				<span class="keyword">continue</span></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		wg.Add(<span class="number">1</span>)</span><br><span class="line">    <span class="comment">// 真正的更新集群状态的方法</span></span><br><span class="line">		<span class="keyword">go</span> cc.updateIndividualClusterStatus(cluster, clusterData, &amp;wg)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	wg.Wait()</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(cc *ClusterController)</span> <span class="title">updateIndividualClusterStatus</span><span class="params">(cluster *fedv1b1.KubeFedCluster,</span></span></span><br><span class="line"><span class="function"><span class="params">	storedData *ClusterData, wg *sync.WaitGroup)</span></span> &#123;</span><br><span class="line">	<span class="keyword">defer</span> metrics.ClusterHealthStatusDurationFromStart(time.Now())</span><br><span class="line"></span><br><span class="line">	clusterClient := storedData.clusterKubeClient</span><br><span class="line">  <span class="comment">// 更新集群状态</span></span><br><span class="line">	currentClusterStatus, err := clusterClient.GetClusterHealthStatus()</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		cc.RecordError(cluster, <span class="string">"RetrievingClusterHealthFailed"</span>, errors.Wrap(err, <span class="string">"Failed to retrieve health of the cluster"</span>))</span><br><span class="line">	&#125;</span><br><span class="line">  </span><br><span class="line">	currentClusterStatus = thresholdAdjustedClusterStatus(currentClusterStatus, storedData, cc.clusterHealthCheckConfig)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> utilfeature.DefaultFeatureGate.Enabled(features.CrossClusterServiceDiscovery) &#123;</span><br><span class="line">		currentClusterStatus = cc.updateClusterZonesAndRegion(currentClusterStatus, cluster, clusterClient)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	storedData.clusterStatus = currentClusterStatus</span><br><span class="line">	cluster.Status = *currentClusterStatus</span><br><span class="line">  <span class="comment">// 更新资源对象的status字段</span></span><br><span class="line">	<span class="keyword">if</span> err := cc.client.UpdateStatus(context.TODO(), cluster); err != <span class="literal">nil</span> &#123;</span><br><span class="line">		klog.Warningf(<span class="string">"Failed to update the status of cluster %q: %v"</span>, cluster.Name, err)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	wg.Done()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>至此，kubefed控制器的基本工作流也就梳理的差不多了，其实外部想启用kubefed 集群控制器也只需调用下StartClusterController 函数就可以让集群控制器工作了。</p>
+<p>至此，kubefed 集群控制器的基本工作流也就梳理的差不多了，其实外部想启用 kubefed 集群控制器也只需调用下 StartClusterController 函数就可以让集群控制器工作了。<br>其实，kubefed 集群控制器就是监控 KubeFedCluster 资源对象的变更，通过 KubeFedCluster 里的具体字段，尝试与那个集群的 API server 通信，并将这些数据作为<br> ClusterData 存起来，用于其他的控制器监听联邦资源变化的时候使用。一句话，管理联邦集群里所有的集群的通信 Client，后面有用（留给其他的控制器用）。</p>
 
     </article>
     <!-- license  -->
@@ -440,7 +440,7 @@ height:50vh;
             <p>原文作者：<a href="http://note.run-linux.com">Linus Lee</a>
             <p>原文链接：<a href="http://note.run-linux.com/2020/06/01/kubefed-clustercontroller/">http://note.run-linux.com/2020/06/01/kubefed-clustercontroller/</a>
             <p>发表日期：<a href="http://note.run-linux.com/2020/06/01/kubefed-clustercontroller/">June 1st 2020, 8:40:18 pm</a>
-            <p>更新日期：<a href="http://note.run-linux.com/2020/06/01/kubefed-clustercontroller/">June 2nd 2020, 12:23:11 am</a>
+            <p>更新日期：<a href="http://note.run-linux.com/2020/06/01/kubefed-clustercontroller/">June 2nd 2020, 12:41:19 am</a>
             <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -946,9 +946,22 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 28
+        Total : 29
         </div>
         <!-- search  -->
         
@@ -961,6 +974,11 @@ top:50vh;
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/03</span><a class="archive-post-title" href= "/2020/06/03/kubefed-SyncController/" >Kubefed - Sync Controller</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1136,9 +1154,9 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
     
-        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
-    
         <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
+    
+        <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
     
         <span class="sidebar-tag-name" data-tags="k8s"><span class="iconfont-archer">&#xe606;</span>k8s</span>
     
@@ -1216,9 +1234,26 @@ jsonContent:
     </div>
     <!-- async load share.js -->
     
-        <script src="/scripts/share.js" async></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->    
+        <script src="/scripts/share.js" async></script>    
      
-    </body>
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+
+</body>
 </html>
 
 
