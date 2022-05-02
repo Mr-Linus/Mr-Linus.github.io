@@ -11,7 +11,7 @@
 
 
 <head>
-    <meta charset="utf-8">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
     <meta name="author" content="Linus Lee">
     <meta name="renderer" content="webkit">
@@ -22,7 +22,7 @@
     <meta name="description" content="It's Funky's NoteBook">
     <meta http-equiv="Cache-control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>Funky&#39;s NoteBook</title>
+    <title>架构思维与方法论 · Funky&#39;s NoteBook</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -198,17 +198,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
     <!-- 百度统计  -->
     
-    <!-- 谷歌统计  -->
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
     
 </head>
 
     
+        <body class="post-body">
     
-<header class="header">
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Funky&#39;s NoteBook</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">架构思维与方法论</a>
+            </div>
+    </div>
     
     <a class="home-link" href=/>Funky's NoteBook</a>
 </header>
@@ -220,24 +231,74 @@
 
 
 
+
+height:50vh;
 ">
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            架构思维与方法论
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "arch">arch</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2,749</span>阅读时长: <span class="post-count reading-time">9 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2022/05/02</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -338,44 +399,144 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/07/01/Scraping-Primer/" >
-            
-                <span>Scraping-Primer</span>
-        </a>
-        <div class="abstract-content">
-            Scraping Primer识别网站builtwith模块
-安装
-1pip installl builtwith
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="架构思维与方法论"><a href="#架构思维与方法论" class="headerlink" title="架构思维与方法论"></a>架构思维与方法论</h1><h2 id="1-修心"><a href="#1-修心" class="headerlink" title="1.修心"></a>1.修心</h2><h3 id="1-1-修炼同理心，认同他人的能力"><a href="#1-1-修炼同理心，认同他人的能力" class="headerlink" title="1.1 修炼同理心，认同他人的能力"></a>1.1 修炼同理心，认同他人的能力</h3><ul>
+<li>在架构设计上多转换视角，明确每个人要做的功能。</li>
+<li>搞明白我们是在改善系统还是在破坏系统。</li>
+<li>认同并信任他人的能力，不要在还没有全面理解他人的思想的情况下去调整现有的代码设计逻辑，读懂他人的思想。</li>
+<li>多积累经验，理解用户核心诉求，保持空杯心态，认同他人。</li>
+</ul>
+<h3 id="1-2-大局观念，保持好奇心和韧性"><a href="#1-2-大局观念，保持好奇心和韧性" class="headerlink" title="1.2 大局观念，保持好奇心和韧性"></a>1.2 大局观念，保持好奇心和韧性</h3><ul>
+<li>理论结合实际，架构不等于框架。</li>
+<li>明确什么需要迭代，什么不需要，搞明白系统的全貌。</li>
+<li>持续地学习，保持好奇心，看见新科技与思想，先认同它，体会它，理解它产生的需求背景与技术脉络，融入自己的知识体系。</li>
+<li>学习需要韧性，不是所有技术都值得深耕，明确自己的兴趣，化腐朽为神奇。</li>
+</ul>
+<h3 id="1-3-迭代能力，学会否定自己"><a href="#1-3-迭代能力，学会否定自己" class="headerlink" title="1.3 迭代能力，学会否定自己"></a>1.3 迭代能力，学会否定自己</h3><ul>
+<li>每一次改代码的过程都是对自己架构能力升华的过程。</li>
+<li>每一次开发新的任务都是重新审视自身架构合理性的机会。</li>
+</ul>
+<p>多思考如下问题：</p>
+<ul>
+<li>那些潜在需求未来可能需要被满足？</li>
+<li>如果这些需求在早些被提出，架构如何设计更合理？</li>
+<li>当前的架构迭代到新架构的成本开销多大？</li>
+</ul>
+<p>关于架构调整与迭代：</p>
+<ul>
+<li>早迭代，小步迭代要比做一个大版本的重构要好。</li>
+</ul>
+<h2 id="2-架构设计准则"><a href="#2-架构设计准则" class="headerlink" title="2. 架构设计准则"></a>2. 架构设计准则</h2><p>架构设计的基本准则：</p>
+<ul>
+<li>KISS： 简单优于复杂；</li>
+<li>Modularity：聚焦模块而不是框架；</li>
+<li><p>Testable：保证可测试性；</p>
+</li>
+<li><p>Orthogonal Decomposition：正交分解。</p>
+</li>
+<li>OCP：开闭原则</li>
+</ul>
+<p>其中，各项准则解释如下：</p>
+<p>KISS 即 Keep it Simple, Stupid，不增加无谓的复杂性。正确理解系统的需求之后才进行设计。</p>
+<p>Modularity，强调的是模块化。从架构设计角度来说，模块的规格，也就是模块的接口，比模块的实现机制更重要。框架是易变的。框架是业务流，可复用性相对更低。框架都将经历不断发展演化的过程，逐步得到完善。</p>
+<p>Testable，强调的是模块的可测试性。设计应该以可测试性为第一目标。可测试往往意味着低耦合。一个模块可以很方便地进行测试，那么就可以说它是一个设计优良的模块。模块测试的第一步是环境模拟。模块依赖的模块列表、模块的输入输出，这些是模块测试的需要，也是模块耦合度的表征。 只有在模块开发过程中我们就不断积累典型的测试数据，以案例的形式固化所有已知 Bug，才可能在架构调整等最容易引发问题的情形下获得最佳的效果。</p>
+<p>Orthogonal Decomposition，中文的意思是 “正交分解”。架构就是不断地对系统进行正交分解的过程。：“优先考虑组合，而不是继承”。如果我们用正交分解的角度来诠释这句话，它本质上是鼓励我们做乘法而不是做加法。组合是乘法，它是让我们用相互正交、完全没有相关性的模块，组合出我们要的业务场景。而继承是加法，通过叠加能力把一个模块改造成另一个模块。</p>
+<p>Open Closed Principle，OCP 软件实体（模块，类，函数等）应该对于功能扩展是开放的，但对于修改是封闭的。应尽量通过扩展软件实体的行为来应对变化，满足新的需求，而不是通过修改现有代码来完成变化，它是为软件实体的未来事件而制定的对现行开发设计进行约束的一个原则。通过引入插件机制把系统分解为 “最小化的核心系统 + 多个彼此正交的周边系统”。事实上回调函数或者接口本质上就是一种事件监听机制，所以它是插件机制的特例。</p>
+<h2 id="3-少谈框架，多谈业务"><a href="#3-少谈框架，多谈业务" class="headerlink" title="3. 少谈框架，多谈业务"></a>3. 少谈框架，多谈业务</h2><p>不要让框架绑架业务。</p>
+<p>在架构的两侧，一边是用户需求，一边是技术。接口代表用户需求，代表业务。框架代表技术，是我们满足需求的方法。</p>
+<p>框架，体现的是需求泛化的能力。从架构思维角度上来看，它是通过抽象出需求模板，把多个需求场景中变化的部分抽离出来，形成相对稳定的泛化需求。</p>
+<p>框架的抽象能力不是一蹴而就的，它既依赖我们抽象系统的能力，也依赖我们对领域需求的理解程度。所以框架会随着时间而迭代，逐步向最理想的状态逼近。不要让代码逃逸出框架，把系统搅得支离破碎。架构层面最好能够提前预测所有可能的需求，以此抑制潜在代码逃逸的风险，坚持不要往核心系统中增加新功能。</p>
+<h2 id="4-不断地重新审视边界"><a href="#4-不断地重新审视边界" class="headerlink" title="4. 不断地重新审视边界"></a>4. 不断地重新审视边界</h2><p>不同的业务模块，分别做什么，它们之间通过什么样的方式耦合在一起。这种耦合方式的需求适应性如何，开发人员实现上的心智负担如何，是我们决策的影响因素。</p>
+<p>为了避免留下难以调整的架构缺陷，认真细致做好需求分析，并且在架构设计时，认真细致地过一遍所有的用户故事（User Story），以确认架构适应性。</p>
+<p>多梳理自身与外部组件的依赖关系，引用/调用关系</p>
+<h2 id="5-完善中的架构范式"><a href="#5-完善中的架构范式" class="headerlink" title="5. 完善中的架构范式"></a>5. 完善中的架构范式</h2><p>每一个设计模式都应该放到他相应解决的问题领域来看，架构范式也是如此，常见的架构原则如下:</p>
+<ul>
+<li>接口隔离原则（Interface Segregation Principle，ISP）：一个模块与另一个模块之间的依赖性，应该依赖于尽可能小的接口。</li>
+<li>依赖倒置原则（Dependence Inversion Principle，DIP）：高层模块不应该依赖于低层模块，它们应该依赖于抽象接口。</li>
+<li>无环依赖原则（Acyclic Dependencies Principle，ADP）：不要让两个模块之间出现循环依赖。怎么解除循环依赖？见上一条。</li>
+<li>组合 / 聚合复用原则（Composition/Aggregation Reuse Principle，CARP）：当要扩展功能时，优先考虑使用组合，而不是继承。</li>
+<li>高内聚与低耦合（High Cohesion and Low Coupling，HCLC）：模块内部需要做到内聚度高，模块之间需要做到耦合度低。这是判断一个模块是在做一个业务还是多个业务的依据。如果是在做同一个业务，那么它所有的代码都是内聚的，相互有较强的依赖。</li>
+<li>惯例优于配置（Convention over Configuration，COC）：灵活性会增加复杂性，所以除非这个灵活性是必须的，否则应尽量让惯例来减少配置，这样才能提高开发效率。如有可能，尽量做到 “零配置”。</li>
+<li>命令查询分离（Command Query Separation，CQS）：读写操作要分离。在定义接口方法时，要区分哪些是命令（写操作），哪些是查询（读操作），要将它们分离，而不要揉到一起。</li>
+<li>关注点分离（Separation of Concerns，SOC）：将一个复杂的问题分离为多个简单的问题，然后逐个解决这些简单的问题，那么这个复杂的问题就解决了。当然这条说了等于没说，难在如何进行分离，最终还是归结到对业务的理解上。</li>
+</ul>
+<h2 id="6-架构老化与重构"><a href="#6-架构老化与重构" class="headerlink" title="6. 架构老化与重构"></a>6. 架构老化与重构</h2><h3 id="6-1-架构老化的原因"><a href="#6-1-架构老化的原因" class="headerlink" title="6.1 架构老化的原因"></a>6.1 架构老化的原因</h3><p>系统添加各种新功能的时候，往往会遇到功能需求的实现方式不在当初框架设定的范围之内，于是很多功能代码逸出框架的范围之外。这些散落在各处的代码，把系统绞得支离破碎。</p>
+<p>代码老化的标志，是添加功能越来越难，迭代效率降低，问题却是持续不断，解决了一个问题却又由此生出好几个新问题。</p>
+<p>在理想的情况下，如果我们坚持以 “最小化的核心系统 + 多个相互正交的周边系统” 这个指导思想来构建应用，那么代码就很难出现老化。</p>
+<h3 id="6-2-如何添加新功能"><a href="#6-2-如何添加新功能" class="headerlink" title="6.2 如何添加新功能"></a>6.2 如何添加新功能</h3><ul>
+<li>能够少改就少改</li>
+<li>业务务不依赖。代码独立于既有业务系统，只有少量桥接的代码是耦合的。</li>
+</ul>
+<h3 id="6-3-架构的局部优化"><a href="#6-3-架构的局部优化" class="headerlink" title="6.3 架构的局部优化"></a>6.3 架构的局部优化</h3><ul>
+<li>重写，或者叫局部重构。执行局部重构一定要对重构的代码充分了解，否则会引发严重问题。</li>
+<li>依赖优化，如果改动不大，代表耦合在合理范围，做到这一步暂时不再往下走是可接受的。如果耦合过多，那就意味着需要站在这个功能本身的业务视角看依赖的合理性了。如果不合理，可以考虑推动局部重构。</li>
+</ul>
+<h3 id="6-4-核心系统重构"><a href="#6-4-核心系统重构" class="headerlink" title="6.4 核心系统重构"></a>6.4 核心系统重构</h3><ul>
+<li>首先确定其边界，也就是使用界面（接口），能够在不修改实现的情况下调整核心系统的使用界面到我们期望的样子是最好的。</li>
+<li>接着对所有周边模块进行依赖优化的整理，细加分析后可以初步确定核心系统需要暴露的事件集合。</li>
+<li><p>进一步要做的事情是把核心系统的 DOM 接口也抽象出来。包括依赖接口及其合理性，明确期望的接口设计。</p>
+</li>
+<li><p>重新设计，前置条件是对业务了解有了长足的进步，对周边系统切换有充足的预计。</p>
+</li>
+<li>执行重构。</li>
+</ul>
+<h2 id="7-结语"><a href="#7-结语" class="headerlink" title="7. 结语"></a>7. 结语</h2><p>​    架构的功夫全在平常。无论是在架构范式的不断完善上，还是应对架构老化的经验积累上，都是在日常工作过程中见功夫。不能指望有一天架构水平会突飞猛进。架构能力提升全靠平常一点一滴地不断反思与打磨得来。在应对架构老化这件事情上，不要轻率地选择进行全局性的重构。要把功夫花在平常，让重构在润物细无声中发生。局性的重构比一个全新业务的架构过程要难得多。重构，不只是一个架构的合理性问题。它包含了架构合理性的考量，因为需要知道未来在哪里，迭代方向在哪里。</p>
 
-使用
-12345import builtwithprint(builtwith.parse('http://example.webscraping.com'))## 输出结果&#123;'web-servers': ['Nginx'], 'web-frameworks': ['Web2py', 'Twitter Bootstrap'], 'programming-languages': ['Python'], 'javascript-frameworks': ['jQue...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "scraping">scraping</a>
-    
-</div>
-            
-        </div>
     </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者：<a href="http://note.run-linux.com">Linus Lee</a>
+            <p>原文链接：<a href="http://note.run-linux.com/2022/05/02/2022-05-02-arch/">http://note.run-linux.com/2022/05/02/2022-05-02-arch/</a>
+            <p>发表日期：<a href="http://note.run-linux.com/2022/05/02/2022-05-02-arch/">May 2nd 2022, 8:40:18 pm</a>
+            <p>更新日期：<a href="http://note.run-linux.com/2022/05/02/2022-05-02-arch/">May 2nd 2022, 11:39:03 pm</a>
+            <p>版权声明：本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2020/06/03/kubefed-SyncController/" title= "Kubefed - Sync Controller">
+                    <div class="prevTitle">Kubefed - Sync Controller</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zMjU0Ni85MTA3>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
     
+    
+    <!-- partial('_partial/comment/changyan') -->
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
 </main>
             <!-- profile -->
             
@@ -447,6 +608,24 @@
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#架构思维与方法论"><span class="toc-number">1.</span> <span class="toc-text">架构思维与方法论</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-修心"><span class="toc-number">1.1.</span> <span class="toc-text">1.修心</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-修炼同理心，认同他人的能力"><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1 修炼同理心，认同他人的能力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-大局观念，保持好奇心和韧性"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2 大局观念，保持好奇心和韧性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-迭代能力，学会否定自己"><span class="toc-number">1.1.3.</span> <span class="toc-text">1.3 迭代能力，学会否定自己</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-架构设计准则"><span class="toc-number">1.2.</span> <span class="toc-text">2. 架构设计准则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-少谈框架，多谈业务"><span class="toc-number">1.3.</span> <span class="toc-text">3. 少谈框架，多谈业务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-不断地重新审视边界"><span class="toc-number">1.4.</span> <span class="toc-text">4. 不断地重新审视边界</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-完善中的架构范式"><span class="toc-number">1.5.</span> <span class="toc-text">5. 完善中的架构范式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-架构老化与重构"><span class="toc-number">1.6.</span> <span class="toc-text">6. 架构老化与重构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-1-架构老化的原因"><span class="toc-number">1.6.1.</span> <span class="toc-text">6.1 架构老化的原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-2-如何添加新功能"><span class="toc-number">1.6.2.</span> <span class="toc-text">6.2 如何添加新功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-3-架构的局部优化"><span class="toc-number">1.6.3.</span> <span class="toc-text">6.3 架构的局部优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-4-核心系统重构"><span class="toc-number">1.6.4.</span> <span class="toc-text">6.4 核心系统重构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-结语"><span class="toc-number">1.7.</span> <span class="toc-text">7. 结语</span></a></li></ol></li></ol>
+    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -1132,6 +1311,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -1147,7 +1328,7 @@ jsonContent:
             all[i].SourceElement().parentNode.className += ' has-jax';
     });
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 
 </body>

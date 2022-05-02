@@ -359,6 +359,37 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/2019/03/15/Install-K8S-dashboard/" >
+            
+                <span>Install K8S dashboard with ingress</span>
+        </a>
+        <div class="abstract-content">
+            安装 kubernetes dashboard（仪表盘）同时开启 ingressKubernetes Dashboard是Kubernetes集群的基于Web的通用UI。 它允许用户管理在群集中运行的应用程序并对其进行故障排除，以及管理群集本身。
+Step1: 为 dashboard 创建 service account我们创建一个命名空间在 kube-system 中， 名为 kubernetes-dashboard 的 Service Account:
+12345apiVersion: v1kind: ServiceAccountmetadata:  name: kubernetes...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/15</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "k8s">k8s</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/2019/03/10/Install-K8S-with-kubeadm/" >
             
                 <span>Install a single master K8S cluster with kubeadm</span>
@@ -654,48 +685,6 @@ NamespaceNamespace 也叫命名空间，是 Linux kernel 的一个功能，以�
             <div class= abstract-tags >
     
         <a class="post-tag" href="javascript:void(0);" data-tags = "docker">docker</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/2018/07/17/K8S-InfoCollection/" >
-            
-                <span>Kubernetes Information Collection</span>
-        </a>
-        <div class="abstract-content">
-            kubernetes 架构分层架构
-
-核心层:Kubernetes最核心的功能，对外提供API构建高层的应用，对内提供 插件式应用执行环境 
-
-应用层:部署(无状态应用、有状态应用、批处理任务、集群应用等)和路 由(服务发现、DNS解析等) 
-
-管理层:系统度量(如基础设施、容器和网络的度量)，自动化(如自动扩 展、动态Provision等)以及策略管理(RBAC、Quota、PSP、NetworkPolicy 等) 
-
-接口层:kubectl命令行工具、客户端SDK以及集群联邦 
-
-生态系统:在接口层之上的庞大容器集群管理调度的生态系统，可以划分为 
-两个范畴 :
-
-Kubernete...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/07/17</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "k8s">k8s</a>
     
 </div>
             
@@ -1239,9 +1228,26 @@ Kubernete...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 29
+        Total : 30
         </div>
         <!-- search  -->
         
@@ -1251,6 +1257,20 @@ Kubernete...
     
     
     
+    
+    <div class="archive-year"> 2022 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/02</span><a class="archive-post-title" href= "/2022/05/02/2022-05-02-arch/" >架构思维与方法论</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2020 </div>
     <ul class="year-list">
@@ -1432,21 +1452,23 @@ Kubernete...
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
+        <span class="sidebar-tag-name" data-tags="arch"><span class="iconfont-archer">&#xe606;</span>arch</span>
+    
         <span class="sidebar-tag-name" data-tags="Data Structure"><span class="iconfont-archer">&#xe606;</span>Data Structure</span>
     
-        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
-    
         <span class="sidebar-tag-name" data-tags="Go"><span class="iconfont-archer">&#xe606;</span>Go</span>
+    
+        <span class="sidebar-tag-name" data-tags="docker"><span class="iconfont-archer">&#xe606;</span>docker</span>
     
         <span class="sidebar-tag-name" data-tags="k8s"><span class="iconfont-archer">&#xe606;</span>k8s</span>
     
         <span class="sidebar-tag-name" data-tags="istio"><span class="iconfont-archer">&#xe606;</span>istio</span>
     
-        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
-    
         <span class="sidebar-tag-name" data-tags="scraping"><span class="iconfont-archer">&#xe606;</span>scraping</span>
     
         <span class="sidebar-tag-name" data-tags="open-source"><span class="iconfont-archer">&#xe606;</span>open-source</span>
+    
+        <span class="sidebar-tag-name" data-tags="Linux"><span class="iconfont-archer">&#xe606;</span>Linux</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
